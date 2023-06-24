@@ -1,0 +1,24 @@
+{
+  "name": "ai-doc-query",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "version": "0.1.0",
+  "description": "next.js/nest.js project for document querying using LLMs powered by Langchain",
+  "scripts": {
+    "test": "npm run test",
+    "start:frontend:dev": "npm --prefix packages/frontend run dev",
+    "start:backend:dev": "npm --prefix packages/backend run start:dev",
+    "prisma:generate": "npm --prefix packages/backend run prisma:generate"
+  },
+  "keywords": [
+    "ChatGPT",
+    "PDF",
+    "Langchain",
+    "next.js",
+    "nest.js"
+  ],
+  "author": "Abderrahim Mellouki",
+  "license": "MIT"
+}

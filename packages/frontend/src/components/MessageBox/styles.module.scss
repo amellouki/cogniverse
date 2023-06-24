@@ -1,0 +1,44 @@
+$border-radius: 1rem;
+
+.messageBox {
+  display: flex;
+  padding: 0.625rem;
+  align-items: baseline;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.messageBox.bubble {
+  border: 1px solid;
+  border-radius: $border-radius;
+  border-color: var(--amber);
+  background: rgba(var(--amber-rgb), 0.1);
+  backdrop-filter: blur(2.5px);
+}
+
+.messageBox:not(.bubble) {
+}
+
+.messageText {
+  display: block;
+  font-weight: 400;
+  flex: 1 1 0%;
+
+  transition: height 300ms ease-in-out;
+  box-sizing: border-box;
+}
+
+.sender {
+  text-align: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 100%;
+  background-color: var(--amber);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  span {
+    display: inline-block;
+    line-height: 2rem;
+  }
+}

@@ -1,0 +1,20 @@
+.uploadFile {
+  display: flex;
+  input {
+    display: none;
+  }
+}
+
+.uploadFile > span {
+  display: inline-block;
+  align-items: center;
+  font-weight: bold;
+  //color: white;
+  span, svg {
+    display: inline-block;
+    line-height: 1.5rem;
+  }
+  svg {
+    margin-left: 0.25rem;
+  }
+}

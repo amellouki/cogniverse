@@ -1,0 +1,23 @@
+.textInput {
+  display: block;
+  padding: 0.625rem;
+  background-color: var(--primary-background);
+  color: var(--primary-foreground);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  width: 100%;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  border-color: var(--primary-border);
+}
+
+.textInput::placeholder,
+.textInput.-ms-input-placeholder,
+.textInput::-ms-input-placeholder {
+  color: var(--text-input-hint)
+}
+
+.textInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary-button-focus-outline);
+}

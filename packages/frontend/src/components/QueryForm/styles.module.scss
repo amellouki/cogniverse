@@ -1,0 +1,11 @@
+.form {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  width: 100%;
+  gap: 1rem;
+}
+
+.fillRest {
+  flex: 1 1 0;
+}

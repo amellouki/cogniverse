@@ -1,0 +1,12 @@
+@mixin background-pattern-1($background-color, $dots-color) {
+  background-color: $background-color;
+  background-image: radial-gradient(#{$dots-color} 0.75px, transparent 0.75px),
+  radial-gradient(#{$dots-color} 0.75px, #{$background-color} 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
+@mixin background-pattern-2($background-color, $dots-color) {
+  background-color: $background-color;
+  background-image: repeating-linear-gradient(45deg, #{$dots-color}, #{$dots-color} 4.5px, #{$background-color} 4.5px, #{$background-color} 22.5px);
+}

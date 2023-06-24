@@ -1,0 +1,40 @@
+@import "src/styles/background-patterns";
+
+.container {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: 300px auto;
+    grid-template-rows: 100px calc(100vh - 100px);
+  grid-template-areas: "header header"
+                       "aside main";
+  grid-gap: 0 1rem;
+
+  > header {
+    grid-area: header;
+    display: flex;
+    padding: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    @include background-pattern-2(var(--secondary-background), var(--primary-background));
+  }
+
+  > aside, > main {
+    padding: 1rem 1rem 1rem 0;
+  }
+
+  > aside {
+    grid-area: aside;
+    padding-left: 1rem;
+    @include background-pattern-2(var(--secondary-background), var(--primary-background));
+  }
+
+  > main {
+    grid-area: main;
+  }
+}
+
+.contentWrapper {
+  padding: 1.5rem;
+  width: 100%;
+  @include background-pattern-2(var(--secondary-background), var(--primary-background));
+}

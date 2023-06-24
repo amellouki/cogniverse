@@ -1,0 +1,78 @@
+@mixin light-theme {
+  color-scheme: light;
+  // main colors
+  --amber: #ffbe0b;
+  --amber-rgb: 255, 190, 11;
+  --amber-light: #FFD970;
+  --amber-dark: #CC9600;
+  --orange-panton: #FB5607;
+  --rose: #FF006E;
+  --blue-violet: #8338EC;
+  --azure: #3A86FF;
+
+  // blocks
+  --primary-background: #fff;
+  --secondary-background: #d7d7d7;
+  --inverse-background: #000;
+  --primary-foreground: #000;
+  --inverse-foregraound: #000;
+  --accent-background: #51CBEE;
+  --primary-border: #545454;
+
+  // text input
+  --text-input-hint: var(gray);
+
+  // buttons
+  --primary-button-background: var(--amber);
+  --primary-button-foreground: var(--inverse-foregraound);
+  --primary-button-hover-background: var(--amber-light);
+  --primary-button-focus-outline: var(--amber-dark);
+  --secondary-button-background: #fb5607;
+  --secondary-button-foreground: var(--inverse-foregraound);
+  --teriary-button-background: #FF006E;
+  --teriary-button-foreground: var(--inverse-foregraound);
+  --button-accent-background: #8338EC;
+  --button-accent-foreground: var(--inverse-foregraound);
+  --button-hover-background: #3A86FF;
+  --button-hover-foreground: var(--inverse-foregraound);
+  --button-active-background: #fff;
+  --button-active-foreground: var(--inverse-foregraound);
+  --button-focus-background: #fff;
+  --button-focus-foreground: var(--inverse-foregraound);
+  --inverse-button-background: #fff;
+  --inverse-button-foreground: var(--inverse-foregraound);
+  --success-button-background: #fff;
+  --success-button-foreground: var(--inverse-foregraound);
+  --error-button-background: #fff;
+  --error-button-foreground: var(--inverse-foregraound);
+  --warning-button-background: #fff;
+  --warning-button-foreground: var(--inverse-foregraound);
+  --disabled-button-background: #fff;
+  --disabled-button-foreground: var(--inverse-foregraound);
+}
+
+@mixin dark-theme {
+  color-scheme: dark;
+  --primary-background: #1f1f1f;
+  --secondary-background: #000000;
+  --primary-foreground: #fff;
+  --accent-background: #575757;
+}
+
+:root {
+  @include light-theme
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @include dark-theme
+  }
+}
+
+:root.dark-theme {
+  @include dark-theme
+}
+
+:root.light-theme {
+  @include light-theme
+}

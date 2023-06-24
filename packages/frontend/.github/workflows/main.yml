@@ -1,0 +1,7 @@
+name: Deploy Next.js App
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: #enable manual triggers
