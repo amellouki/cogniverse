@@ -12,7 +12,7 @@ import {
   HumanChatMessage,
   SystemChatMessage,
 } from 'langchain/schema';
-import DocConversationalChain from '../../model/chains/doc-conversational-chain';
+import DocConversationalChain from '../../models/chains/doc-conversational-chain';
 import { Conversation, LanguageModel, Message } from '@prisma/client';
 import { ChatHistoryService } from '../../repositories/chat-history/chat-history.service';
 

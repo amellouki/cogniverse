@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PdfUploadDto } from '../../dto/pdf-upload.dto';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import * as pdfParse from 'pdf-parse';
-import { UploadedFileType } from '../../model/uploaded-file';
+import { UploadedFileType } from '../../types/uploaded-file';
 
 @Injectable()
 export class PdfSplitterService {
