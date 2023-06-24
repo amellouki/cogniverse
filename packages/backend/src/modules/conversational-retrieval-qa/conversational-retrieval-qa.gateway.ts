@@ -12,6 +12,7 @@ import {
 import * as dotenv from 'dotenv';
 import { ConversationService } from '../../repositories/conversation/conversation.service';
 import { Message } from '@prisma/client';
+import NewMessage from '@my-monorepo/shared/dist/new-message';
 
 dotenv.config({ path: './.env.local' });
 
@@ -51,7 +52,7 @@ export class ConversationalRetrievalQaGateway {
     );
 
     this.logger.log(conversation);
-    const sendToken = async (tokenMessage: Omit<Message, 'id'>) => {
+    const sendToken = async (tokenMessage: NewMessage) => {
       client.emit('data', getData('token', tokenMessage));
     };
     const sendRetrieval = async (retrievedStandaloneQuestion: Message) => {

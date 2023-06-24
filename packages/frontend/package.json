@@ -30,7 +30,8 @@
     "react-query": "^3.39.3",
     "sass": "^1.62.1",
     "socket.io-client": "^4.6.2",
-    "typescript": "5.0.3"
+    "typescript": "5.0.3",
+    "@my-monorepo/shared": "file:../shared"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",

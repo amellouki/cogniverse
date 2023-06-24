@@ -15,9 +15,10 @@ import {
 import DocConversationalChain from '../../models/chains/doc-conversational-chain';
 import { Conversation, LanguageModel, Message } from '@prisma/client';
 import { ChatHistoryService } from '../../repositories/chat-history/chat-history.service';
+import NewMessage from '@my-monorepo/shared/dist/new-message';
 
 type Callbacks = {
-  sendToken: (tokenMessage: Omit<Message, 'id'>) => Promise<void>;
+  sendToken: (tokenMessage: NewMessage) => Promise<void>;
   sendRetrieval: (message: Message) => void;
   sendConfirmQuestion: (message: Message) => void;
 };

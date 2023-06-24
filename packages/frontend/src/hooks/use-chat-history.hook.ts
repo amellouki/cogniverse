@@ -1,13 +1,14 @@
 import {useCallback, useEffect, useState} from "react";
 import {ChatHistory} from "@/types/ChatRequest";
 import {Message} from "@/types/ChatThread";
+import NewMessage from '@my-monorepo/shared/dist/new-message';
 
 export default function useChatHistory(initHistory?: Message[]) {
   const [history, setHistory] = useState<ChatHistory>([]);
   useEffect(() => {
     setHistory(initHistory || [])
   }, [initHistory])
-  const appendOptimistic = useCallback((message: Omit<Message, 'id'>) => {
+  const appendOptimistic = useCallback((message: NewMessage) => {
     setHistory((prev) => ([...prev, {...message, id:0}]));
   }, [setHistory])
   const appendSuccess = useCallback((message: Message) => {

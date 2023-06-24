@@ -1,14 +1,14 @@
 import {useCallback, useState} from 'react'
-import {ChatHistory} from "@/types/ChatRequest";
 import {io} from "socket.io-client";
 import {Message} from "@/types/ChatThread";
+import NewMessage from '@my-monorepo/shared/dist/new-message';
 
 const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/conversational-retrieval-qa'
 
 const useConversation = (
   onQuestionReceived: (message: Message) => void,
   onLatestResponseComplete: (message: Message) => void) => {
-  const [response, setResponse] = useState<Omit<Message, 'id'>>();
+  const [response, setResponse] = useState<NewMessage>();
   const [resources, setResources] = useState<any>();
 
   const sendQuestion = useCallback((conversationId: number, question: string) => {
@@ -18,7 +18,7 @@ const useConversation = (
       question
     })
     socket.on('data', (data) => {
-      const tokenMessage = data.content as Omit<Message, 'id'>
+      const tokenMessage = data.content as NewMessage
       // console.log('data', data)
       if (data.type === 'token' && tokenMessage.type === 'response-token') {
         setResponse((prev) => {

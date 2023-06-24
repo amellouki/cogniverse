@@ -1,11 +1,6 @@
-export type Message = {
-  id: number;
-  content: string;
-  type: string;
-  fromId: number;
-  fromType: string;
-  conversationId: number;
-}
+import {Message as PrismaMessage} from "@prisma/client";
+
+export type Message = PrismaMessage
 
 export type Conversation = {
   id: number;

@@ -1,5 +1,5 @@
-import { Message } from '@prisma/client';
+import NewMessage from '@my-monorepo/shared/dist/new-message';
 
-type AppendMessageRequestDto = Omit<Message, 'id'>;
+type AppendMessageRequestDto = NewMessage;
 
 export default AppendMessageRequestDto;

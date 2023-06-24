@@ -14,7 +14,7 @@ import { ConfigService } from '@nestjs/config';
 import { DOC_EMBEDDING_MODEL, ENV } from '../../constants';
 import { PineconeService } from '../../services/pinecone/pinecone.service';
 import { PdfUploadDto } from '../../dto/pdf-upload.dto';
-import { UploadedFileType } from '../../types/uploaded-file';
+import { UploadedFileType } from '@my-monorepo/shared/dist/uploaded-file';
 import { PdfSplitterService } from '../../services/pdf-splitter/pdf-splitter.service';
 
 @Controller('pdf-embedding')

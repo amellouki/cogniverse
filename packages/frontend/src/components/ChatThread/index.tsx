@@ -2,10 +2,10 @@ import React, {FunctionComponent} from 'react'
 import MessageBox from '@/components/MessageBox'
 import styles from './styles.module.scss'
 import {ChatHistory} from "@/types/ChatRequest";
-import {Message} from "@/types/ChatThread";
+import NewMessage from '@my-monorepo/shared/dist/new-message';
 
 type ChatThreadProps = {
-  response?: Omit<Message, 'id'>,
+  response?: NewMessage,
   chatHistory: ChatHistory
 }
 

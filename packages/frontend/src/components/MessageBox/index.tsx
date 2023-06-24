@@ -2,9 +2,10 @@ import React, {FunctionComponent} from "react";
 import clsx from "clsx";
 import styles from "./styles.module.scss";
 import {Message} from "@/types/ChatThread";
+import NewMessage from '@my-monorepo/shared/dist/new-message';
 
 export type MessageBoxProps = {
-  message: Message | Omit<Message, "id">;
+  message: Message | NewMessage;
   bubble?: boolean;
 };
 
