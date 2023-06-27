@@ -1,4 +1,4 @@
-# WiseResponder
+# Backend
 
 Backend service that combines Pinecone's vector database and Langchain's GPT augmentation to deliver highly educated and data-aware responses
 
@@ -32,16 +32,18 @@ $ npm run start:prod
 
 ## Prisma Schema
 
+Create a `.env` file similar to `.env.example` and add your own variables.
+
 Generate your SQL migration files and run them against the database
 
 ```bash
-npx prisma migrate dev --name init
+npm run prisma:migrate
 ```
 
 After updating the Prisma models, in order to update the generated Prisma Client, run:
 
 ```bash
-prisma generate
+npm run prisma:generate
 ```
 
 
