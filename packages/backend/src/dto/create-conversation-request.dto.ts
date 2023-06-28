@@ -1,23 +1,21 @@
-import { Prisma } from '@prisma/client';
+import { IsNotEmpty } from "class-validator";
+import NewConversation from "@my-monorepo/shared/dist/new-conversation";
 
-const languageModel = Prisma.validator<Prisma.LanguageModelArgs>()({
-  select: {
-    name: true,
-    type: true,
-    prompt: true,
-  },
-});
+export default class CreateConversationRequestDto implements NewConversation {
+  @IsNotEmpty()
+  title: string;
 
-const conversationWithModels = Prisma.validator<Prisma.ConversationArgs>()({
-  select: {
-    retrievalLanguageModel: languageModel,
-    conversationModel: languageModel,
-    title: true,
-  },
-});
+  conversationModel: CreateLanguageModelDto | null;
+  retrievalLanguageModel: CreateLanguageModelDto | null;
+}
 
-type CreateConversationRequestDto = Prisma.ConversationGetPayload<
-  typeof conversationWithModels
->;
+class CreateLanguageModelDto {
+  @IsNotEmpty()
+  name: string;
 
-export default CreateConversationRequestDto;
+  @IsNotEmpty()
+  type: string;
+
+  @IsNotEmpty()
+  prompt: string;
+}

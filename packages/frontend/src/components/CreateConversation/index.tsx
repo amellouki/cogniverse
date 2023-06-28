@@ -7,6 +7,7 @@ import TextInput from "@/components/BaseFormFields/TextInput";
 import Button from "@/components/Button";
 import {useMutation, useQueryClient} from "react-query";
 import axios from "axios";
+import NewConversation from "@my-monorepo/shared/dist/new-conversation";
 
 const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/api/create_conversation'
 
@@ -16,7 +17,7 @@ const CreateConversation: FunctionComponent = (props) => {
 
   const queryClient = useQueryClient()
 
-  const mutation = useMutation((newItem: any) => axios.post(PATH, newItem), {
+  const mutation = useMutation((newConversation: NewConversation) => axios.post(PATH, newConversation), {
     onSuccess: () => {
       formRef.current?.reset();
       queryClient.invalidateQueries('conversations');
@@ -38,12 +39,12 @@ const CreateConversation: FunctionComponent = (props) => {
         prompt: rlmPromptElement.value,
         name: "Retreival model",
         type: "retreival-model",
-      } : undefined
+      } : null
       const conversationModel = clmPromptElement?.value ? {
         prompt: clmPromptElement.value,
         name: "Conversation model",
         type: "conversation-model",
-      } : undefined
+      } : null
       mutation.mutate({
         title: titleElement.value,
         retrievalLanguageModel,
