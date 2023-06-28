@@ -51,8 +51,8 @@ export class ConversationalRetrievalQaService {
     question: string,
     conversation: Conversation & {
       ChatHistory: Message[];
-      conversationModel: LanguageModel;
-      retrievalLanguageModel: LanguageModel;
+      conversationModel: LanguageModel | null;
+      retrievalLanguageModel: LanguageModel | null;
     },
     callbacks: Callbacks,
   ) {
@@ -150,9 +150,9 @@ export class ConversationalRetrievalQaService {
         }),
         questionGeneratorChainOptions: {
           llm: retrievalModel,
-          template: conversation.retrievalLanguageModel.prompt,
+          template: conversation.retrievalLanguageModel?.prompt,
         },
-        conversationTemplate: conversation.conversationModel.prompt,
+        conversationTemplate: conversation.conversationModel?.prompt,
       },
     );
     const chainValues = await chain.call({
