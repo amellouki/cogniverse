@@ -1,14 +1,14 @@
 @mixin light-theme {
   color-scheme: light;
   // main colors
-  --amber: #ffbe0b;
-  --amber-rgb: 255, 190, 11;
-  --amber-light: #FFD970;
+  --azure: #3A86FF;
+  --azure-rgb: 58, 134, 255;
+  --azure-light: #7fadfc;
   --amber-dark: #CC9600;
   --orange-panton: #FB5607;
   --rose: #FF006E;
   --blue-violet: #8338EC;
-  --azure: #3A86FF;
+  --amber: #ffbe0b;
 
   // blocks
   --primary-background: #fff;
@@ -23,9 +23,9 @@
   --text-input-hint: var(gray);
 
   // buttons
-  --primary-button-background: var(--amber);
+  --primary-button-background: var(--azure);
   --primary-button-foreground: var(--inverse-foregraound);
-  --primary-button-hover-background: var(--amber-light);
+  --primary-button-hover-background: var(--azure-light);
   --primary-button-focus-outline: var(--amber-dark);
   --secondary-button-background: #fb5607;
   --secondary-button-foreground: var(--inverse-foregraound);

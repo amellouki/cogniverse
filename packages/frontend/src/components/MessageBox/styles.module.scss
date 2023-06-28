@@ -11,8 +11,8 @@ $border-radius: 1rem;
 .messageBox.bubble {
   border: 1px solid;
   border-radius: $border-radius;
-  border-color: var(--amber);
-  background: rgba(var(--amber-rgb), 0.1);
+  border-color: var(--azure);
+  background: rgba(var(--azure-rgb), 0.1);
   backdrop-filter: blur(2.5px);
 }
 
@@ -33,7 +33,7 @@ $border-radius: 1rem;
   width: 2rem;
   height: 2rem;
   border-radius: 100%;
-  background-color: var(--amber);
+  background-color: var(--azure);
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
