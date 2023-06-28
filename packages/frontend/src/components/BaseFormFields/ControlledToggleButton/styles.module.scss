@@ -10,6 +10,7 @@
   > span {
     flex: 1;
     transition: font-weight 0.2s ease-in-out;
+    text-align: center;
   }
 
   > span:first-child {
@@ -18,7 +19,6 @@
 
   > span:last-child {
     font-weight: normal;
-    text-align: right;
   }
 }
 
