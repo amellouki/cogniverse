@@ -37,8 +37,8 @@ const CreateConversation: FunctionComponent = (props) => {
       const clmPromptElement = form.elements.namedItem('clm-prompt') as HTMLInputElement;
       const retrievalLanguageModel = rlmPromptElement?.value ? {
         prompt: rlmPromptElement.value,
-        name: "Retreival model",
-        type: "retreival-model",
+        name: "Retrieval model",
+        type: "retrieval-model",
       } : null
       const conversationModel = clmPromptElement?.value ? {
         prompt: clmPromptElement.value,
