@@ -1,0 +1,68 @@
+.ControlledToggleButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  > span, .wrapper {
+    display: block;
+  }
+
+  > span {
+    flex: 1;
+    transition: font-weight 0.2s ease-in-out;
+  }
+
+  > span:first-child {
+    font-weight: bold;
+  }
+
+  > span:last-child {
+    font-weight: normal;
+    text-align: right;
+  }
+}
+
+.wrapper {
+  justify-self: center;
+  width: 4rem;
+  height: 2rem;
+  background-color: var(--accent-background);
+  position: relative;
+  border-radius: 2rem;
+
+}
+
+.ControlledToggleButton.pressed .wrapper::after {
+  left: 2rem;
+}
+
+.ControlledToggleButton.pressed {
+  > span:first-child {
+    font-weight: normal;
+  }
+  > span:last-child {
+    font-weight: bold;
+  }
+}
+
+.wrapper::after {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--primary-foreground);
+  border-radius: 50%;
+  transition: left 0.2s ease-in-out, right 0.2s ease-in-out;
+}
+
+.wrapper input {
+  color: transparent;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}

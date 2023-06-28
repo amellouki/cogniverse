@@ -1,4 +1,4 @@
-@import "src/styles/background-patterns";
+@import '../../styles/background-patterns';
 
 .container {
   display: grid;
@@ -19,12 +19,11 @@
   }
 
   > aside, > main {
-    padding: 1rem 1rem 1rem 0;
+    padding: 1rem;
   }
 
   > aside {
     grid-area: aside;
-    padding-left: 1rem;
     @include background-pattern-2(var(--secondary-background), var(--primary-background));
   }
 
@@ -36,5 +35,5 @@
 .contentWrapper {
   padding: 1.5rem;
   width: 100%;
-  @include background-pattern-2(var(--secondary-background), var(--primary-background));
+  @include background-pattern-1(var(--secondary-background), var(--primary-background));
 }

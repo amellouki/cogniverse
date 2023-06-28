@@ -1,12 +1,10 @@
 import React, {ChangeEventHandler} from "react";
 import styles from './styles.module.scss'
 
-type TextInputProps = {
+type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   id: string;
   value?: string;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
   error?: string;
-  className?: string;
 };
 
 const TextInput = (props: TextInputProps) => {

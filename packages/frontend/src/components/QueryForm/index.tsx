@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import TextInput from '@/components/TextInput'
+import TextInput from '../BaseFormFields/TextInput'
 import Button from '@/components/Button'
 import styles from './styles.module.scss'
 import clsx from "clsx";
