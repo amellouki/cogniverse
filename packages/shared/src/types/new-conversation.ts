@@ -1,23 +1,13 @@
-import { Prisma } from '@prisma/client';
+type LanguageModel = {
+  name: string
+  type: string
+  prompt: string
+}
 
-const languageModel = Prisma.validator<Prisma.LanguageModelArgs>()({
-  select: {
-    name: true,
-    type: true,
-    prompt: true,
-  },
-});
-
-const conversationWithModels = Prisma.validator<Prisma.ConversationArgs>()({
-  select: {
-    retrievalLanguageModel: languageModel,
-    conversationModel: languageModel,
-    title: true,
-  },
-});
-
-type NewConversation = Prisma.ConversationGetPayload<
-  typeof conversationWithModels
->;
+type NewConversation = {
+  title: string
+  retrievalLanguageModel?: LanguageModel
+  conversationModel?: LanguageModel
+}
 
 export default NewConversation;

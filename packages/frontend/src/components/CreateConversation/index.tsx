@@ -39,12 +39,12 @@ const CreateConversation: FunctionComponent = (props) => {
         prompt: rlmPromptElement.value,
         name: "Retrieval model",
         type: "retrieval-model",
-      } : null
+      } : undefined
       const conversationModel = clmPromptElement?.value ? {
         prompt: clmPromptElement.value,
         name: "Conversation model",
         type: "conversation-model",
-      } : null
+      } : undefined
       mutation.mutate({
         title: titleElement.value,
         retrievalLanguageModel,
