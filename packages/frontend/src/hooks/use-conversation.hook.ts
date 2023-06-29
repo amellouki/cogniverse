@@ -22,11 +22,11 @@ const useConversation = (
       // console.log('data', data)
       if (data.type === 'token' && tokenMessage.type === 'response-token') {
         setResponse((prev) => {
-          const newResponse = {
+          if (!prev) return tokenMessage
+          return {
             ...tokenMessage,
-            content: prev?.content + tokenMessage.content
+            content: prev.content + tokenMessage.content
           }
-          return newResponse
         })
       }
       if (data.type === 'retrieval') {
