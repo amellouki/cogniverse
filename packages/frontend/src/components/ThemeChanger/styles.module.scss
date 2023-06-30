@@ -1,4 +1,25 @@
 .ThemeChanger {
   display: flex;
   gap: 0.5rem;
+  border: 1px solid var(--primary-foreground);
+  padding: 0.25rem;
+  border-radius: 1rem;
+}
+
+.selected {
+  background-color: var(--primary-foreground);
+  color: var(--primary-background);
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.iconButton:hover {
+  border: 1px solid var(--primary-foreground);
 }

@@ -1,33 +1,15 @@
 import React, {FunctionComponent, useCallback, useEffect, useRef, useState} from 'react';
 import clsx from "clsx";
 import styles from "./styles.module.scss";
-
-const Themes = [
-  'dark',
-  'light'
-] as const
-
-const ThemePreferences = [
-  ...Themes,
-  'system'
-] as const
-
-const themeToIconMap = new Map([
-  ['dark', '🌙'],
-  ['light', '☀️'],
-  ['system', '🌓']
-])
-
-type ThemeType = typeof Themes[number]
-
-type ThemePreferenceType = typeof ThemePreferences[number];
+import {ThemePreferences, ThemePreferenceType, ThemeType} from "@/components/ThemeChanger/types";
+import {activeThemeToIconMap, themeToIconMap} from "@/components/ThemeChanger/iconMap";
 
 const ThemeChanger: FunctionComponent = (props) => {
   const [themePreference, setThemePreference] = useState<ThemePreferenceType>('system')
   const colorSchemeQueryList = useRef<MediaQueryList>()
   const prefersColorSchemeHandler = useRef<(e: MediaQueryListEvent) => void>()
 
-  const appendHandler =  useCallback(() => {
+  const appendHandler = useCallback(() => {
     prefersColorSchemeHandler.current = (e: MediaQueryListEvent) => {
       setThemeDOM(e.matches ? 'dark' : 'light')
     }
@@ -71,9 +53,13 @@ const ThemeChanger: FunctionComponent = (props) => {
           onClick={() => updateTheme(preference)}
           aria-label={`Change theme to ${preference}`}
           aria-pressed={preference === themePreference}
-          className={clsx(preference === themePreference && 'active')}
+          className={clsx(styles.iconButton, preference === themePreference && styles.selected)}
           key={preference}>
-          {themeToIconMap.get(preference)}
+          {
+            preference === themePreference
+              ? activeThemeToIconMap.get(preference)
+              : themeToIconMap.get(preference)
+          }
         </button>
       ))}
     </div>
