@@ -29,6 +29,7 @@ $border-radius: 1rem;
 .idea {
   padding-bottom: 1.5rem;
   align-items: baseline;
+  flex-wrap: wrap;
 
   transition: display 300ms ease-in;
 }

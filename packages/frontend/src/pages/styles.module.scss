@@ -3,6 +3,7 @@
 
 .mainContentClassName {
   display: grid;
+  max-width: 1000px;
   grid-template-columns: 1fr;
   grid-template-rows: auto 50px;
 }

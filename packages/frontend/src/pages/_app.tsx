@@ -10,7 +10,6 @@ const outfit = Outfit({ subsets: ['latin'] });
 const queryClient = new QueryClient();
 
 export default function App({Component, pageProps}: AppProps) {
-  debugger;
   return (
     <QueryClientProvider client={queryClient}>
       <>

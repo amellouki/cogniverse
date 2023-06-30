@@ -25,8 +25,10 @@ const Layout: FC<PropsWithChildren<Props>> = ({className, mainContentClassName, 
       <aside>
         <ConversationsList/>
       </aside>
-      <main className={clsx(styles.contentWrapper, mainContentClassName)}>
-        {children}
+      <main className={clsx(styles.contentWrapper)}>
+        <div className={mainContentClassName}>
+          {children}
+        </div>
       </main>
     </div>
   )

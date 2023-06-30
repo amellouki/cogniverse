@@ -3,11 +3,12 @@
 .container {
   display: grid;
   height: 100vh;
-  grid-template-columns: 300px auto;
-    grid-template-rows: 100px calc(100vh - 100px);
-  grid-template-areas: "header header"
-                       "aside main";
-  grid-gap: 0 1rem;
+  grid-template-columns: 300px 1fr auto;
+
+  grid-template-rows: 80px calc(100vh - 80px - 2rem);
+  grid-template-areas: "header header header"
+                       "aside main .";
+  grid-gap: 1rem 1rem;
 
   > header {
     grid-area: header;
@@ -20,17 +21,22 @@
 
   > aside, > main {
     padding: 1rem;
+    border-radius: 2rem;
   }
 
   > aside {
     grid-area: aside;
-    @include background-pattern-2(var(--secondary-background), var(--primary-background));
+    @include background-pattern-1(var(--secondary-background), var(--primary-background));
 
     overflow: scroll;
+    margin-left: 1rem;
   }
 
   > main {
     grid-area: main;
+    display: grid;
+    grid-template-rows: 100%;
+    justify-content: center;
   }
 }
 
