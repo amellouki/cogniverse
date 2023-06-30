@@ -4,16 +4,15 @@ import clsx from "clsx";
 import ConversationsList from "@/components/ConversationsList";
 import UploadPDF from "@/components/UploadPDF";
 import ThemeChanger from "@/components/ThemeChanger";
-import IconButton from "@/components/Button/IconButton";
 import GithubIcon from "@/components/icons/Github.icon";
 import LinkIconButton from "@/components/Button/IconButton/LinkIconButton";
 
-type ScaffoldingProps = {
+type Props = {
   className?: string
   mainContentClassName?: string
 }
 
-const Scaffolding: FC<PropsWithChildren<ScaffoldingProps>> = ({className, mainContentClassName, children}) => {
+const Layout: FC<PropsWithChildren<Props>> = ({className, mainContentClassName, children}) => {
   return (
     <div id="root" className={clsx(styles.container, className)}>
       <header>
@@ -33,4 +32,4 @@ const Scaffolding: FC<PropsWithChildren<ScaffoldingProps>> = ({className, mainCo
   )
 }
 
-export default Scaffolding
+export default Layout

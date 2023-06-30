@@ -1,5 +1,4 @@
 import React from "react";
-import Layout from "../../components/Layout";
 import QueryForm from "@/components/QueryForm";
 import DebugDocs from "@/components/DebugDocs";
 import ChatThread from "@/components/ChatThread";
@@ -32,7 +31,7 @@ const Conversation: React.FC = () => {
   );
 
   return (
-    <Layout className={styles.chat} mainContentClassName={styles.mainContentClassName}>
+    <>
       <ChatThread chatHistory={history} response={response}/>
       <QueryForm className={styles.queryForm} onSubmit={(question: string) => {
         if (!data) {
@@ -48,7 +47,7 @@ const Conversation: React.FC = () => {
         sendQuestion(data.id, question);
       }}/>
       {resources && <DebugDocs docs={resources}/>}
-    </Layout>
+    </>
   );
 };
 
