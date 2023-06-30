@@ -9,15 +9,16 @@
   border-radius: 0.5rem;
   border-width: 1px;
   border-color: var(--primary-border);
+  transition: box-shadow 0.2s ease-in, border-color 0.2s ease-in;
+  box-shadow: 0 0 0 0;
 }
 
-.textInput::placeholder,
-.textInput.-ms-input-placeholder,
-.textInput::-ms-input-placeholder {
-  color: var(--text-input-hint)
+.textInput::placeholder {
+  color: var(--text-input-hint);
 }
 
 .textInput:focus {
   outline: none;
+  border-color: var(--primary-button-focus-outline);
   box-shadow: 0 0 0 2px var(--primary-button-focus-outline);
 }

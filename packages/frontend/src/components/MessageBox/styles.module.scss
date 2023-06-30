@@ -3,7 +3,7 @@ $border-radius: 1rem;
 .messageBox {
   display: flex;
   padding: 0.625rem;
-  align-items: baseline;
+  align-items: start;
   width: 100%;
   gap: 0.5rem;
 }
@@ -11,34 +11,33 @@ $border-radius: 1rem;
 .messageBox.bubble {
   border: 1px solid;
   border-radius: $border-radius;
-  border-color: var(--azure);
-  background: rgba(var(--azure-rgb), 0.1);
+  border-color: var(--color-2);
+  background: rgba(var(--color-2-rgb), 0.1);
   backdrop-filter: blur(2.5px);
-}
-
-.messageBox:not(.bubble) {
 }
 
 .messageText {
   display: block;
   font-weight: 400;
   flex: 1 1 0%;
+  padding-top: 0.25rem;
 
   transition: height 300ms ease-in-out;
   box-sizing: border-box;
 }
 
-.sender {
-  text-align: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 100%;
-  background-color: var(--azure);
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  span {
-    display: inline-block;
-    line-height: 2rem;
-  }
+.idea {
+  padding-bottom: 1.5rem;
+  align-items: baseline;
+
+  transition: display 300ms ease-in;
+}
+
+.idea .messageText {
+  padding: 0.25rem 0.75rem;
+  border-radius: 2.5rem;
+  flex: 0 0 auto;
+  background-color: var(--color-2);
+  color: var(--inverse-foregraound);
+  box-shadow: 0.15rem 0.15rem 0 0.15rem var(--color-3);
 }

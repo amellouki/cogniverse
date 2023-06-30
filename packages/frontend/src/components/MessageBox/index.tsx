@@ -3,6 +3,7 @@ import clsx from "clsx";
 import styles from "./styles.module.scss";
 import {Message} from "@/types/ChatThread";
 import NewMessage from '@my-monorepo/shared/dist/new-message';
+import Sender from "@/components/Sender";
 
 export type MessageBoxProps = {
   message: Message | NewMessage;
@@ -16,6 +17,19 @@ const MessageBox: FunctionComponent<MessageBoxProps> = ({
 
   const shouldWrapInBubble = bubble || (message.fromType === "ai" && message.type !== "idea");
 
+  if (message.type === "idea") {
+    return (
+      <div
+        className={clsx(styles.idea, styles.messageBox)}
+      >
+        <div><strong>Searching for: </strong></div>
+        <div className={styles.messageText}>
+          {message.content}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div
       className={clsx(
@@ -24,9 +38,7 @@ const MessageBox: FunctionComponent<MessageBoxProps> = ({
       )}
     >
       <div className="flex-shrink-0">
-        <div className={styles.sender}>
-          <span className="align-middle">{message.fromType}</span>
-        </div>
+        <Sender sender={message.fromType} />
       </div>
       <div className={styles.messageText}>
         {message.content}

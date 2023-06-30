@@ -7,13 +7,20 @@
   font-weight: 500;
   text-align: center;
   border-radius: 0.5rem;
+
+  transition: box-shadow 0.2s ease-in;
 }
 
 .button:hover {
   background-color: var(--primary-button-hover-background);
+  box-shadow: 0 0 0 3px var(--primary-button-focus-outline);
 }
 
 .button:focus {
   outline: none;
+  box-shadow: 0 0 0 2px var(--primary-button-focus-outline);
+}
+
+.button:active {
   box-shadow: 0 0 0 2px var(--primary-button-focus-outline);
 }

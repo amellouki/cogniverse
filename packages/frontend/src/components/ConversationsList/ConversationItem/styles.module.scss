@@ -1,6 +1,31 @@
+@import "../../../styles/background-patterns";
+
 .conversationItem {
-  display: block;
+  display: flex;
   padding: 0.8rem;
   border-radius: 1rem;
   border: 1px solid var(--primary-foreground);
+  align-items: center;
+  gap: 0.5rem;
+
+  transition: box-shadow 0.1s ease-in;
+}
+
+.selected {
+  @include background-pattern-2(var(--primary-inverse-background), var(--secondary-inverse-background));
+  color: var(--primary-background);
+}
+
+.conversationItem:hover {
+  @include background-pattern-2(var(--primary-inverse-background), var(--secondary-inverse-background));
+  color: var(--primary-background);
+
+  box-shadow: 0 0 0 3px var(--primary-button-focus-outline);
+}
+
+.conversationItem > :last-child {
+  // disable wrapping
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

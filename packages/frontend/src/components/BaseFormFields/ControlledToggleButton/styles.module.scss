@@ -26,10 +26,11 @@
   justify-self: center;
   width: 4rem;
   height: 2rem;
-  background-color: var(--accent-background);
+  background-color: var(--disabled-button-background);
   position: relative;
   border-radius: 2rem;
 
+  transition: background-color 0.2s linear;
 }
 
 .ControlledToggleButton.pressed .wrapper::after {
@@ -43,6 +44,9 @@
   > span:last-child {
     font-weight: bold;
   }
+  .wrapper {
+    background-color: var(--primary-button-background);
+  }
 }
 
 .wrapper::after {
@@ -55,7 +59,7 @@
   height: 2rem;
   background-color: var(--primary-foreground);
   border-radius: 50%;
-  transition: left 0.2s ease-in-out, right 0.2s ease-in-out;
+  transition: left 0.2s ease-in-out;
 }
 
 .wrapper input {

@@ -1,32 +1,39 @@
 @mixin light-theme {
   color-scheme: light;
   // main colors
-  --azure: #3A86FF;
-  --azure-rgb: 58, 134, 255;
   --azure-light: #7fadfc;
-  --amber-dark: #CC9600;
   --orange-panton: #FB5607;
   --rose: #FF006E;
   --blue-violet: #8338EC;
   --amber: #ffbe0b;
 
+  --color-1: rgb(43, 43, 75);
+  --color-2-rgb: 248, 94, 70;
+  --color-2: rgb(var(--color-2-rgb));
+  --color-2-light: rgba(var(--color-2-rgb), 0.8);
+  --color-3: rgb(226, 192, 50);
+  --color-4: rgb(249, 124, 174);
+
   // blocks
-  --primary-background: #fff;
-  --secondary-background: #d7d7d7;
+  --primary-background: rgb(255, 248, 233);
+  --secondary-background: #ffffff;
   --inverse-background: #000;
-  --primary-foreground: #000;
+  --primary-foreground: var(--color-1);
   --inverse-foregraound: #000;
+  --primary-inverse-background: rgb(18, 18, 18);
+  --secondary-inverse-background: rgb(32, 29, 29);
+
   --accent-background: #51CBEE;
-  --primary-border: #545454;
+  --primary-border: rgb(190, 186, 176);
 
   // text input
-  --text-input-hint: var(gray);
+  --text-input-hint: var(--primary-border);
 
   // buttons
-  --primary-button-background: var(--azure);
+  --primary-button-background: var(--color-2);
   --primary-button-foreground: var(--inverse-foregraound);
-  --primary-button-hover-background: var(--azure-light);
-  --primary-button-focus-outline: var(--amber-dark);
+  --primary-button-hover-background: var(--color-2-light);
+  --primary-button-focus-outline: var(--color-1);
   --secondary-button-background: #fb5607;
   --secondary-button-foreground: var(--inverse-foregraound);
   --teriary-button-background: #FF006E;
@@ -47,16 +54,32 @@
   --error-button-foreground: var(--inverse-foregraound);
   --warning-button-background: #fff;
   --warning-button-foreground: var(--inverse-foregraound);
-  --disabled-button-background: #fff;
+  --disabled-button-background: rgb(199, 199, 199);
   --disabled-button-foreground: var(--inverse-foregraound);
 }
 
 @mixin dark-theme {
   color-scheme: dark;
-  --primary-background: #1f1f1f;
-  --secondary-background: #000000;
-  --primary-foreground: #fff;
+
+  --color-1: rgb(254, 255, 249);
+  --color-2-rgb: 217, 255, 93;
+  --color-3: rgb(0, 206, 235);
+  --color-4: rgb(255, 82, 29);
+  --color-5: rgb(255, 216, 68);
+
+
+  --primary-background: rgb(18, 18, 18);
+  --secondary-background: rgb(32, 29, 29);
+  --primary-foreground: var(--color-1);
   --accent-background: #575757;
+  --primary-inverse-background: rgb(255, 248, 233);
+  --secondary-inverse-background: #ffffff;
+
+
+  --disabled-button-background: rgb(182, 182, 182);
+  --primary-border: rgb(126, 126, 126);
+
+  --text-input-hint: var(--primary-border);
 }
 
 :root {

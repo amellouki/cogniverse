@@ -25,6 +25,8 @@
   > aside {
     grid-area: aside;
     @include background-pattern-2(var(--secondary-background), var(--primary-background));
+
+    overflow: scroll;
   }
 
   > main {
