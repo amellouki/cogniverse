@@ -1,11 +1,15 @@
 .chat {
 }
 
-.mainContentClassName {
+.main {
+  grid-template-columns: minmax(auto, 1000px);
+}
+
+.contentWrapperClassName {
   display: grid;
-  max-width: 1000px;
-  grid-template-columns: 1fr;
+  grid-template-columns: auto;
   grid-template-rows: auto 50px;
+  justify-content: center;
 }
 
 .queryForm {

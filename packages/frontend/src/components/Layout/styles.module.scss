@@ -14,8 +14,8 @@
     grid-area: header;
     display: flex;
     padding: 1rem;
+    gap: 2rem;
     align-items: center;
-    justify-content: space-between;
     @include background-pattern-2(var(--secondary-background), var(--primary-background));
   }
 
@@ -40,8 +40,12 @@
   }
 }
 
-.contentWrapper {
+.main {
   padding: 1.5rem;
   width: 100%;
   @include background-pattern-1(var(--secondary-background), var(--primary-background));
+}
+
+.spacer {
+  margin-left: auto;
 }

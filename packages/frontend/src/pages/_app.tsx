@@ -18,7 +18,11 @@ export default function App({Component, pageProps}: AppProps) {
             font-family: ${outfit.style.fontFamily};
           }
         `}</style>
-        <Layout className={styles.chat} mainContentClassName={styles.mainContentClassName}>
+        <Layout
+          className={styles.chat}
+          mainClassName={styles.main}
+          contentWrapperClassName={styles.contentWrapperClassName}
+        >
           <Component {...pageProps} />
         </Layout>
       </>

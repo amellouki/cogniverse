@@ -1,17 +1,15 @@
 @mixin light-theme {
   color-scheme: light;
   // main colors
-  --azure-light: #7fadfc;
   --orange-panton: #FB5607;
-  --rose: #FF006E;
   --blue-violet: #8338EC;
-  --amber: #ffbe0b;
-
+  --rose: #FF006E;
+  --black: rgb(43, 43, 75);
   --color-1: rgb(43, 43, 75);
   --color-2-rgb: 248, 94, 70;
   --color-2: rgb(var(--color-2-rgb));
   --color-2-light: rgba(var(--color-2-rgb), 0.8);
-  --color-3: rgb(226, 192, 50);
+  --color-3: var(--blue-violet);
   --color-4: rgb(249, 124, 174);
 
   // blocks

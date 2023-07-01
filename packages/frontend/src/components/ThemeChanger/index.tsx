@@ -2,7 +2,7 @@ import React, {FunctionComponent, useCallback, useEffect, useRef, useState} from
 import clsx from "clsx";
 import styles from "./styles.module.scss";
 import {ThemePreferences, ThemePreferenceType, ThemeType} from "@/components/ThemeChanger/types";
-import {activeThemeToIconMap, themeToIconMap} from "@/components/ThemeChanger/iconMap";
+import {themeToIconMap} from "@/components/ThemeChanger/iconMap";
 
 const ThemeChanger: FunctionComponent = (props) => {
   const [themePreference, setThemePreference] = useState<ThemePreferenceType>('system')
@@ -47,19 +47,16 @@ const ThemeChanger: FunctionComponent = (props) => {
   }, [appendHandler, removeHandler])
   // TODO: Style button group & make it a11ble
   return (
-    <div className={styles.ThemeChanger}>
+    <div className={clsx(styles.ThemeChanger, styles[themePreference])}>
       {ThemePreferences.map((preference) => (
         <button
           onClick={() => updateTheme(preference)}
           aria-label={`Change theme to ${preference}`}
           aria-pressed={preference === themePreference}
           className={clsx(styles.iconButton, preference === themePreference && styles.selected)}
-          key={preference}>
-          {
-            preference === themePreference
-              ? activeThemeToIconMap.get(preference)
-              : themeToIconMap.get(preference)
-          }
+          key={preference}
+        >
+          {themeToIconMap.get(preference)}
         </button>
       ))}
     </div>

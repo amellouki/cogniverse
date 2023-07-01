@@ -6,27 +6,36 @@ import UploadPDF from "@/components/UploadPDF";
 import ThemeChanger from "@/components/ThemeChanger";
 import GithubIcon from "@/components/icons/Github.icon";
 import LinkIconButton from "@/components/Button/IconButton/LinkIconButton";
+import Logo from "@/components/Logo";
 
 type Props = {
   className?: string
-  mainContentClassName?: string
+  mainClassName?: string
+  contentWrapperClassName?: string
 }
 
-const Layout: FC<PropsWithChildren<Props>> = ({className, mainContentClassName, children}) => {
+const Layout: FC<PropsWithChildren<Props>> = ({
+  className,
+  contentWrapperClassName,
+  mainClassName,
+  children
+}) => {
   return (
     <div id="root" className={clsx(styles.container, className)}>
       <header>
+        <Logo/>
         <LinkIconButton href={'https://github.com/amellouki/papegaai'}>
-          <GithubIcon />
+          <GithubIcon/>
         </LinkIconButton>
+        <div className={styles.spacer}/>
         <UploadPDF/>
         <ThemeChanger/>
       </header>
       <aside>
         <ConversationsList/>
       </aside>
-      <main className={clsx(styles.contentWrapper)}>
-        <div className={mainContentClassName}>
+      <main className={clsx(styles.main, mainClassName)}>
+        <div className={contentWrapperClassName}>
           {children}
         </div>
       </main>

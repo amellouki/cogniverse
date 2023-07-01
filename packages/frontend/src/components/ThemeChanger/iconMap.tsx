@@ -13,12 +13,6 @@ const iconDimensions = {
 
 export const themeToIconMap = new Map<string, JSX.Element>([
   ['dark', <MoonIcon key={'icon-dark'} {...iconDimensions} />],
-    ['light', <SunIcon key={'icon-light'} {...iconDimensions} />],
-    ['system', <ComputerDesktopIcon key={'icon-system'} {...iconDimensions} />]
-  ])
-
-export const activeThemeToIconMap = new Map<string, JSX.Element>([
-  ['dark', <SolidMoonIcon key={'icon-dark'} {...iconDimensions} />],
-    ['light', <SolidSunIcon key={'icon-light'} {...iconDimensions} />],
-    ['system', <SolidComputerDesktopIcon key={'icon-system'} {...iconDimensions} />]
-  ])
+  ['light', <SunIcon key={'icon-light'} {...iconDimensions} />],
+  ['system', <ComputerDesktopIcon key={'icon-system'} {...iconDimensions} />]
+])

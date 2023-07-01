@@ -18,7 +18,7 @@ const UploadPDF: FunctionComponent = (props) => {
         />
         <span>
           <span>Upload PDF</span>
-          <DocumentArrowUpIcon width={"1.5rem"} height={"1.5rem"} />
+          <DocumentArrowUpIcon width={24} height={24} />
         </span>
       </label>
     </Button>
