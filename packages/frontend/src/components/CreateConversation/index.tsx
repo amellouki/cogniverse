@@ -1,5 +1,4 @@
 import React, {FunctionComponent} from 'react';
-import styles from './styles.module.scss';
 import Textarea from "@/components/BaseFormFields/Textarea";
 import ControlledToggleButton from "../BaseFormFields/ControlledToggleButton";
 import FormFieldWrapper from "@/components/FormFieldWrapper";
@@ -8,11 +7,12 @@ import Button from "@/components/Button";
 import {useMutation, useQueryClient} from "react-query";
 import axios from "axios";
 import NewConversation from "@my-monorepo/shared/dist/new-conversation";
+import styles from './styles.module.scss';
 
 const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/api/create_conversation'
 
 
-const CreateConversation: FunctionComponent = (props) => {
+const CreateConversation: FunctionComponent = () => {
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const queryClient = useQueryClient()

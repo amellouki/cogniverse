@@ -1,0 +1,15 @@
+.Conversation {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto 50px;
+}
+
+.queryForm {
+  margin-top: auto;
+}
+
+.CreateConversation {
+  //display: grid;
+  display: flex;
+  justify-content: center;
+}

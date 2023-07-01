@@ -21,7 +21,6 @@ export default function App({Component, pageProps}: AppProps) {
         <Layout
           className={styles.chat}
           mainClassName={styles.main}
-          contentWrapperClassName={styles.contentWrapperClassName}
         >
           <Component {...pageProps} />
         </Layout>

@@ -4,10 +4,10 @@ import DebugDocs from "@/components/DebugDocs";
 import ChatThread from "@/components/ChatThread";
 import useChatHistory from "@/hooks/use-chat-history.hook";
 import useConversation from "@/hooks/use-conversation.hook";
-import styles from "../styles.module.scss";
 import {useQuery} from "react-query";
 import {Conversation} from "@/types/ChatThread";
 import {useRouter} from "next/router";
+import styles from "./styles.module.scss";
 
 const Conversation: React.FC = () => {
   const router = useRouter()
@@ -31,7 +31,7 @@ const Conversation: React.FC = () => {
   );
 
   return (
-    <>
+    <div className={styles.Conversation}>
       <ChatThread chatHistory={history} response={response}/>
       <QueryForm className={styles.queryForm} onSubmit={(question: string) => {
         if (!data) {
@@ -47,7 +47,7 @@ const Conversation: React.FC = () => {
         sendQuestion(data.id, question);
       }}/>
       {resources && <DebugDocs docs={resources}/>}
-    </>
+    </div>
   );
 };
 

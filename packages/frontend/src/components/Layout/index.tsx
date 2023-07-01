@@ -11,12 +11,10 @@ import Logo from "@/components/Logo";
 type Props = {
   className?: string
   mainClassName?: string
-  contentWrapperClassName?: string
 }
 
 const Layout: FC<PropsWithChildren<Props>> = ({
   className,
-  contentWrapperClassName,
   mainClassName,
   children
 }) => {
@@ -35,9 +33,7 @@ const Layout: FC<PropsWithChildren<Props>> = ({
         <ConversationsList/>
       </aside>
       <main className={clsx(styles.main, mainClassName)}>
-        <div className={contentWrapperClassName}>
-          {children}
-        </div>
+        {children}
       </main>
     </div>
   )
