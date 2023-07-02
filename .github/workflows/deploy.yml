@@ -1,48 +1,40 @@
+name: Push images to Dockerhub and deploy on Elastic Beanstalk
 on:
   push:
     branches:
       - master
 jobs:
-  build_and_deploy:
+  build_docker_images:
+    name: build docker images
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: checkout
         uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Docker Login
+        uses: docker/login-action@v1.8.0
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: your-ecr-repo-name
-          IMAGE_TAG: ${{ github.sha }}
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+          logout: true
+      - name: Build Server image
+        run: docker build -t abdoumell/papegaai -f
+          ./Server/Dockerfile ./Server
+      - name: Tag our Image
+        run: docker tag abdoumell/papegaai
+          abdoumell/papegaai:latest
+      - name: Push to dockerhub
+        run: docker push abdoumell/papegaai
+      - name: Prepare Beanstalk Deployment Package
         run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to EB
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          
-          - name: Deploy to EB
-          uses: aws-actions/elastic-beanstalk-deploy@v1
-          with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application-name: papegaai
-          environment-name: Papegaai-web-app
-          version-label: ${{ github.run_id }}
-          region: 'us-west-2'
-          source-bundle: ${{ steps.build-image.outputs.image }}
-
+          echo 'Creating deployment package...'
+          zip -r deploy.zip Dockerfile Dockerrun.aws.json .ebextensions
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v14
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: papegaai
+          environment_name: Papegaai-web-app
+          version_label: ${{ github.sha }}
+          region: eu-west-3
+          deployment_package: deploy.zip
