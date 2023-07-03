@@ -47,7 +47,7 @@ jobs:
           sed -i -e "s|<CONTAINER_PORT>|$CONTAINER_PORT|g" Dockerrun.aws.json
           sed -i -e "s|<HOST_PORT>|$HOST_PORT|g" Dockerrun.aws.json
           echo 'Creating deployment package...'
-          zip -r deploy.zip Dockerrun.aws.json
+          zip -r deploy-backend.zip Dockerrun.aws.json
         env:
           SHA: ${{ github.sha }}
           CONTAINER_PORT: 3001
@@ -72,7 +72,7 @@ jobs:
           environment_name: Papegaai-temp-backend
           version_label: ${{ steps.get_backend_label.outputs.label }}
           region: eu-west-3
-          deployment_package: deploy.zip
+          deployment_package: deploy-backend.zip
 
       - name: Build Docker Frontend Image
         run: docker build -t abdoumell/papegaai-frontend -f
@@ -90,7 +90,7 @@ jobs:
           sed -i -e "s|<CONTAINER_PORT>|$CONTAINER_PORT|g" Dockerrun.aws.json
           sed -i -e "s|<HOST_PORT>|$HOST_PORT|g" Dockerrun.aws.json
           echo 'Creating deployment package...'
-          zip -r deploy.zip Dockerrun.aws.json
+          zip -r deploy-frontend.zip Dockerrun.aws.json
         env:
           SHA: ${{ github.sha }}
           CONTAINER_PORT: 3000
@@ -111,4 +111,4 @@ jobs:
           environment_name: Papegaai-temp-frontend
           version_label: ${{ steps.get_frontend_label.outputs.label }}
           region: eu-west-3
-          deployment_package: deploy.zip
+          deployment_package: deploy-frontend.zip
