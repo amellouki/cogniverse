@@ -60,7 +60,7 @@ jobs:
       - name: Get Elastic Beanstalk Label
         shell: bash
         run: echo "##[set-output name=label;]$(echo papegaai-backend-${TIMESTAMP})"
-        id: get_label
+        id: get_backend_label
         env:
           TIMESTAMP: ${{ steps.get_timestamp.outputs.timestamp }}
       - name: Deploy to EB
@@ -70,7 +70,7 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: papegaai
           environment_name: Papegaai-env
-          version_label: ${{ steps.get_label.outputs.label }}
+          version_label: ${{ steps.get_backend_label.outputs.label }}
           region: eu-west-3
           deployment_package: deploy.zip
 
@@ -99,6 +99,6 @@ jobs:
       - name: Get Elastic Beanstalk Label
         shell: bash
         run: echo "##[set-output name=label;]$(echo papegaai-frontend-${TIMESTAMP})"
-        id: get_label
+        id: get_frontend_label
         env:
           TIMESTAMP: ${{ steps.get_timestamp.outputs.timestamp }}
