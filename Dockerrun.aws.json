@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "abdoumell/papegaai:latest",
+    "Name": "abdoumell/papegaai:<TAG>",
     "Update": "true"
   },
   "Ports": [
