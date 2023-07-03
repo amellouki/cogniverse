@@ -13,6 +13,5 @@
       "ContainerPort": "3001",
       "HostPort": "3501"
     }
-  ],
-  "Logging": "/var/log/nginx"
+  ]
 }
