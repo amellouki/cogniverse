@@ -26,7 +26,7 @@ EXPOSE 3000
 
 EXPOSE 3001
 
-FROM node:18.5.0
+FROM node:18.16.0
 
 WORKDIR /app
 
