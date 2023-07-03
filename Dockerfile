@@ -45,9 +45,6 @@ COPY --from=build /app/packages/backend/prisma /app/packages/backend/prisma
 # Copy .env configs
 COPY --from=build /app/packages/backend/.env* /app/packages/backend/
 
-# Copy nginx.conf file
-COPY --from=build /app/nginx.conf /etc/nginx/nginx.conf
-
 # Install production dependencies for backend and frontend
 RUN npm ci --omit=dev
 
@@ -58,10 +55,16 @@ RUN npm install -g @nestjs/cli
 RUN npm run prisma:migrate
 RUN npm run prisma:generate
 
+# Set non-interactive mode for apt-get
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Install Nginx
 RUN apt-get update && apt-get install -y nginx
 
-# Expose port 80 for Nginx
+# Copy nginx.conf file
+COPY --from=build /app/nginx.conf /etc/nginx/nginx.conf
+
+# Expose port 5000 for Nginx
 EXPOSE 5000
 
 CMD service nginx start && ./start-builds.sh
