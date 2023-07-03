@@ -18,7 +18,7 @@ jobs:
           logout: true
       - name: Build Server image
         run: docker build -t abdoumell/papegaai -f
-          ./Server/Dockerfile ./Server
+          ./Dockerfile .
       - name: Tag our Image
         run: docker tag abdoumell/papegaai
           abdoumell/papegaai:latest
