@@ -23,9 +23,6 @@ FROM node:18.16.0
 
 WORKDIR /app
 
-COPY --from=build /app/scripts/start-builds.sh .
-RUN chmod +x start-builds.sh
-
 # Copy build folders
 COPY --from=build /app/packages/frontend/.next /app/packages/frontend/.next
 
