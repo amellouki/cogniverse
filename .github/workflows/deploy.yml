@@ -93,7 +93,7 @@ jobs:
           zip -r deploy.zip Dockerrun.aws.json
         env:
           SHA: ${{ github.sha }}
-          CONTAINER_PORT: 3001
+          CONTAINER_PORT: 3000
           HOST_PORT: 5000
           APP: frontend
       - name: Get Elastic Beanstalk Label
