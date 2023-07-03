@@ -43,7 +43,7 @@ jobs:
         run: |
           echo 'Replacing TAG in Dockerrun.aws.json...'
           sed -i -e "s|<TAG>|$SHA|g" Dockerrun.aws.json
-          sed -i -e "s|<WEB_APP>|$WEB_APP|g" Dockerrun.aws.json
+          sed -i -e "s|<APP>|$APP|g" Dockerrun.aws.json
           sed -i -e "s|<CONTAINER_PORT>|$CONTAINER_PORT|g" Dockerrun.aws.json
           sed -i -e "s|<HOST_PORT>|$HOST_PORT|g" Dockerrun.aws.json
           echo 'Creating deployment package...'
@@ -52,7 +52,7 @@ jobs:
           SHA: ${{ github.sha }}
           CONTAINER_PORT: 3001
           HOST_PORT: 5000
-          WEB_APP: backend
+          APP: backend
       - name: Get Timestamp
         shell: bash
         run: echo "##[set-output name=timestamp;]$(date '+%Y%m%d%H%M%S')"
@@ -86,7 +86,7 @@ jobs:
         run: |
           echo 'Replacing TAG in Dockerrun.aws.json...'
           sed -i -e "s|<TAG>|$SHA|g" Dockerrun.aws.json
-          sed -i -e "s|<WEB_APP>|$WEB_APP|g" Dockerrun.aws.json
+          sed -i -e "s|<APP>|$APP|g" Dockerrun.aws.json
           sed -i -e "s|<CONTAINER_PORT>|$CONTAINER_PORT|g" Dockerrun.aws.json
           sed -i -e "s|<HOST_PORT>|$HOST_PORT|g" Dockerrun.aws.json
           echo 'Creating deployment package...'
@@ -95,7 +95,7 @@ jobs:
           SHA: ${{ github.sha }}
           CONTAINER_PORT: 3001
           HOST_PORT: 5000
-          WEB_APP: frontend
+          APP: frontend
       - name: Get Elastic Beanstalk Label
         shell: bash
         run: echo "##[set-output name=label;]$(echo papegaai-frontend-${TIMESTAMP})"
