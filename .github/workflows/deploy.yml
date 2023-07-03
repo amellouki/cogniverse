@@ -42,7 +42,7 @@ jobs:
       - name: Prepare Beanstalk Deployment Package
         run: |
           echo 'Replacing TAG in Dockerrun.aws.json...'
-          sed -i "s/<TAG>/$SHA/g" Dockerrun.aws.json
+          sed -i -e "s|<TAG>|$SHA|g" Dockerrun.aws.json
           echo 'Creating deployment package...'
           zip -r deploy.zip Dockerrun.aws.json .ebextensions
         env:
