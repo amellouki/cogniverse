@@ -44,7 +44,7 @@ jobs:
           echo 'Replacing TAG in Dockerrun.aws.json...'
           sed -i -e "s|<TAG>|$SHA|g" Dockerrun.aws.json
           echo 'Creating deployment package...'
-          zip -r deploy.zip Dockerrun.aws.json .ebextensions
+          zip -r deploy.zip Dockerrun.aws.json .platform
         env:
           SHA: ${{ github.sha }}
       - name: Get Timestamp
