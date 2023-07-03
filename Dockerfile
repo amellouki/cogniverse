@@ -9,6 +9,8 @@ COPY packages/backend/package*.json ./packages/backend/
 COPY packages/frontend/package*.json ./packages/frontend/
 COPY packages/shared/package*.json ./packages/shared/
 
+COPY /app/proxy.conf.json /app/proxy.conf.json
+
 RUN npm install
 
 COPY . .
@@ -21,10 +23,6 @@ RUN npm run shared:build
 RUN npm run backend:build
 
 RUN npm run frontend:build
-
-EXPOSE 3000
-
-EXPOSE 3001
 
 FROM node:18.16.0
 
