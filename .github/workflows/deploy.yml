@@ -77,10 +77,10 @@ jobs:
       - name: Build Docker Frontend Image
         run: docker build -t abdoumell/papegaai-frontend -f
           ./frontend.Dockerfile .
-      - name: Tag Our Image
+      - name: Tag Our Frontend Image
         run: docker tag abdoumell/papegaai-frontend
           abdoumell/papegaai-frontend:${{ github.sha }}
-      - name: Push to DockerHub
+      - name: Push Frontend to DockerHub
         run: docker push abdoumell/papegaai-frontend:${{ github.sha }}
       - name: Prepare Beanstalk Deployment Package
         run: |
@@ -102,3 +102,13 @@ jobs:
         id: get_frontend_label
         env:
           TIMESTAMP: ${{ steps.get_timestamp.outputs.timestamp }}
+      - name: Deploy Frontend to EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: papegaai
+          environment_name: Papegaai-frontend
+          version_label: ${{ steps.get_frontend_label.outputs.label }}
+          region: eu-west-3
+          deployment_package: deploy.zip
