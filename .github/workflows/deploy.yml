@@ -96,10 +96,6 @@ jobs:
           CONTAINER_PORT: 3001
           HOST_PORT: 5000
           WEB_APP: frontend
-      - name: Get Timestamp
-        shell: bash
-        run: echo "##[set-output name=timestamp;]$(date '+%Y%m%d%H%M%S')"
-        id: get_timestamp
       - name: Get Elastic Beanstalk Label
         shell: bash
         run: echo "##[set-output name=label;]$(echo papegaai-frontend-${TIMESTAMP})"
