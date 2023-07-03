@@ -6,10 +6,7 @@ RUN npm install -g @nestjs/cli
 
 COPY package*.json ./
 COPY packages/backend/package*.json ./packages/backend/
-COPY packages/frontend/package*.json ./packages/frontend/
 COPY packages/shared/package*.json ./packages/shared/
-
-COPY nginx.conf ./nginx.conf
 
 RUN npm install
 
@@ -22,8 +19,6 @@ RUN npm run shared:build
 
 RUN npm run backend:build
 
-RUN npm run frontend:build
-
 FROM node:18.16.0
 
 WORKDIR /app
@@ -33,19 +28,17 @@ RUN chmod +x start-builds.sh
 
 # Copy build folders
 COPY --from=build /app/packages/backend/dist /app/packages/backend/dist
-COPY --from=build /app/packages/frontend/.next /app/packages/frontend/.next
 
 # Copy package.json and package-lock.json files
 COPY --from=build /app/package*.json /app/
 COPY --from=build /app/packages/backend/package*.json /app/packages/backend/
-COPY --from=build /app/packages/frontend/package*.json /app/packages/frontend/
 
 COPY --from=build /app/packages/backend/prisma /app/packages/backend/prisma
 
 # Copy .env configs
 COPY --from=build /app/packages/backend/.env* /app/packages/backend/
 
-# Install production dependencies for backend and frontend
+# Install production dependencies for backend
 RUN npm ci --omit=dev
 
 # Install nestjs globally
@@ -55,17 +48,8 @@ RUN npm install -g @nestjs/cli
 RUN npm run prisma:migrate
 RUN npm run prisma:generate
 
-# Set non-interactive mode for apt-get
-ENV DEBIAN_FRONTEND=noninteractive
+# Export port
+EXPOSE 3001
 
-# Install Nginx
-RUN apt-get update && apt-get install -y nginx
-
-# Copy nginx.conf file
-COPY --from=build /app/nginx.conf /etc/nginx/nginx.conf
-
-# Expose port 5000 for Nginx
-EXPOSE 5000
-
-CMD service nginx start && ./start-builds.sh
+CMD ["npm", "run", "start:backend:prod"]
 

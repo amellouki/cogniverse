@@ -1,13 +1,13 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "abdoumell/papegaai:<TAG>",
+    "Name": "abdoumell/papegaai-<APP>:<TAG>",
     "Update": "true"
   },
   "Ports": [
     {
-      "ContainerPort": "5000",
-      "HostPort": "5000"
+      "ContainerPort": "<CONTAINER_PORT>",
+      "HostPort": "<HOST_PORT>"
     }
   ]
 }
