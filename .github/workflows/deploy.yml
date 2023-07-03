@@ -2,7 +2,7 @@ name: Push images to Dockerhub and deploy on Elastic Beanstalk
 on:
   push:
     branches:
-      - master
+      - github-actions
 jobs:
   build_docker_images:
     name: Set up Environment Variables & Build Docker Image
