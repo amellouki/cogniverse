@@ -43,13 +43,23 @@ jobs:
         run: |
           echo 'Creating deployment package...'
           zip -r deploy.zip Dockerfile Dockerrun.aws.json .ebextensions
+      - name: Get timestamp
+        shell: bash
+        run: echo "##[set-output name=timestamp;]$(date '+%Y%m%d%H%M%S')"
+        id: get_timestamp
+      - name: Get Elastic Beanstalk label
+        shell: bash
+        run: echo "##[set-output name=label;]$(echo papegaai-latest-${TIMESTAMP})"
+        id: get_label
+        env:
+          TIMESTAMP: ${{ steps.get_timestamp.outputs.timestamp }}
       - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v14
+        uses: einaregilsson/beanstalk-deploy@v21
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: papegaai
           environment_name: Papegaai-web-app
-          version_label: ${{ github.sha }}
+          version_label: ${{ steps.get_label.outputs.label }}
           region: eu-west-3
           deployment_package: deploy.zip
