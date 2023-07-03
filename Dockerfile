@@ -3,6 +3,7 @@ FROM node:18.5.0 as build
 WORKDIR /app
 
 RUN npm install -g @nestjs/cli
+RUN npm install -g next@13.2.4
 RUN npm install -g typescript
 
 COPY package*.json ./
