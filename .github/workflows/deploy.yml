@@ -42,7 +42,7 @@ jobs:
       - name: Prepare Beanstalk Deployment Package
         run: |
           echo 'Creating deployment package...'
-          zip -r deploy.zip Dockerfile Dockerrun.aws.json .ebextensions
+          zip -r deploy.zip Dockerrun.aws.json .ebextensions
       - name: Get timestamp
         shell: bash
         run: echo "##[set-output name=timestamp;]$(date '+%Y%m%d%H%M%S')"
