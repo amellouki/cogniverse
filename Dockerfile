@@ -57,9 +57,14 @@ RUN npm install -g @nestjs/cli
 RUN npm run prisma:migrate
 RUN npm run prisma:generate
 
-# Expose ports
-EXPOSE 3000
-EXPOSE 3001
+# Copy nginx.conf file
+COPY --from=build /app/nginx.conf /etc/nginx/nginx.conf
 
-CMD ["./start-builds.sh"]
+# Install Nginx
+RUN apt-get update && apt-get install -y nginx
+
+# Expose port 80 for Nginx
+EXPOSE 5000
+
+CMD service nginx start && ./start-builds.sh
 
