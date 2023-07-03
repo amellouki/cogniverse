@@ -64,8 +64,8 @@ RUN apt-get update && apt-get install -y nginx
 # Copy nginx.conf file
 COPY --from=build /app/nginx.conf /etc/nginx/nginx.conf
 
-# Expose port 5000 for Nginx
-EXPOSE 5000
+# Expose port 80 for Nginx
+EXPOSE 80
 
 CMD service nginx start && ./start-builds.sh
 
