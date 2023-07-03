@@ -30,7 +30,7 @@ COPY --from=build /app/packages/frontend/.next /app/packages/frontend/.next
 # Copy package.json and package-lock.json files
 COPY --from=build /app/package*.json /app/
 COPY --from=build /app/packages/frontend/package*.json /app/packages/frontend/
-
+COPY --from=build /app/packages/backend/package*.json /app/packages/backend/
 
 COPY --from=build /app/packages/backend/prisma /app/packages/backend/prisma
 
