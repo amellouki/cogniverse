@@ -38,7 +38,7 @@ jobs:
         run: docker tag abdoumell/papegaai
           abdoumell/papegaai:${{ github.sha }}
       - name: Push to DockerHub
-        run: docker push abdoumell/papegaai
+        run: docker push abdoumell/papegaai:${{ github.sha }}
       - name: Prepare Beanstalk Deployment Package
         run: |
           echo 'Replacing TAG in Dockerrun.aws.json...'
