@@ -9,7 +9,7 @@ COPY packages/backend/package*.json ./packages/backend/
 COPY packages/frontend/package*.json ./packages/frontend/
 COPY packages/shared/package*.json ./packages/shared/
 
-COPY /app/proxy.conf.json /app/proxy.conf.json
+COPY /app/proxy.conf /app/proxy.conf
 
 RUN npm install
 
