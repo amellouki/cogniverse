@@ -51,7 +51,7 @@ jobs:
         env:
           SHA: ${{ github.sha }}
           CONTAINER_PORT: 3001
-          HOST_PORT: 3001
+          HOST_PORT: 3000
           APP: backend
       - name: Get Timestamp
         shell: bash
@@ -68,8 +68,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: papegaai
-          environment_name: Papegaai-backend
+          application_name: Papegaai-temp
+          environment_name: Papegaai-temp-backend
           version_label: ${{ steps.get_backend_label.outputs.label }}
           region: eu-west-3
           deployment_package: deploy.zip
@@ -107,8 +107,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: papegaai
-          environment_name: Papegaai-frontend
+          application_name: Papegaai-temp
+          environment_name: Papegaai-temp-frontend
           version_label: ${{ steps.get_frontend_label.outputs.label }}
           region: eu-west-3
           deployment_package: deploy.zip
