@@ -1,12 +1,13 @@
-FROM node:18.5.0 as build
+FROM node:18.16.0 as build
 
 WORKDIR /app
 
 RUN npm install -g @nestjs/cli
-RUN npm install -g next@13.2.4
-RUN npm install -g typescript
 
 COPY package*.json ./
+COPY packages/backend/package*.json ./packages/backend/
+COPY packages/frontend/package*.json ./packages/frontend/
+COPY packages/shared/package*.json ./packages/shared/
 
 RUN npm install
 
