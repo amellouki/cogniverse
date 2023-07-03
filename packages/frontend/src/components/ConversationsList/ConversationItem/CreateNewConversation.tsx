@@ -12,7 +12,7 @@ const CreateNewConversation: FunctionComponent = () => {
     <Link className={clsx(styles.conversationItem, isCreate && styles.selected)} href={`/conversation/create`}>
       <SparklesIcon width={24} height={24} />
       <span>
-          Create new conversation
+          [Updated successfully in production!]
         </span>
     </Link>
   );
