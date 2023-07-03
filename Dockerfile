@@ -9,7 +9,7 @@ COPY packages/backend/package*.json ./packages/backend/
 COPY packages/frontend/package*.json ./packages/frontend/
 COPY packages/shared/package*.json ./packages/shared/
 
-COPY proxy.conf ./proxy.conf
+COPY nginx.conf ./nginx.conf
 
 RUN npm install
 
@@ -45,6 +45,9 @@ COPY --from=build /app/packages/backend/prisma /app/packages/backend/prisma
 # Copy .env configs
 COPY --from=build /app/packages/backend/.env* /app/packages/backend/
 
+# Copy nginx.conf file
+COPY --from=build /app/nginx.conf /etc/nginx/nginx.conf
+
 # Install production dependencies for backend and frontend
 RUN npm ci --omit=dev
 
@@ -54,9 +57,6 @@ RUN npm install -g @nestjs/cli
 # Run migrations and generate prisma client
 RUN npm run prisma:migrate
 RUN npm run prisma:generate
-
-# Copy nginx.conf file
-COPY --from=build /app/nginx.conf /etc/nginx/nginx.conf
 
 # Install Nginx
 RUN apt-get update && apt-get install -y nginx
