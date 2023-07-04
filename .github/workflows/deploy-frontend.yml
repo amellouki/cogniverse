@@ -10,7 +10,7 @@ on:
       - 'package.json'
       - 'frontend.Dockerfile'
       - 'Dockerrun.aws.json'
-      - '.github/workflows/deploy-backend.yml'
+      - '.github/workflows/deploy-frontend.yml'
 jobs:
   build_docker_images:
     name: Set up Environment Variables & Build Docker Image
