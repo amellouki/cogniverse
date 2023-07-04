@@ -54,6 +54,10 @@ jobs:
           CONTAINER_PORT: 3000
           HOST_PORT: 3000
           DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_FRONTEND_REPO }}
+      - name: Get Timestamp
+        shell: bash
+        run: echo "##[set-output name=timestamp;]$(date '+%Y%m%d%H%M%S')"
+        id: get_timestamp
       - name: Get Elastic Beanstalk Label
         shell: bash
         run: echo "##[set-output name=label;]$(echo ${NAME}-${TIMESTAMP})"
