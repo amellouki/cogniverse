@@ -3,6 +3,14 @@ on:
   push:
     branches:
       - github-actions
+    paths:
+      - 'packages/frontend/**'
+      - 'packages/shared/**'
+      - 'packages/backend/prisma/**'
+      - 'package.json'
+      - 'frontend.Dockerfile'
+      - 'Dockerrun.aws.json'
+      - '.github/workflows/deploy-backend.yml'
 jobs:
   build_docker_images:
     name: Set up Environment Variables & Build Docker Image
@@ -25,18 +33,18 @@ jobs:
           password: ${{secrets.DOCKERHUB_TOKEN}}
           logout: true
       - name: Build Docker Frontend Image
-        run: docker build -t abdoumell/papegaai-frontend -f
+        run: docker build -t ${{ secrets.DOCKERHUB_FRONTEND_REPO }} -f
           ./frontend.Dockerfile .
       - name: Tag Our Frontend Image
-        run: docker tag abdoumell/papegaai-frontend
-          abdoumell/papegaai-frontend:${{ github.sha }}
+        run: docker tag ${{ secrets.DOCKERHUB_FRONTEND_REPO }}
+          ${{ secrets.DOCKERHUB_FRONTEND_REPO }}:${{ github.sha }}
       - name: Push Frontend to DockerHub
-        run: docker push abdoumell/papegaai-frontend:${{ github.sha }}
+        run: docker push ${{ secrets.DOCKERHUB_FRONTEND_REPO }}:${{ github.sha }}
       - name: Prepare Beanstalk Deployment Package
         run: |
           echo 'Replacing TAG in Dockerrun.aws.json...'
           sed -i -e "s|<TAG>|$SHA|g" Dockerrun.aws.json
-          sed -i -e "s|<APP>|$APP|g" Dockerrun.aws.json
+          sed -i -e "s|<DOCKERHUB_REPO>|$DOCKERHUB_REPO|g" Dockerrun.aws.json
           sed -i -e "s|<CONTAINER_PORT>|$CONTAINER_PORT|g" Dockerrun.aws.json
           sed -i -e "s|<HOST_PORT>|$HOST_PORT|g" Dockerrun.aws.json
           echo 'Creating deployment package...'
@@ -45,20 +53,21 @@ jobs:
           SHA: ${{ github.sha }}
           CONTAINER_PORT: 3000
           HOST_PORT: 3000
-          APP: frontend
+          DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_FRONTEND_REPO }}:${{ github.sha }}
       - name: Get Elastic Beanstalk Label
         shell: bash
-        run: echo "##[set-output name=label;]$(echo papegaai-frontend-${TIMESTAMP})"
+        run: echo "##[set-output name=label;]$(echo ${DOCKERHUB_REPO}-${TIMESTAMP})"
         id: get_frontend_label
         env:
           TIMESTAMP: ${{ steps.get_timestamp.outputs.timestamp }}
+          DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_FRONTEND_REPO }}:${{ github.sha }}
       - name: Deploy Frontend to EB
         uses: einaregilsson/beanstalk-deploy@v21
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: Papegaai-temp
-          environment_name: Papegaai-temp-frontend
+          application_name: ${{ secrets.AWS_EB_APPLICATION_NAME }}
+          environment_name: ${{ secrets.AWS_EB_FRONTEND_ENVIRONMENT }}
           version_label: ${{ steps.get_frontend_label.outputs.label }}
           region: eu-west-3
           deployment_package: deploy-frontend.zip
