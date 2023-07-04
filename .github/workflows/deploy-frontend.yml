@@ -56,11 +56,11 @@ jobs:
           DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_FRONTEND_REPO }}:${{ github.sha }}
       - name: Get Elastic Beanstalk Label
         shell: bash
-        run: echo "##[set-output name=label;]$(echo ${DOCKERHUB_REPO}-${TIMESTAMP})"
+        run: echo "##[set-output name=label;]$(echo ${NAME}-${TIMESTAMP})"
         id: get_frontend_label
         env:
           TIMESTAMP: ${{ steps.get_timestamp.outputs.timestamp }}
-          DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_FRONTEND_REPO }}:${{ github.sha }}
+          NAME: ${{ secrets.AWS_EB_FRONTEND_ENVIRONMENT }}
       - name: Deploy Frontend to EB
         uses: einaregilsson/beanstalk-deploy@v21
         with:
