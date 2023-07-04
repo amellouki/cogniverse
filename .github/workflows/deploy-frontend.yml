@@ -43,8 +43,8 @@ jobs:
       - name: Prepare Beanstalk Deployment Package
         run: |
           echo 'Replacing TAG in Dockerrun.aws.json...'
-          sed -i -e "s|<TAG>|$SHA|g" Dockerrun.aws.json
           sed -i -e "s|<DOCKERHUB_REPO>|$DOCKERHUB_REPO|g" Dockerrun.aws.json
+          sed -i -e "s|<TAG>|$SHA|g" Dockerrun.aws.json
           sed -i -e "s|<CONTAINER_PORT>|$CONTAINER_PORT|g" Dockerrun.aws.json
           sed -i -e "s|<HOST_PORT>|$HOST_PORT|g" Dockerrun.aws.json
           echo 'Creating deployment package...'
@@ -53,7 +53,7 @@ jobs:
           SHA: ${{ github.sha }}
           CONTAINER_PORT: 3000
           HOST_PORT: 3000
-          DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_FRONTEND_REPO }}:${{ github.sha }}
+          DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_FRONTEND_REPO }}
       - name: Get Elastic Beanstalk Label
         shell: bash
         run: echo "##[set-output name=label;]$(echo ${NAME}-${TIMESTAMP})"
