@@ -2,7 +2,7 @@ name: Push images to Dockerhub and deploy on Elastic Beanstalk
 on:
   push:
     branches:
-      - github-actions
+      - master
     paths:
       - 'packages/frontend/**'
       - 'packages/shared/**'
