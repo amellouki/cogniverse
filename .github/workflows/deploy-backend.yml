@@ -29,9 +29,6 @@ jobs:
 
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> ./packages/backend/prisma/.env
 
-          echo "NODE_ENV=production" >> ./packages/frontend/.env.local
-          echo "NEXT_PUBLIC_BACKEND_API=${{ secrets.NEXT_PUBLIC_BACKEND_API }}" >> ./packages/frontend/.env.local
-
       - name: Docker Login
         uses: docker/login-action@v2
         with:
