@@ -10,6 +10,8 @@ on:
         - 'backend.Dockerfile'
         - 'Dockerrun.aws.json'
         - '.github/workflows/deploy-backend.yml'
+        - 'package.json'
+        - 'package-lock.json'
 jobs:
   build_docker_images:
     name: Set up Environment Variables & Build Docker Image
