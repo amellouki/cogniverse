@@ -4,82 +4,110 @@ import ControlledToggleButton from "../BaseFormFields/ControlledToggleButton";
 import FormFieldWrapper from "@/components/FormFieldWrapper";
 import TextInput from "@/components/BaseFormFields/TextInput";
 import Button from "@/components/Button";
-import {useMutation, useQueryClient} from "react-query";
-import axios from "axios";
-import NewConversation from "@my-monorepo/shared/dist/new-conversation";
+import useCreateConversation from "@/hooks/use-create-conversation.hook";
+import {Controller, SubmitHandler, useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import schema, {InputType} from "./form.schema";
+import {getNewConversation} from "./helpers";
 import styles from './styles.module.scss';
-
-const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/api/create_conversation'
 
 
 const CreateConversation: FunctionComponent = () => {
-  const formRef = React.useRef<HTMLFormElement>(null);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: {errors},
+    watch,
+  } = useForm<InputType>({
+    resolver: zodResolver(schema),
+  })
 
-  const queryClient = useQueryClient()
+  const mutation = useCreateConversation(() => {
+    reset();
+  })
 
-  const mutation = useMutation((newConversation: NewConversation) => axios.post(PATH, newConversation), {
-    onSuccess: () => {
-      formRef.current?.reset();
-      queryClient.invalidateQueries('conversations');
-    },
-  });
+  const onSubmit: SubmitHandler<InputType> = (data) => mutation.mutate(getNewConversation(data))
 
-  // RLM: Retrieval Language Model
-  const [isRLMCustomPrompt, setIsRLMCustomPrompt] = React.useState<boolean>(false)
-  // CLM: Conversational Language Model
-  const [isCLMCustomPrompt, setIsCLMCustomPrompt] = React.useState<boolean>(false)
+  const isRLMCustomPrompt = watch('isRLMCustomPrompt');
+  const isCLMCustomPrompt = watch('isCLMCustomPrompt');
+
   return (
-    <form ref={formRef} onSubmit={(e) => {
-      e.preventDefault();
-      const form = e.currentTarget;
-      const titleElement = form.elements.namedItem('conversation-title') as HTMLInputElement;
-      const rlmPromptElement = form.elements.namedItem('rlm-prompt') as HTMLInputElement;
-      const clmPromptElement = form.elements.namedItem('clm-prompt') as HTMLInputElement;
-      const retrievalLanguageModel = rlmPromptElement?.value ? {
-        prompt: rlmPromptElement.value,
-        name: "Retrieval model",
-        type: "retrieval-model",
-      } : undefined
-      const conversationModel = clmPromptElement?.value ? {
-        prompt: clmPromptElement.value,
-        name: "Conversation model",
-        type: "conversation-model",
-      } : undefined
-      mutation.mutate({
-        title: titleElement.value,
-        retrievalLanguageModel,
-        conversationModel,
-      });
-    }} className={styles.CreateConversation}>
-      <FormFieldWrapper id={'conversation-title'} label={'Conversation title'}>
-        <TextInput id={'conversation-title'} placeholder={'Provide conversation title'}/>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.CreateConversation}>
+      <FormFieldWrapper
+        htmlFor={'conversation-title'}
+        label={'Conversation title'}
+        fieldError={errors.title}
+      >
+        <TextInput
+          id={'conversation-title'}
+          placeholder={'Provide conversation title'}
+          hasError={!!errors.title}
+          {...register('title', {required: true})}
+        />
       </FormFieldWrapper>
       <div className={styles.ToggleButtonRow}>
         <span>Retrieval model prompt</span>
-        <ControlledToggleButton
-          id={'rlm'} pressed={isRLMCustomPrompt}
-          onToggle={setIsRLMCustomPrompt}
-          options={['Default', 'Custom']}
-          className={styles.ToggleButton}
+        <Controller
+          render={({ field: {onChange, value} }) => (
+            <ControlledToggleButton
+              id={'rlm'}
+              pressed={value}
+              onToggle={onChange}
+              options={['Default', 'Custom']}
+              className={styles.ToggleButton}
+            />
+          )}
+          name={'isRLMCustomPrompt'}
+          control={control}
+          defaultValue={false}
         />
       </div>
       {isRLMCustomPrompt && (
-        <FormFieldWrapper id={'rlm-prompt'} label={'Retrieval model prompt'}>
-          <Textarea id={'rlm-prompt'} placeholder={'Provide retrieval model prompt'}/>
+        <FormFieldWrapper
+          htmlFor={'rlm-prompt'}
+          label={'Retrieval model prompt'}
+          fieldError={errors.rlmPrompt}
+        >
+          <Textarea
+            {...register('rlmPrompt', {required: true})}
+            id={'rlm-prompt'}
+            aria-invalid={errors.rlmPrompt ? 'true' : 'false'}
+            placeholder={'Provide retrieval model prompt'}
+            hasError={!!errors.rlmPrompt}
+          />
         </FormFieldWrapper>
       )}
       <div className={styles.ToggleButtonRow}>
         <span>Conversational model prompt</span>
-        <ControlledToggleButton
-          id={'clm'} pressed={isCLMCustomPrompt}
-          onToggle={setIsCLMCustomPrompt}
-          options={['Default', 'Custom']}
-          className={styles.ToggleButton}
+        <Controller
+          render={({ field: {onChange, value} }) => (
+            <ControlledToggleButton
+              id={'clm'}
+              pressed={value}
+              onToggle={onChange}
+              options={['Default', 'Custom']}
+              className={styles.ToggleButton}
+            />
+          )}
+          name={'isCLMCustomPrompt'}
+          control={control}
+          defaultValue={false}
         />
       </div>
       {isCLMCustomPrompt && (
-        <FormFieldWrapper id={'clm-prompt'} label={'Conversational model prompt'}>
-          <Textarea id={'clm-prompt'} placeholder={'Provide conversational model prompt'}/>
+        <FormFieldWrapper
+          htmlFor={'clm-prompt'}
+          label={'Conversational model prompt'}
+          fieldError={errors.clmPrompt}
+        >
+          <Textarea
+            {...register('clmPrompt', {required: true})}
+            id={'clm-prompt'}
+            placeholder={'Provide conversational model prompt'}
+            hasError={!!errors.clmPrompt}
+          />
         </FormFieldWrapper>
       )}
       <Button type={'submit'} className={styles.SubmitButton}>Create</Button>

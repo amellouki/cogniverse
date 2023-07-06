@@ -1,27 +1,25 @@
-import React, {ChangeEventHandler} from "react";
+import React, {forwardRef} from "react";
 import styles from './styles.module.scss'
+import clsx from "clsx";
 
 type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  id: string;
   value?: string;
-  error?: string;
+  hasError?: boolean;
 };
 
-const TextInput = (props: TextInputProps) => {
-  const { id, value, onChange, error, className, ...rest } = props;
+const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, ref) => {
+  const { className, hasError, ...rest } = props;
   return (
     <div className={className}>
       <input
-        id={id}
-        className={styles.textInput}
-        value={value}
-        onChange={onChange}
-        placeholder={"Send a message..."}
+        className={clsx(styles.textInput, hasError && styles.Error)}
         {...rest}
+        ref={ref}
       />
-      {error && <span className="text-input__error">{error}</span>}
     </div>
   );
-};
+});
+
+TextInput.displayName = 'TextInput';
 
 export default TextInput;

@@ -1,7 +1,9 @@
 import {useEffect, useState} from "react";
 import autosize from "autosize";
 
-export default function useAutoresizeHook() {
+type ReturnedType = [HTMLTextAreaElement | null, (textarea: HTMLTextAreaElement) => void]
+
+export default function useAutoresizeHook(): ReturnedType {
   const [textareaRef, setTextareaRef] = useState<HTMLTextAreaElement | null>(null);
   useEffect(() => {
     if (textareaRef) {
@@ -12,5 +14,5 @@ export default function useAutoresizeHook() {
     }
   }, [textareaRef]);
 
-  return setTextareaRef;
+  return [textareaRef, setTextareaRef];
 }

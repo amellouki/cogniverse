@@ -1,11 +1,16 @@
-.HTMLLabel {
-
-}
+.HTMLLabel {}
 
 .LabelText {
-
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
-.FormFieldWrapper {
+.FormFieldWrapper {}
 
+.Error {
+  color: var(--input-error);
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
 }
