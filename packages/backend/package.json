@@ -1,5 +1,5 @@
 {
-  "name": "pdf-query-chatbot-backend",
+  "name": "cogniverse-backend",
   "private": true,
   "scripts": {
     "build": "nest build",

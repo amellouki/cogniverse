@@ -1,5 +1,5 @@
 {
-  "name": "pdf-query-chatbot-frontend",
+  "name": "cogniverse-frontend",
   "private": true,
   "scripts": {
     "dev": "next dev",

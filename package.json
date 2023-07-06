@@ -1,10 +1,10 @@
 {
-  "name": "papegaai",
+  "name": "cogniverse",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "next.js/nest.js project for document querying using LLMs powered by Langchain",
   "scripts": {
     "test": "npm run test",

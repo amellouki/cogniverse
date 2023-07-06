@@ -22,7 +22,7 @@ const Layout: FC<PropsWithChildren<Props>> = ({
     <div id="root" className={clsx(styles.container, className)}>
       <header>
         <Logo/>
-        <LinkIconButton href={'https://github.com/amellouki/papegaai'}>
+        <LinkIconButton href={'https://github.com/amellouki/cogniverse'}>
           <GithubIcon/>
         </LinkIconButton>
         <div className={styles.spacer}/>

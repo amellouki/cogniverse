@@ -4,7 +4,7 @@ import styles from './styles.module.scss';
 const Logo: FunctionComponent = (props) => {
   return (
     <span className={styles.Logo}>
-      Papega<strong className={styles.ai}>ai</strong>
+      Cogni<strong className={styles.highlight}>verse</strong>
     </span>
   );
 }
