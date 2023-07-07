@@ -9,7 +9,9 @@ Deployed at https://www.cogniverse.ai
 
 ## Pre-requisites
 Node `v18.16.0` \
-npm `9.5.1`
+npm `9.5.1` 
+
+Run `nvm use` to use the correct node version.
 
 ## Environment variables
 _(Follow the examples in the .env.example files)_
@@ -17,22 +19,22 @@ _(Follow the examples in the .env.example files)_
 Create a `.env` file in /packages/backend/prisma with the following variables:
 (follow the example in .env.example)
 
-`DATABASE_URL` denoting the database connection string
+* `DATABASE_URL` denoting the database connection string
 
 ### Backend variables
 Create a `.env.local` file in /packages/backend with the following variables:
 
-`OPEN_AI_API_KEY` Your organization's openAI api key 
-`PINECONE_API_KEY` Your Pinecone api key
-`PINECONE_INDEX` Your Pinecone index name
-`PINECONE_ENVIRONMENT` Your Pinecone environment name
-`PORT` The port on which the backend server will run
-`ALLOWED_DOMAINS` The allowed domains for CORS
+* `OPEN_AI_API_KEY` Your organization's openAI api key
+* `PINECONE_API_KEY` Your Pinecone api key
+* `PINECONE_INDEX` Your Pinecone index name
+* `PINECONE_ENVIRONMENT` Your Pinecone environment name
+* `PORT` The port on which the backend server will run
+* `ALLOWED_DOMAINS` The allowed domains for CORS 
 
 ### Frontend variables
 Create a `.env.local` file in /packages/frontend with the following variables:
 
-`NEXT_PUBLIC_BACKEND_API` The backend api url (Port included if applicable)
+* `NEXT_PUBLIC_BACKEND_API` The backend api url (Port included if applicable)
 
 ## How to run the app
 
