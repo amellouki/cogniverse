@@ -12,13 +12,15 @@ const WrappedSelect: FunctionComponent<Props> = ({
   label,
   selected,
   onChange,
+  id,
   ...props
 }) => {
   const select = useSelect({
     items: props.options,
     itemToString: item => item?.label || '',
     onSelectedItemChange: ({selectedItem}) => onChange(selectedItem),
-    selectedItem: selected
+    selectedItem: selected,
+    id,
   })
   return (
     <FormFieldWrapper label={label} {...select.getLabelProps()}>

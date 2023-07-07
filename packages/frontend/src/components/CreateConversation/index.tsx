@@ -24,6 +24,7 @@ const CreateConversation: FunctionComponent = () => {
         placeholder={'Select...'}
         selected={selectedOption}
         onChange={setSelectedOption}
+        id={'conversation-type'}
       />
       {selectedOption && renderForm(selectedOption.value)}
     </div>

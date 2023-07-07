@@ -5,4 +5,5 @@ export type SelectProps = {
   placeholder?: string;
   onChange: (value: SelectOption | undefined | null) => void;
   selected: SelectOption | undefined | null;
+  id: string;
 }

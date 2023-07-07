@@ -1,6 +1,6 @@
 import React, {FunctionComponent} from 'react';
 import {UseSelectReturnValue} from "downshift";
-import {Option} from "./types";
+import SelectOption from "@/types/SelectOption";
 import clsx from "clsx";
 import buttonStyle from "@/components/Button/styles.module.scss";
 import styles from './styles.module.scss';
@@ -9,8 +9,8 @@ import {ChevronDownIcon} from "@heroicons/react/24/solid";
 const DEFAULT_PLACEHOLDER = 'Select...';
 
 type Props = {
-  select: UseSelectReturnValue<Option>
-  options: Option[];
+  select: UseSelectReturnValue<SelectOption>
+  options: SelectOption[];
   placeholder?: string;
 }
 
@@ -43,9 +43,8 @@ const SelectView: FunctionComponent<Props> = (props) => {
         </span>
         <ChevronDownIcon className={styles.icon} width={24} height={24}/>
       </button>
-      {isOpen &&
-      <ul {...getMenuProps} className={styles.list}>
-        {props.options.map((option, index) => (
+      <ul {...getMenuProps()} className={clsx(styles.list, !isOpen && styles.hidden)}>
+        {isOpen && props.options.map((option, index) => (
           <li
             key={option.value}
             {...getItemProps({item: option, index})}
@@ -58,7 +57,7 @@ const SelectView: FunctionComponent<Props> = (props) => {
             <span>{option.label}</span>
           </li>
         ))}
-      </ul>}
+      </ul>
     </div>
   );
 }
