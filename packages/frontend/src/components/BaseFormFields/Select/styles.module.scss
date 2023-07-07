@@ -1,0 +1,56 @@
+.SelectView {
+  position: relative;
+}
+
+.list {
+  position: absolute;
+  background-color: var(--secondary-background);
+  border: 1px solid var(--primary-border);
+  border-radius: 0.5rem;
+  width: 100%;
+}
+
+.option {
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--primary-button-hover-background);
+  }
+  &:first-child {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+  &:last-child {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+}
+
+.SelectButton {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.icon {
+  transition: transform 0.2s ease-in;
+}
+
+.open .icon {
+  transform: rotate(180deg);
+}
+
+.selected {
+  background-color: var(--primary-button-background);
+  color: var(--primary-button-foreground);
+}
+
+.highlighted {
+  background-color: var(--primary-button-hover-background);
+}

@@ -1,21 +1,26 @@
-import React, {FunctionComponent, PropsWithChildren} from 'react';
+import React, {FunctionComponent, LabelHTMLAttributes, PropsWithChildren} from 'react';
 import {FieldError} from "react-hook-form";
 import {getErrorText} from "./helper";
 import styles from './styles.module.scss';
 
-type Props = PropsWithChildren & {
+type Props = PropsWithChildren & LabelHTMLAttributes<HTMLLabelElement> & {
   htmlFor: string;
   label: string;
   fieldError?: FieldError;
 }
 
-const FormFieldWrapper: FunctionComponent<Props> = (props) => {
+const FormFieldWrapper: FunctionComponent<Props> = ({
+  label,
+  fieldError,
+  children,
+  ...labelAttributes
+}) => {
   return (
-    <label htmlFor={props.htmlFor} className={styles.HTMLLabel}>
-      <div className={styles.LabelText}>{props.label}</div>
-      <div className={styles.FormFieldWrapper}>{props.children}</div>
-      {props.fieldError && <div className={styles.Error} role="alert">
-        {getErrorText(props.label, props.fieldError)}
+    <label {...labelAttributes} className={styles.HTMLLabel}>
+      <div className={styles.LabelText}>{label}</div>
+      <div className={styles.FormFieldWrapper}>{children}</div>
+      {fieldError && <div className={styles.Error} role="alert">
+        {getErrorText(label, fieldError)}
       </div>}
     </label>
   );

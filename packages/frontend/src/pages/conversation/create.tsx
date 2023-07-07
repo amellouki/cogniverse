@@ -1,6 +1,6 @@
 import React, {FunctionComponent} from 'react';
-import CreateConversation from "@/components/CreateConversation";
 import styles from './styles.module.scss'
+import CreateConversation from "@/components/CreateConversation";
 
 const Create: FunctionComponent = () => {
   return <div className={styles.CreateConversation}><CreateConversation /></div>;
