@@ -1,13 +1,12 @@
-import React, {forwardRef, FunctionComponent, useImperativeHandle, useMemo} from 'react';
-import {Props as TextareaProps} from '../Textarea'
+import React, {forwardRef, FunctionComponent, useImperativeHandle} from 'react';
 import useAutoresizeHook from "@/hooks/use-autoresize.hook";
 import clsx from "clsx";
 import textInputStyles from "../TextInput/styles.module.scss";
-import textareaStyles from "../Textarea/styles.module.scss";
 import styles from './styles.module.scss';
 
-type Props = TextareaProps & {
+type Props = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
   placeholders: string[];
+  hasError?: boolean;
 }
 
 const Prompt: FunctionComponent<Props> = forwardRef<HTMLTextAreaElement, Props>((props, ref) => {
@@ -24,7 +23,6 @@ const Prompt: FunctionComponent<Props> = forwardRef<HTMLTextAreaElement, Props>(
         className={clsx(
           className,
           textInputStyles.textInput,
-          textareaStyles.Textarea,
           props.hasError && textInputStyles.Error,
           styles.textarea
         )}
