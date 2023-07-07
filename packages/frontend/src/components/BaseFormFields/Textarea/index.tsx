@@ -17,7 +17,7 @@ const Textarea: FunctionComponent<Props> = forwardRef<HTMLTextAreaElement, Props
   return (
     <textarea
       {...rest}
-      ref={ref}
+      ref={setTextareaRef}
       className={clsx(
         className,
         textInputStyles.textInput,

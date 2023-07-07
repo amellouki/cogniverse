@@ -20,7 +20,7 @@ const Prompt: FunctionComponent<Props> = forwardRef<HTMLTextAreaElement, Props>(
     <div className={styles.Prompt}>
       <textarea
         {...rest}
-        ref={ref}
+        ref={setTextareaRef}
         className={clsx(
           className,
           textInputStyles.textInput,
