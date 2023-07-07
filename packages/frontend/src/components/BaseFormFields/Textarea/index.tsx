@@ -4,7 +4,7 @@ import clsx from "clsx";
 import useAutoresizeHook from "@/hooks/use-autoresize.hook";
 import styles from './styles.module.scss';
 
-type Props = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+export type Props = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
   hasError?: boolean;
 }
 
@@ -15,17 +15,16 @@ const Textarea: FunctionComponent<Props> = forwardRef<HTMLTextAreaElement, Props
   useImperativeHandle(ref, () => textareaRef!);
 
   return (
-    <div className={props.className}>
-      <textarea
-        {...rest}
-        ref={setTextareaRef}
-        className={clsx(
-          textInputStyles.textInput,
-          styles.Textarea,
-          props.hasError && textInputStyles.Error
-        )}
-      />
-    </div>
+    <textarea
+      {...rest}
+      ref={ref}
+      className={clsx(
+        className,
+        textInputStyles.textInput,
+        styles.Textarea,
+        props.hasError && textInputStyles.Error
+      )}
+    />
   );
 });
 

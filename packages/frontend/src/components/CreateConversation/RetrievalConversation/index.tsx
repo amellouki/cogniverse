@@ -1,14 +1,15 @@
 import React, {FunctionComponent} from 'react';
-import Textarea from "@/components/BaseFormFields/Textarea";
+import {Controller, SubmitHandler, useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import useCreateConversation from "@/hooks/use-create-conversation.hook";
 import ControlledToggleButton from "../../BaseFormFields/ControlledToggleButton";
 import FormFieldWrapper from "@/components/FormFieldWrapper";
 import TextInput from "@/components/BaseFormFields/TextInput";
 import Button from "@/components/Button";
-import useCreateConversation from "@/hooks/use-create-conversation.hook";
-import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
+import Prompt from "@/components/BaseFormFields/Prompt";
 import schema, {InputType} from "./form.schema";
 import {getNewConversation} from "./helpers";
+import {CLM_PROMPT_PLACEHOLDERS, RLM_PROMPT_PLACEHOLDERS} from "./contants";
 import styles from './styles.module.scss';
 
 const RetrievalConversation: FunctionComponent = () => {
@@ -69,12 +70,13 @@ const RetrievalConversation: FunctionComponent = () => {
           label={'Retrieval model prompt'}
           fieldError={errors.rlmPrompt}
         >
-          <Textarea
+          <Prompt
             {...register('rlmPrompt', {required: true})}
             id={'rlm-prompt'}
             aria-invalid={errors.rlmPrompt ? 'true' : 'false'}
             placeholder={'Provide retrieval model prompt'}
             hasError={!!errors.rlmPrompt}
+            placeholders={RLM_PROMPT_PLACEHOLDERS}
           />
         </FormFieldWrapper>
       )}
@@ -101,11 +103,12 @@ const RetrievalConversation: FunctionComponent = () => {
           label={'Conversational model prompt'}
           fieldError={errors.clmPrompt}
         >
-          <Textarea
+          <Prompt
             {...register('clmPrompt', {required: true})}
             id={'clm-prompt'}
             placeholder={'Provide conversational model prompt'}
             hasError={!!errors.clmPrompt}
+            placeholders={CLM_PROMPT_PLACEHOLDERS}
           />
         </FormFieldWrapper>
       )}

@@ -1,14 +1,8 @@
 import {z} from "zod";
-
-const RLM_PROMPT_PLACEHOLDERS = [
-  "{chat_history}", // The chat history of the conversation so far
-  "{question}", // The last question asked by the user
-]
-
-const CLM_PROMPT_PLACEHOLDERS = [
-  ...RLM_PROMPT_PLACEHOLDERS,
-  "{context}" // The retrieved documents
-]
+import {
+  CLM_PROMPT_PLACEHOLDERS,
+  RLM_PROMPT_PLACEHOLDERS
+} from "./contants";
 
 const schema = z.object({
   title: z.string().nonempty(),
