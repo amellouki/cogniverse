@@ -15,7 +15,7 @@ const CreateConversation: FunctionComponent = () => {
   const [
     selectedOption,
     setSelectedOption
-  ] = React.useState<SelectOption | undefined | null>();
+  ] = React.useState<SelectOption | undefined | null>(null);
   return (
     <div className={styles.CreateConversation}>
       <WrappedSelect

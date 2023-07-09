@@ -24,6 +24,7 @@ export default function App({Component, pageProps}: AppProps) {
         >
           <Component {...pageProps} />
         </Layout>
+        <div id="select-overlay" />
       </>
     </QueryClientProvider>
   );
