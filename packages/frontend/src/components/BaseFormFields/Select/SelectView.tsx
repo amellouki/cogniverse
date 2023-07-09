@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useRef} from 'react';
+import React, {FunctionComponent} from 'react';
 import {UseSelectReturnValue} from "downshift";
 import SelectOption from "@/types/SelectOption";
 import clsx from "clsx";
@@ -7,7 +7,6 @@ import styles from './styles.module.scss';
 import {ChevronDownIcon} from "@heroicons/react/24/solid";
 import Portal from "@/components/Portal";
 import useOverlay from "@/components/BaseFormFields/Select/use-overlay.hook";
-import {useMounted} from "@/hooks/use-mounted.hook";
 
 const DEFAULT_PLACEHOLDER = 'Select...';
 
@@ -33,11 +32,6 @@ const SelectView: FunctionComponent<Props> = (props) => {
     attributes,
     popperStyles
   } = useOverlay();
-
-  const mounted = useMounted()
-
-  const count = useRef(0)
-  console.log(count.current++)
 
   return (
     <div className={styles.SelectView}>
