@@ -27,4 +27,6 @@ const SelectFile: FunctionComponent<Props> = forwardRef<HTMLInputElement, Props>
   );
 });
 
+SelectFile.displayName = 'SelectFile';
+
 export default SelectFile;
