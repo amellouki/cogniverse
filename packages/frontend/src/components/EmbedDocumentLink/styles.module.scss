@@ -1,0 +1,12 @@
+.EmbedDocumentLink > span {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  span, svg {
+    display: inline-block;
+    line-height: 1.5rem;
+  }
+  svg {
+    margin-left: 0.25rem;
+  }
+}

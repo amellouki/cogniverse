@@ -1,12 +1,12 @@
 import React, {FC, PropsWithChildren} from 'react'
-import styles from './styles.module.scss'
 import clsx from "clsx";
 import ConversationsList from "@/components/ConversationsList";
-import UploadPDF from "@/components/UploadPDF";
+import UploadPDF from "../EmbedDocumentLink";
 import ThemeChanger from "@/components/ThemeChanger";
 import GithubIcon from "@/components/icons/Github.icon";
 import LinkIconButton from "@/components/Button/IconButton/LinkIconButton";
 import Logo from "@/components/Logo";
+import styles from './styles.module.scss'
 
 type Props = {
   className?: string

@@ -28,7 +28,7 @@
     grid-area: aside;
     @include background-pattern-1(var(--secondary-background), var(--primary-background));
 
-    overflow: scroll;
+    overflow: auto;
     margin-left: 1rem;
   }
 

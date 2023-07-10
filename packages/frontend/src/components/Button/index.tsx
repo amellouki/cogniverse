@@ -7,15 +7,17 @@ type ButtonProps = {
   onClick?: () => void;
   type?: "submit" | "button";
   className?: string;
-};
+} & React.ButtonHTMLAttributes<HTMLButtonElement>
 const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   onClick,
   type,
   children,
   className,
+  ...restProps
 }) => {
   return (
     <button
+      {...restProps}
       className={clsx(styles.button, className)}
       onClick={onClick}
       type={type}

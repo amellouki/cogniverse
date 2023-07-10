@@ -22,7 +22,7 @@ const QueryForm: FC<QueryFormProps> = ({ onSubmit, className }) => {
         onSubmit(inputElement.value);
       }}
     >
-      <TextInput id={"query-field"} className={styles.fillRest} />
+      <TextInput id={"query-field"} placeholder={'Send message...'} className={styles.fillRest} />
       <Button type="submit">Send</Button>
     </form>
   )

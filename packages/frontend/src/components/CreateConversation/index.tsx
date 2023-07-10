@@ -18,6 +18,7 @@ const CreateConversation: FunctionComponent = () => {
   ] = React.useState<SelectOption | undefined | null>(null);
   return (
     <div className={styles.CreateConversation}>
+      <h2 className={styles.formTitle}>Create a new conversation</h2>
       <WrappedSelect
         options={ConversationOptions}
         label={'Select Conversation Type'}

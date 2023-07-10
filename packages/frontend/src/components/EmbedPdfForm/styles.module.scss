@@ -1,0 +1,34 @@
+.EmbedPdfForm {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  gap: 1rem;
+  width: 100%;
+}
+
+.button {
+  align-self: flex-end;
+}
+
+.formTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.progress {
+  margin-top: 1rem;
+}
+
+.selectedFile {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  span, svg {
+    display: inline-block;
+    line-height: 1.5rem;
+  }
+  svg {
+    margin-left: 0.25rem;
+  }
+}
