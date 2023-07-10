@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller,
+  Controller, Get,
   Logger,
   Post,
   UploadedFile,
@@ -16,6 +16,7 @@ import { PineconeService } from '../../services/pinecone/pinecone.service';
 import { PdfUploadDto } from '../../dto/pdf-upload.dto';
 import { UploadedFileType } from '@my-monorepo/shared/dist/uploaded-file';
 import { PdfSplitterService } from '../../services/pdf-splitter/pdf-splitter.service';
+import {PdfEmbeddingService} from "./pdf-embedding.service";
 
 @Controller('pdf-embedding')
 export class PdfEmbeddingController {
@@ -25,9 +26,10 @@ export class PdfEmbeddingController {
     private configService: ConfigService,
     private pineconeService: PineconeService,
     private pdfSplitterService: PdfSplitterService,
+    private pdfEmbeddingService: PdfEmbeddingService,
   ) {}
 
-  @Post()
+  @Post('embed')
   @UseInterceptors(FileInterceptor('file'))
   async uploadPdf(
     @UploadedFile() file: UploadedFileType,
@@ -50,11 +52,18 @@ export class PdfEmbeddingController {
       },
     );
 
+    await this.pdfEmbeddingService.saveDocumentMetadata(file);
+
     return {
       status: 'success',
       size: file.size,
       numberOfChunks: docs.length,
       message: 'File embedded successfully',
     };
+  }
+
+  @Get('embedded-documents')
+  async getEmbeddedDocuments() {
+    return this.pdfEmbeddingService.getDocumentList();
   }
 }
