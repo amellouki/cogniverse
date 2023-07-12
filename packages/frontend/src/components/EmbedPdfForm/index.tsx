@@ -9,8 +9,8 @@ import {getRequestBody} from "./helpers";
 import {useMutateDocs} from "@/components/EmbedPdfForm/mutate-docs.hook";
 import {zodResolver} from "@hookform/resolvers/zod";
 import schema from "./form.schema";
-import styles from './styles.module.scss';
 import {DocumentCheckIcon} from "@heroicons/react/24/outline";
+import styles from './styles.module.scss';
 
 const EmbedPdfForm: FunctionComponent = (props) => {
   const [uploadStatus, setUploadStatus] = React.useState<string>();

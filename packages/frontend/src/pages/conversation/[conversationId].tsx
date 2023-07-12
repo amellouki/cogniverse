@@ -1,6 +1,5 @@
 import React from "react";
 import QueryForm from "@/components/QueryForm";
-import DebugDocs from "@/components/DebugDocs";
 import ChatThread from "@/components/ChatThread";
 import useChatHistory from "@/hooks/use-chat-history.hook";
 import useConversation from "@/hooks/use-conversation.hook";
@@ -13,7 +12,6 @@ const Conversation: React.FC = () => {
   const router = useRouter()
   const conversationId = router.query.conversationId as string
 
-  console.log(conversationId)
   const {data} = useQuery<Conversation>(`conversation${conversationId}`, () => {
     if (conversationId) {
       return fetch(process.env.NEXT_PUBLIC_BACKEND_API + `/api/conversation?id=${conversationId}`).then((res) => res.json());
@@ -46,7 +44,7 @@ const Conversation: React.FC = () => {
         });
         sendQuestion(data.id, question);
       }}/>
-      {resources && <DebugDocs docs={resources}/>}
+      {data?.document && <div><em>Retrieving data from <strong>{data.document.title}</strong></em></div>}
     </div>
   );
 };

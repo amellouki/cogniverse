@@ -10,6 +10,7 @@ import Prompt from "@/components/BaseFormFields/Prompt";
 import schema, {InputType} from "./form.schema";
 import {getNewConversation} from "./helpers";
 import {CLM_PROMPT_PLACEHOLDERS, RLM_PROMPT_PLACEHOLDERS} from "./contants";
+import EmbeddedDocumentsSelector from "@/components/EmbeddedDocumentsSelector";
 import styles from './styles.module.scss';
 
 const RetrievalConversation: FunctionComponent = () => {
@@ -112,6 +113,18 @@ const RetrievalConversation: FunctionComponent = () => {
           />
         </FormFieldWrapper>
       )}
+      <Controller
+        render={({ field: {onChange, value} }) => (
+          <EmbeddedDocumentsSelector
+            selectedDocumentId={value}
+            onChange={onChange}
+            fieldError={errors.documentId}
+          />
+        )}
+        name={'documentId'}
+        control={control}
+        defaultValue={null}
+      />
       <Button type={'submit'} className={styles.SubmitButton}>Create</Button>
     </form>
   );

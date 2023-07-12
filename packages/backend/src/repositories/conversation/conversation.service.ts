@@ -43,6 +43,7 @@ export class ConversationService {
         },
         conversationModel: true,
         retrievalLanguageModel: true,
+        document: true,
       },
     });
   }

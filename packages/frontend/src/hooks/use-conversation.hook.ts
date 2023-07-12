@@ -19,7 +19,6 @@ const useConversation = (
     })
     socket.on('data', (data) => {
       const tokenMessage = data.content as NewMessage
-      // console.log('data', data)
       if (data.type === 'token' && tokenMessage.type === 'response-token') {
         setResponse((prev) => {
           if (!prev) return tokenMessage

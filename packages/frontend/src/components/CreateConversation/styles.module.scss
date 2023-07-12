@@ -1,5 +1,7 @@
 .CreateConversation {
   display: flex;
+  overflow-y: auto;
+  overflow-x: visible;
   flex-direction: column;
   gap: 1rem;
   width: 100%;

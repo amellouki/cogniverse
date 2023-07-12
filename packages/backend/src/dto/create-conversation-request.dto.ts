@@ -7,6 +7,9 @@ export default class CreateConversationRequestDto implements NewConversation {
 
   conversationModel: CreateLanguageModelDto | null;
   retrievalLanguageModel: CreateLanguageModelDto | null;
+
+  @IsNotEmpty()
+  documentId: number;
 }
 
 class CreateLanguageModelDto {
