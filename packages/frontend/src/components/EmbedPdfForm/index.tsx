@@ -18,8 +18,9 @@ const EmbedPdfForm: FunctionComponent = (props) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    watch
+    formState: {errors},
+    watch,
+    reset,
   } = useForm<InputType>({
     resolver: zodResolver(schema)
   });
@@ -27,14 +28,21 @@ const EmbedPdfForm: FunctionComponent = (props) => {
   const files = watch('files');
   const selectedFile = files && files[0]?.name;
 
-  const mutation = useMutateDocs(setUploadStatus, () => setIsProcessing(false));
+  const mutation = useMutateDocs(
+    setUploadStatus,
+    () => {
+      reset()
+    },
+    () => {
+      setIsProcessing(false);
+    });
 
   const onSubmit: SubmitHandler<InputType> = (data) => {
     mutation.mutate(getRequestBody(data));
     setIsProcessing(true);
   }
   return (
-    <form className={styles.EmbedPdfForm} onSubmit={handleSubmit(onSubmit)} >
+    <form className={styles.EmbedPdfForm} onSubmit={handleSubmit(onSubmit)}>
       <h2 className={styles.formTitle}>Embed Your PDF</h2>
       <FormFieldWrapper
         htmlFor="block_size"
