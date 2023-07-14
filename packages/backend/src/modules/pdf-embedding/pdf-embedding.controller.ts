@@ -1,6 +1,7 @@
 import {
   Body,
-  Controller, Get,
+  Controller,
+  Get,
   Logger,
   Post,
   UploadedFile,
@@ -16,7 +17,7 @@ import { PineconeService } from '../../services/pinecone/pinecone.service';
 import { PdfUploadDto } from '../../dto/pdf-upload.dto';
 import { UploadedFileType } from '@my-monorepo/shared/dist/uploaded-file';
 import { PdfSplitterService } from '../../services/pdf-splitter/pdf-splitter.service';
-import {PdfEmbeddingService} from "./pdf-embedding.service";
+import { PdfEmbeddingService } from './pdf-embedding.service';
 
 @Controller('pdf-embedding')
 export class PdfEmbeddingController {
@@ -41,6 +42,9 @@ export class PdfEmbeddingController {
 
     const docs = await this.pdfSplitterService.split(file, splitParams);
 
+    const documentMetadata =
+      await this.pdfEmbeddingService.saveDocumentMetadata(file);
+
     await PineconeStore.fromDocuments(
       docs,
       new OpenAIEmbeddings({
@@ -49,10 +53,16 @@ export class PdfEmbeddingController {
       }),
       {
         pineconeIndex,
+        namespace: documentMetadata.id.toString(),
       },
     );
 
-    await this.pdfEmbeddingService.saveDocumentMetadata(file);
+    this.logger.log(
+      'used namespace for doc embedding :',
+      documentMetadata.id.toString(),
+    );
+
+    // TODO: confirm that the document was embedded successfully, in a database column of the DocumentMetadata table
 
     return {
       status: 'success',

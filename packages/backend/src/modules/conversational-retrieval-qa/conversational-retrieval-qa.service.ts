@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ENV, QUERY_EMBEDDING_MODEL } from '../../constants';
 import { PineconeStore } from 'langchain/vectorstores';
 import { OpenAIEmbeddings } from 'langchain/embeddings';
@@ -25,6 +25,7 @@ type Callbacks = {
 
 @Injectable()
 export class ConversationalRetrievalQaService {
+  logger = new Logger(ConversationalRetrievalQaService.name);
   constructor(
     private configService: ConfigService,
     private pinecone: PineconeService,
@@ -78,7 +79,12 @@ export class ConversationalRetrievalQaService {
         openAIApiKey: openAiApiKey,
         modelName: QUERY_EMBEDDING_MODEL,
       }),
-      { pineconeIndex },
+      { pineconeIndex, namespace: conversation.documentId.toString() },
+    );
+
+    this.logger.log(
+      'used namespace for retrieval:',
+      conversation.documentId.toString(),
     );
 
     const conversationModel = new OpenAI({

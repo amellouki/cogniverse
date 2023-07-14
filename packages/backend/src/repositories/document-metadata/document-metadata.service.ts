@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import {PrismaService} from "../prisma/prisma.service";
-import { Prisma } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { DocumentMetadata, Prisma } from '@prisma/client';
 
 @Injectable()
 export class DocumentMetadataService {
@@ -10,15 +10,17 @@ export class DocumentMetadataService {
     return this.prismaService.documentMetadata.findUnique({
       where: {
         id,
-      }
-    })
+      },
+    });
   }
 
   async getDocumentList() {
-    return this.prismaService.documentMetadata.findMany()
+    return this.prismaService.documentMetadata.findMany();
   }
 
-  async createDocumentMetadata(data: Prisma.DocumentMetadataCreateInput) {
-    return this.prismaService.documentMetadata.create({ data })
+  async createDocumentMetadata(
+    data: Prisma.DocumentMetadataCreateInput,
+  ): Promise<DocumentMetadata> {
+    return this.prismaService.documentMetadata.create({ data });
   }
 }
