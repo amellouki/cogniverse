@@ -1,11 +1,11 @@
-# Cogniverse
+# [Cogniverse.ai](https://www.cogniverse.ai)
 A web app that leverages LLMs through Langchain.\
 _Aims at enabling fine-tuned prompting and UI to interact with the created agents._
 
 Deployed at https://www.cogniverse.ai
 
-**Currently supported LLMs:** chatGPT-3 (default) \
-**Currently support vector stores:** Pinecone (default)
+**Currently supported LLMs:** GPT-3.5 (default) \
+**Currently supported vector stores:** Pinecone (default)
 
 ## Pre-requisites
 Node `v18.16.0` \
