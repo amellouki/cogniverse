@@ -3,6 +3,7 @@ import { ConversationalRetrievalQaService } from './conversational-retrieval-qa.
 import { ConversationalRetrievalQaGateway } from './conversational-retrieval-qa.gateway';
 import { PineconeService } from '../../services/pinecone/pinecone.service';
 import { RepositoriesModule } from '../../repositories/repositories.module';
+import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
 
 @Module({
   imports: [RepositoriesModule],
@@ -10,6 +11,7 @@ import { RepositoriesModule } from '../../repositories/repositories.module';
     ConversationalRetrievalQaGateway,
     ConversationalRetrievalQaService,
     PineconeService,
+    DocumentNamespaceService,
   ],
   controllers: [],
 })

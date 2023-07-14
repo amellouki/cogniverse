@@ -1,0 +1,53 @@
+.Checkbox {
+  display: flex;
+  position: relative;
+  cursor: pointer;
+  align-items: center;
+}
+
+.Checkbox input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2rem;
+  width: 2rem;
+  opacity: 0;
+}
+
+.Checkbox span {
+  margin: .25rem 0 .25rem 2.5rem;
+  line-height: 1.5rem;
+}
+
+.Checkbox span::after {
+  position: absolute;
+  content: "";
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  top: 0;
+  left: 0;
+  background-color: var(--disabled-button-background);
+  border-radius: 0.5rem;
+}
+
+.Checkbox input:checked+span::after {
+  background-color: var(--primary-button-background);
+}
+
+.checkIcon {
+  display: none;
+  position: absolute;
+  top: 0rem;
+  left: 0rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.25rem;
+  color: var(--primary-button-foreground);
+  stroke-width: 2.3;
+}
+
+.Checkbox input:checked~.checkIcon {
+  display: block;
+}
+

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Logger,
   Post,
   UploadedFile,
@@ -16,6 +17,8 @@ import { PineconeService } from '../../services/pinecone/pinecone.service';
 import { PdfUploadDto } from '../../dto/pdf-upload.dto';
 import { UploadedFileType } from '@my-monorepo/shared/dist/uploaded-file';
 import { PdfSplitterService } from '../../services/pdf-splitter/pdf-splitter.service';
+import { PdfEmbeddingService } from './pdf-embedding.service';
+import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
 
 @Controller('pdf-embedding')
 export class PdfEmbeddingController {
@@ -25,9 +28,11 @@ export class PdfEmbeddingController {
     private configService: ConfigService,
     private pineconeService: PineconeService,
     private pdfSplitterService: PdfSplitterService,
+    private pdfEmbeddingService: PdfEmbeddingService,
+    private documentNamespaceService: DocumentNamespaceService,
   ) {}
 
-  @Post()
+  @Post('embed')
   @UseInterceptors(FileInterceptor('file'))
   async uploadPdf(
     @UploadedFile() file: UploadedFileType,
@@ -39,6 +44,9 @@ export class PdfEmbeddingController {
 
     const docs = await this.pdfSplitterService.split(file, splitParams);
 
+    const documentMetadata =
+      await this.pdfEmbeddingService.saveDocumentMetadata(file);
+
     await PineconeStore.fromDocuments(
       docs,
       new OpenAIEmbeddings({
@@ -47,8 +55,17 @@ export class PdfEmbeddingController {
       }),
       {
         pineconeIndex,
+        namespace:
+          this.documentNamespaceService.getDocumentNamespace(documentMetadata),
       },
     );
+
+    this.logger.log(
+      'used namespace for doc embedding :',
+      this.documentNamespaceService.getDocumentNamespace(documentMetadata),
+    );
+
+    // TODO: confirm that the document was embedded successfully, in a database column of the DocumentMetadata table
 
     return {
       status: 'success',
@@ -56,5 +73,10 @@ export class PdfEmbeddingController {
       numberOfChunks: docs.length,
       message: 'File embedded successfully',
     };
+  }
+
+  @Get('embedded-documents')
+  async getEmbeddedDocuments() {
+    return this.pdfEmbeddingService.getDocumentList();
   }
 }

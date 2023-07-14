@@ -1,11 +1,12 @@
 import React, {FunctionComponent} from 'react';
 import styles from './styles.module.scss';
+import Link from "next/link";
 
 const Logo: FunctionComponent = (props) => {
   return (
-    <span className={styles.Logo}>
+    <Link href={'/'} className={styles.Logo}>
       Cogni<strong className={styles.highlight}>verse</strong>
-    </span>
+    </Link>
   );
 }
 

@@ -1,6 +1,6 @@
 import React, {FunctionComponent, LabelHTMLAttributes, PropsWithChildren} from 'react';
 import {FieldError} from "react-hook-form";
-import {getErrorText} from "./helper";
+import {getErrorText} from "@/helpers/get-error-text";
 import styles from './styles.module.scss';
 
 type Props = PropsWithChildren & LabelHTMLAttributes<HTMLLabelElement> & {

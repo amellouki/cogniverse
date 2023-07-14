@@ -1,4 +1,4 @@
-//Prisma schema, more in the docs: https://pris.ly/d/prisma-schema
+// Prisma schema, more in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -10,30 +10,42 @@ datasource db {
 }
 
 model Conversation {
-  id            Int    @id @default(autoincrement())
-  title         String
-  retrievalLanguageModelId   Int?
-  retrievalLanguageModel     LanguageModel? @relation("RetrievalModel", fields: [retrievalLanguageModelId], references: [id])
-  conversationModelId        Int?
-  conversationModel          LanguageModel? @relation("ConversationModel", fields: [conversationModelId], references: [id])
-  ChatHistory            Message[]
+  id                       Int               @id @default(autoincrement())
+  title                    String
+  retrievalLanguageModelId Int?
+  retrievalLanguageModel   LanguageModel?    @relation("RetrievalModel", fields: [retrievalLanguageModelId], references: [id])
+  conversationModelId      Int?
+  conversationModel        LanguageModel?    @relation("ConversationModel", fields: [conversationModelId], references: [id])
+  documentId               Int?
+  document                 DocumentMetadata? @relation("DocumentMetadata", fields: [documentId], references: [id])
+  ChatHistory              Message[]
 }
 
 model Message {
-  id            Int    @id @default(autoincrement())
-  type          String
-  content       String
-  fromId        Int?
-  fromType      String
-  conversationId     Int
-  conversation       Conversation  @relation(fields: [conversationId], references: [id])
+  id             Int          @id @default(autoincrement())
+  type           String
+  content        String
+  fromId         Int?
+  fromType       String
+  conversationId Int
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
 }
 
 model LanguageModel {
-  id            Int    @id @default(autoincrement())
-  name          String
-  type          String
-  prompt        String
-  DocRetrievalConversationRetrieval  Conversation[] @relation("RetrievalModel")
+  id                                   Int            @id @default(autoincrement())
+  name                                 String
+  type                                 String
+  prompt                               String
+  DocRetrievalConversationRetrieval    Conversation[] @relation("RetrievalModel")
   DocRetrievalConversationConversation Conversation[] @relation("ConversationModel")
+}
+
+model DocumentMetadata {
+  id                   Int            @id @default(autoincrement())
+  title                String
+  size                 Int
+  url                  String
+  embeddedAt           DateTime       @default(now())
+  embeddingStatus      String
+  ConversationDocument Conversation[] @relation("DocumentMetadata")
 }

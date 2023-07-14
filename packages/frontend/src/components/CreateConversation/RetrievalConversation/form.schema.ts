@@ -12,6 +12,7 @@ const schema = z.object({
   // CLM: Conversational Language Model
   isCLMCustomPrompt: z.boolean(),
   clmPrompt: z.string().optional(),
+  documentId: z.number().positive().nullable().refine((value) =>  value !== null, {message: "Document is required"}),
 }).refine((data) => {
   return !(data.isRLMCustomPrompt && !data.rlmPrompt);
 }, {

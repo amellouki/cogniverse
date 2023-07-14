@@ -27,6 +27,11 @@ export class AppController {
       ChatHistory: {
         create: [],
       },
+      document: {
+        connect: {
+          id: request.documentId,
+        }
+      },
     };
     return this.conversationService.createConversation(conversationData);
   }
@@ -38,7 +43,7 @@ export class AppController {
 
   @Get('conversation')
   async getConversationHistory(@Query('id') id: string): Promise<Conversation> {
-    return this.conversationService.conversationHistory(Number(id));
+    return this.conversationService.getConversationById(Number(id));
   }
 
   @Post('append-to-history')

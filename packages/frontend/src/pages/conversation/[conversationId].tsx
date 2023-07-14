@@ -1,20 +1,19 @@
 import React from "react";
 import QueryForm from "@/components/QueryForm";
-import DebugDocs from "@/components/DebugDocs";
 import ChatThread from "@/components/ChatThread";
 import useChatHistory from "@/hooks/use-chat-history.hook";
 import useConversation from "@/hooks/use-conversation.hook";
 import {useQuery} from "react-query";
 import {Conversation} from "@/types/ChatThread";
 import {useRouter} from "next/router";
+import Tips from "../../components/Tips";
 import styles from "./styles.module.scss";
 
 const Conversation: React.FC = () => {
   const router = useRouter()
   const conversationId = router.query.conversationId as string
 
-  console.log(conversationId)
-  const {data} = useQuery<Conversation>(`conversation${conversationId}`, () => {
+  const {data, isLoading} = useQuery<Conversation>(`conversation${conversationId}`, () => {
     if (conversationId) {
       return fetch(process.env.NEXT_PUBLIC_BACKEND_API + `/api/conversation?id=${conversationId}`).then((res) => res.json());
     }
@@ -29,6 +28,18 @@ const Conversation: React.FC = () => {
       appendSuccess(response)
     }
   );
+
+  if (!conversationId) {
+    return <center><Tips /></center>
+  }
+
+  if (isLoading) {
+    return <center>Loading...</center>
+  }
+
+  if (!data) {
+    return <center>Not found</center>
+  }
 
   return (
     <div className={styles.Conversation}>
@@ -46,7 +57,7 @@ const Conversation: React.FC = () => {
         });
         sendQuestion(data.id, question);
       }}/>
-      {resources && <DebugDocs docs={resources}/>}
+      {data.document && <div><em>Retrieving data from <strong>{data.document.title}</strong></em></div>}
     </div>
   );
 };

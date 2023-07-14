@@ -13,9 +13,12 @@ export function getNewConversation(data: InputType): NewConversation {
     type: "conversation-model",
   } : undefined
 
+  if (data.documentId === null) throw new Error("Document is required");
+
   return {
     title: data.title,
     retrievalLanguageModel,
     conversationModel,
+    documentId: data.documentId,
   }
 }

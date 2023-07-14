@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ENV, QUERY_EMBEDDING_MODEL } from '../../constants';
 import { PineconeStore } from 'langchain/vectorstores';
 import { OpenAIEmbeddings } from 'langchain/embeddings';
@@ -13,9 +13,15 @@ import {
   SystemChatMessage,
 } from 'langchain/schema';
 import DocConversationalChain from '../../models/chains/doc-conversational-chain';
-import { Conversation, LanguageModel, Message } from '@prisma/client';
+import {
+  Conversation,
+  DocumentMetadata,
+  LanguageModel,
+  Message,
+} from '@prisma/client';
 import { ChatHistoryService } from '../../repositories/chat-history/chat-history.service';
 import NewMessage from '@my-monorepo/shared/dist/new-message';
+import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
 
 type Callbacks = {
   sendToken: (tokenMessage: NewMessage) => Promise<void>;
@@ -25,10 +31,12 @@ type Callbacks = {
 
 @Injectable()
 export class ConversationalRetrievalQaService {
+  logger = new Logger(ConversationalRetrievalQaService.name);
   constructor(
     private configService: ConfigService,
     private pinecone: PineconeService,
     private chatHistoryService: ChatHistoryService,
+    private documentNamespaceService: DocumentNamespaceService,
   ) {}
 
   private constructHistory(array: Message[]): ChatMessageHistory {
@@ -53,6 +61,7 @@ export class ConversationalRetrievalQaService {
       ChatHistory: Message[];
       conversationModel: LanguageModel | null;
       retrievalLanguageModel: LanguageModel | null;
+      document: DocumentMetadata;
     },
     callbacks: Callbacks,
   ) {
@@ -78,7 +87,19 @@ export class ConversationalRetrievalQaService {
         openAIApiKey: openAiApiKey,
         modelName: QUERY_EMBEDDING_MODEL,
       }),
-      { pineconeIndex },
+      {
+        pineconeIndex,
+        namespace: this.documentNamespaceService.getDocumentNamespace(
+          conversation.document,
+        ),
+      },
+    );
+
+    this.logger.log(
+      'used namespace for retrieval:',
+      this.documentNamespaceService.getDocumentNamespace(
+        conversation.document,
+      ),
     );
 
     const conversationModel = new OpenAI({

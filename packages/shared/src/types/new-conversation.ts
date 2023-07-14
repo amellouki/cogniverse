@@ -8,6 +8,7 @@ type NewConversation = {
   title: string
   retrievalLanguageModel?: LanguageModel
   conversationModel?: LanguageModel
+  documentId: number
 }
 
 export default NewConversation;
