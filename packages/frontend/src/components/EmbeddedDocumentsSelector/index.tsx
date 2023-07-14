@@ -5,6 +5,7 @@ import LabelValuePair from "@/types/LabelValuePair";
 import styles from './styles.module.scss';
 import {FieldError} from "react-hook-form";
 import {getErrorText} from "@/helpers/get-error-text";
+import Link from "next/link";
 
 type Props = {
   onChange: (selectedDocumentId: number) => void
@@ -30,7 +31,7 @@ const EmbeddedDocumentsSelector: FunctionComponent<Props> = ({onChange, selected
     return options.find((document) => document.value === selectedDocumentId + '');
   }, [options, selectedDocumentId]);
 
-  if (data?.length === 0) return (<div>No documents registered yet!</div>);
+  if (data?.length === 0) return (<div>No documents registered yet! Please <Link href={'/embed-document'}><strong><u>embed a document first</u></strong></Link>!</div>);
   return (
     <div className={styles.EmbeddedDocumentsSelector}>
       <ControlledOptionSelection

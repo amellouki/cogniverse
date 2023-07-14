@@ -18,6 +18,7 @@ import { PdfUploadDto } from '../../dto/pdf-upload.dto';
 import { UploadedFileType } from '@my-monorepo/shared/dist/uploaded-file';
 import { PdfSplitterService } from '../../services/pdf-splitter/pdf-splitter.service';
 import { PdfEmbeddingService } from './pdf-embedding.service';
+import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
 
 @Controller('pdf-embedding')
 export class PdfEmbeddingController {
@@ -28,6 +29,7 @@ export class PdfEmbeddingController {
     private pineconeService: PineconeService,
     private pdfSplitterService: PdfSplitterService,
     private pdfEmbeddingService: PdfEmbeddingService,
+    private documentNamespaceService: DocumentNamespaceService,
   ) {}
 
   @Post('embed')
@@ -53,13 +55,14 @@ export class PdfEmbeddingController {
       }),
       {
         pineconeIndex,
-        namespace: documentMetadata.id.toString(),
+        namespace:
+          this.documentNamespaceService.getDocumentNamespace(documentMetadata),
       },
     );
 
     this.logger.log(
       'used namespace for doc embedding :',
-      documentMetadata.id.toString(),
+      this.documentNamespaceService.getDocumentNamespace(documentMetadata),
     );
 
     // TODO: confirm that the document was embedded successfully, in a database column of the DocumentMetadata table

@@ -51,7 +51,6 @@ export class ConversationalRetrievalQaGateway {
       conversationId,
     );
 
-    this.logger.log(conversation);
     const sendToken = async (tokenMessage: NewMessage) => {
       client.emit('data', getData('token', tokenMessage));
     };

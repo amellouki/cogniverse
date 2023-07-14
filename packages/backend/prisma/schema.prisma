@@ -45,5 +45,7 @@ model DocumentMetadata {
   title                String
   size                 Int
   url                  String
+  embeddedAt           DateTime       @default(now())
+  embeddingStatus      String
   ConversationDocument Conversation[] @relation("DocumentMetadata")
 }

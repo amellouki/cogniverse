@@ -11,6 +11,7 @@ export class PdfEmbeddingService {
       title: file.originalname,
       size: file.size,
       url: 'https://www.example.com',
+      embeddingStatus: 'pending',
     });
   }
 

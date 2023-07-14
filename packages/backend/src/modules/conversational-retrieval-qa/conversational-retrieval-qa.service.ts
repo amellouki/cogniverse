@@ -13,9 +13,15 @@ import {
   SystemChatMessage,
 } from 'langchain/schema';
 import DocConversationalChain from '../../models/chains/doc-conversational-chain';
-import { Conversation, LanguageModel, Message } from '@prisma/client';
+import {
+  Conversation,
+  DocumentMetadata,
+  LanguageModel,
+  Message,
+} from '@prisma/client';
 import { ChatHistoryService } from '../../repositories/chat-history/chat-history.service';
 import NewMessage from '@my-monorepo/shared/dist/new-message';
+import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
 
 type Callbacks = {
   sendToken: (tokenMessage: NewMessage) => Promise<void>;
@@ -30,6 +36,7 @@ export class ConversationalRetrievalQaService {
     private configService: ConfigService,
     private pinecone: PineconeService,
     private chatHistoryService: ChatHistoryService,
+    private documentNamespaceService: DocumentNamespaceService,
   ) {}
 
   private constructHistory(array: Message[]): ChatMessageHistory {
@@ -54,6 +61,7 @@ export class ConversationalRetrievalQaService {
       ChatHistory: Message[];
       conversationModel: LanguageModel | null;
       retrievalLanguageModel: LanguageModel | null;
+      document: DocumentMetadata;
     },
     callbacks: Callbacks,
   ) {
@@ -79,12 +87,19 @@ export class ConversationalRetrievalQaService {
         openAIApiKey: openAiApiKey,
         modelName: QUERY_EMBEDDING_MODEL,
       }),
-      { pineconeIndex, namespace: conversation.documentId.toString() },
+      {
+        pineconeIndex,
+        namespace: this.documentNamespaceService.getDocumentNamespace(
+          conversation.document,
+        ),
+      },
     );
 
     this.logger.log(
       'used namespace for retrieval:',
-      conversation.documentId.toString(),
+      this.documentNamespaceService.getDocumentNamespace(
+        conversation.document,
+      ),
     );
 
     const conversationModel = new OpenAI({
