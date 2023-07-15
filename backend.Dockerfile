@@ -12,6 +12,8 @@ RUN npm install
 
 COPY . .
 
+ARG DATABASE_URL
+ENV DATABASE_URL ${DATABASE_URL}
 RUN npm run prisma:migrate
 RUN npm run prisma:generate
 
@@ -42,6 +44,8 @@ RUN npm ci --omit=dev
 RUN npm install -g @nestjs/cli
 
 # Run migrations and generate prisma client
+ARG DATABASE_URL
+ENV DATABASE_URL ${DATABASE_URL}
 RUN npm run prisma:migrate
 RUN npm run prisma:generate
 
