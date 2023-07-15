@@ -27,7 +27,7 @@ jobs:
           password: ${{secrets.DOCKERHUB_TOKEN}}
           logout: true
       - name: Build Docker Backend Image
-        run: docker build -t ${{ secrets.DOCKERHUB_BACKEND_REPO }} -f
+        run: docker build --build-args DATABASE_URL=${{ secrets.DATABASE_URL }} -t ${{ secrets.DOCKERHUB_BACKEND_REPO }} -f
           ./backend.Dockerfile .
       - name: Tag Our Image
         run: docker tag ${{ secrets.DOCKERHUB_BACKEND_REPO }}
