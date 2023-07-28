@@ -1,27 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { Conversation, Prisma } from '@prisma/client';
+import { RCConversation, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ConversationService {
   constructor(private prisma: PrismaService) {}
 
-  async conversations(): Promise<Conversation[]> {
-    return this.prisma.conversation.findMany();
+  async conversations(): Promise<RCConversation[]> {
+    return this.prisma.rCConversation.findMany();
   }
 
-  async createConversation(
-    data: Prisma.ConversationCreateInput,
-  ): Promise<Conversation> {
-    return this.prisma.conversation.create({ data });
+  async createRCConversation(
+    data: Prisma.RCConversationCreateInput,
+  ): Promise<RCConversation> {
+    return this.prisma.rCConversation.create({ data });
   }
-  async conversationHistory(id: number) {
-    return this.prisma.conversation.findUnique({
+  async rcConversationHistory(id: number) {
+    return this.prisma.rCConversation.findUnique({
       where: {
         id: id,
       },
       include: {
-        ChatHistory: {
+        chatHistory: {
           orderBy: {
             id: 'asc',
           },
@@ -30,19 +30,23 @@ export class ConversationService {
     });
   }
 
-  async getConversationById(id: number) {
-    return this.prisma.conversation.findUnique({
+  async getRcConversationById(id: number) {
+    return this.prisma.rCConversation.findUnique({
       where: {
         id,
       },
       include: {
-        ChatHistory: {
+        chatHistory: {
           orderBy: {
             id: 'asc',
           },
         },
-        conversationModel: true,
-        retrievalLanguageModel: true,
+        rcAgent: {
+          include: {
+            retrievalLanguageModel: true,
+            conversationModel: true,
+          },
+        },
         document: true,
       },
     });

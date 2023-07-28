@@ -1,4 +1,4 @@
 export class DocConversationRequestDto {
-  conversationId: number;
+  conversationId: number | undefined;
   question: string;
 }

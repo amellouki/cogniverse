@@ -6,8 +6,7 @@ type LanguageModel = {
 
 type NewConversation = {
   title: string
-  retrievalLanguageModel?: LanguageModel
-  conversationModel?: LanguageModel
+  agentId: number
   documentId: number
 }
 

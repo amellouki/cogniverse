@@ -1,6 +1,3 @@
-export type DocumentMetadata = {
-  id: number;
-  title: string;
-  size: number;
-  url: string;
-}
+import { DocumentMetadata as PrismaDocumentMetadata } from '@prisma/client';
+
+export type DocumentMetadata = PrismaDocumentMetadata;

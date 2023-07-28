@@ -1,6 +1,5 @@
 import { Logger } from '@nestjs/common';
 import { ConversationalRetrievalQaService } from './conversational-retrieval-qa.service';
-import { END_COMPLETION } from '../../constants';
 import { DocConversationRequestDto } from '../../dto/doc-conversation-request.dto';
 import { Socket } from 'socket.io';
 import {
@@ -13,6 +12,7 @@ import * as dotenv from 'dotenv';
 import { ConversationService } from '../../repositories/conversation/conversation.service';
 import { Message } from '@prisma/client';
 import NewMessage from '@my-monorepo/shared/dist/new-message';
+import { END_COMPLETION } from '../../constants';
 
 dotenv.config({ path: './.env.local' });
 
@@ -47,7 +47,7 @@ export class ConversationalRetrievalQaGateway {
 
     this.logger.log(request);
 
-    const conversation = await this.conversationService.getConversationById(
+    const conversation = await this.conversationService.getRcConversationById(
       conversationId,
     );
 

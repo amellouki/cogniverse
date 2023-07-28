@@ -1,19 +1,18 @@
 import React, {FunctionComponent} from 'react';
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import useCreateAgent from "@/hooks/use-create-conversation.hook";
+import useCreateAgent from "@/hooks/use-create-rc-agent.hook";
 import ControlledToggleButton from "../../BaseFormFields/ControlledToggleButton";
 import FormFieldWrapper from "@/components/FormFieldWrapper";
 import TextInput from "@/components/BaseFormFields/TextInput";
 import Button from "@/components/Button";
 import Prompt from "@/components/BaseFormFields/Prompt";
 import schema, {InputType} from "./form.schema";
-import {getNewConversation} from "./helpers";
+import {getNewAgent} from "./helpers";
 import {CLM_PROMPT_PLACEHOLDERS, RLM_PROMPT_PLACEHOLDERS} from "./contants";
-import EmbeddedDocumentsSelector from "@/components/EmbeddedDocumentsSelector";
 import styles from './styles.module.scss';
 
-const RetrievalConversation: FunctionComponent = () => {
+const RetrievalConversational: FunctionComponent = () => {
   const {
     register,
     handleSubmit,
@@ -29,7 +28,7 @@ const RetrievalConversation: FunctionComponent = () => {
     reset();
   })
 
-  const onSubmit: SubmitHandler<InputType> = (data) => mutation.mutate(getNewConversation(data))
+  const onSubmit: SubmitHandler<InputType> = (data) => mutation.mutate(getNewAgent(data))
 
   const isRLMCustomPrompt = watch('isRLMCustomPrompt');
   const isCLMCustomPrompt = watch('isCLMCustomPrompt');
@@ -37,15 +36,15 @@ const RetrievalConversation: FunctionComponent = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.CreateConversation}>
       <FormFieldWrapper
-        htmlFor={'conversation-title'}
-        label={'Conversation title'}
-        fieldError={errors.title}
+        htmlFor={'agent-name'}
+        label={'Agent Name'}
+        fieldError={errors.name}
       >
         <TextInput
-          id={'conversation-title'}
-          placeholder={'Provide conversation title'}
-          hasError={!!errors.title}
-          {...register('title', {required: true})}
+          id={'agent-name'}
+          placeholder={'Provide unique agent name'}
+          hasError={!!errors.name}
+          {...register('name', {required: true})}
         />
       </FormFieldWrapper>
       <div className={styles.ToggleButtonRow}>
@@ -113,21 +112,9 @@ const RetrievalConversation: FunctionComponent = () => {
           />
         </FormFieldWrapper>
       )}
-      <Controller
-        render={({ field: {onChange, value} }) => (
-          <EmbeddedDocumentsSelector
-            selectedDocumentId={value}
-            onChange={onChange}
-            fieldError={errors.documentId}
-          />
-        )}
-        name={'documentId'}
-        control={control}
-        defaultValue={null}
-      />
       <Button type={'submit'} className={styles.SubmitButton}>Create</Button>
     </form>
   );
 }
 
-export default RetrievalConversation;
+export default RetrievalConversational;

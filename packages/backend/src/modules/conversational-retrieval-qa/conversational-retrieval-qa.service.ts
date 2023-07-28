@@ -13,14 +13,10 @@ import {
   SystemChatMessage,
 } from 'langchain/schema';
 import DocConversationalChain from '../../models/chains/doc-conversational-chain';
-import {
-  Conversation,
-  DocumentMetadata,
-  LanguageModel,
-  Message,
-} from '@prisma/client';
+import { Message } from '@prisma/client';
 import { ChatHistoryService } from '../../repositories/chat-history/chat-history.service';
-import NewMessage from '@my-monorepo/shared/dist/new-message';
+import NewMessage from '@my-monorepo/shared/src/types/new-message';
+import RCConversation from '@my-monorepo/shared/src/types/rc-conversation';
 import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
 
 type Callbacks = {
@@ -57,18 +53,14 @@ export class ConversationalRetrievalQaService {
 
   async getCompletion(
     question: string,
-    conversation: Conversation & {
-      ChatHistory: Message[];
-      conversationModel: LanguageModel | null;
-      retrievalLanguageModel: LanguageModel | null;
-      document: DocumentMetadata;
-    },
+    conversation: RCConversation,
     callbacks: Callbacks,
   ) {
     // TODO: move side effects away from pure function
     const added = await this.chatHistoryService.saveMessage({
       content: question,
-      conversationId: conversation.id,
+      rcId: conversation.id,
+      simpleConversationId: undefined,
       fromType: 'human',
       type: 'message',
       fromId: null,
@@ -97,9 +89,7 @@ export class ConversationalRetrievalQaService {
 
     this.logger.log(
       'used namespace for retrieval:',
-      this.documentNamespaceService.getDocumentNamespace(
-        conversation.document,
-      ),
+      this.documentNamespaceService.getDocumentNamespace(conversation.document),
     );
 
     const conversationModel = new OpenAI({
@@ -110,10 +100,11 @@ export class ConversationalRetrievalQaService {
           // TODO: use observable to split side effects from pure function
           return callbacks.sendToken({
             content: token,
-            conversationId: conversation.id,
+            rcId: conversation.id,
+            simpleConversationId: undefined,
             fromType: 'ai',
             type: 'response-token',
-            fromId: conversation.conversationModelId,
+            fromId: conversation.rcAgent.conversationModelId,
           });
         },
       }),
@@ -127,21 +118,23 @@ export class ConversationalRetrievalQaService {
         handleLLMNewToken: (token) => {
           return callbacks.sendToken({
             content: token,
-            conversationId: conversation.id,
+            rcId: conversation.id,
+            simpleConversationId: undefined,
             fromType: 'ai',
             type: 'retrieval-token',
-            fromId: conversation.retrievalLanguageModelId,
+            fromId: conversation.rcAgent.retrievalLanguageModelId,
           });
         },
         handleLLMEnd: async (chainValues) => {
           console.log('handle llm end on retrieval model');
           if (chainValues.generations[0][0]?.text) {
-            const message = {
+            const message: NewMessage = {
               content: chainValues.generations[0][0]?.text,
-              conversationId: conversation.id,
+              rcId: conversation.id,
+              simpleConversationId: undefined,
               fromType: 'ai',
               type: 'idea',
-              fromId: conversation.retrievalLanguageModelId,
+              fromId: conversation.rcAgent.retrievalLanguageModelId,
             };
             // TODO: use observable to split side effects from pure function
             this.chatHistoryService
@@ -167,27 +160,28 @@ export class ConversationalRetrievalQaService {
           inputKey: 'question', // The key for the input to the chain
           outputKey: 'text', // The key for the final conversational output of the chain
           returnMessages: true, // If using with a chat model
-          chatHistory: this.constructHistory(conversation.ChatHistory),
+          chatHistory: this.constructHistory(conversation.chatHistory),
         }),
         questionGeneratorChainOptions: {
           llm: retrievalModel,
-          template: conversation.retrievalLanguageModel?.prompt,
+          template: conversation.rcAgent.retrievalLanguageModel?.prompt,
         },
-        conversationTemplate: conversation.conversationModel?.prompt,
+        conversationTemplate: conversation.rcAgent.conversationModel?.prompt,
       },
     );
     const chainValues = await chain.call({
       question,
-      chat_history: this.constructHistory(conversation.ChatHistory),
+      chat_history: this.constructHistory(conversation.chatHistory),
     });
 
     // TODO: Use observable to split side effects from pure function
     const response = await this.chatHistoryService.saveMessage({
       content: chainValues.text,
-      conversationId: conversation.id,
+      rcId: conversation.id,
+      simpleConversationId: undefined,
       fromType: 'ai',
       type: 'message',
-      fromId: conversation.conversationModelId,
+      fromId: conversation.rcAgent.conversationModelId,
     });
 
     return response;
