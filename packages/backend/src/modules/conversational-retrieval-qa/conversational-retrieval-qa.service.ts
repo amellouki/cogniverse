@@ -56,6 +56,7 @@ export class ConversationalRetrievalQaService {
     conversation: RCConversation,
     callbacks: Callbacks,
   ) {
+    this.logger.log('getCompletion', question);
     // TODO: move side effects away from pure function
     const added = await this.chatHistoryService.saveMessage({
       content: question,

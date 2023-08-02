@@ -30,6 +30,7 @@ const MessageBox: FunctionComponent<MessageBoxProps> = ({
     )
   }
 
+  console.log('MessageBox', message)
   return (
     <div
       className={clsx(

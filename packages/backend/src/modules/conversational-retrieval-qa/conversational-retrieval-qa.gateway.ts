@@ -43,17 +43,27 @@ export class ConversationalRetrievalQaGateway {
     @MessageBody() request: DocConversationRequestDto,
     @ConnectedSocket() client: Socket,
   ) {
-    const { question, conversationId } = request;
-
-    this.logger.log(request);
-
-    const conversation = await this.conversationService.getRcConversationById(
-      conversationId,
-    );
-
+    const { question, conversationId, newConversation } = request;
+    let conversation;
+    console.log('request', request);
+    if (!conversationId && newConversation) {
+      conversation = await this.conversationService.createRCConversation({
+        ...newConversation,
+        title: `hello there! ${Date.now()}`,
+      });
+      client.emit('data', getData('conversationDetails', conversation));
+    } else if (!conversationId) {
+      throw new Error('No conversation id provided');
+    } else {
+      conversation = await this.conversationService.getRcConversationById(
+        conversationId,
+      );
+    }
     const sendToken = async (tokenMessage: NewMessage) => {
       client.emit('data', getData('token', tokenMessage));
     };
+
+    console.log('sendToken');
     const sendRetrieval = async (retrievedStandaloneQuestion: Message) => {
       client.emit('data', {
         type: 'retrieval',
@@ -66,6 +76,7 @@ export class ConversationalRetrievalQaGateway {
         content: question,
       });
     };
+
     this.service
       .getCompletion(question || '', conversation, {
         sendToken,

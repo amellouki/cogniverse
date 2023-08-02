@@ -3,11 +3,7 @@ import WrappedSelect from "@/components/BaseFormFields/Select/WrappedSelect";
 import SelectOption from "@/types/SelectOption";
 import RetrievalConversational from "@/components/CreateAgent/RetrievalConversational";
 import styles from './styles.module.scss';
-
-const agentOptions: SelectOption[] = [
-  { value: 'rc', label: 'PDF Retrieval Conversational' },
-  { value: 'simpleAgent', label: 'Simple Agent' },
-]
+import {AGENT_OPTIONS} from "@/constants";
 
 const CreateAgent: FunctionComponent = () => {
   const [
@@ -18,7 +14,7 @@ const CreateAgent: FunctionComponent = () => {
     <div className={styles.CreateConversation}>
       <h2 className={styles.formTitle}>Create a new agent</h2>
       <WrappedSelect
-        options={agentOptions}
+        options={AGENT_OPTIONS}
         label={'Select Agent Type'}
         placeholder={'Select...'}
         selected={selectedOption}

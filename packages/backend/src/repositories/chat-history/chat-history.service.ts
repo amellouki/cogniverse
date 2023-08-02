@@ -37,6 +37,7 @@ export class ChatHistoryService {
         },
       },
     };
+    console.log('saving message', messageCreateInput);
     return this.createMessage(messageCreateInput);
   }
 }

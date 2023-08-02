@@ -13,6 +13,7 @@ const WrappedSelect: FunctionComponent<Props> = ({
   selected,
   onChange,
   id,
+  className,
   ...props
 }) => {
   const select = useSelect({
@@ -23,7 +24,7 @@ const WrappedSelect: FunctionComponent<Props> = ({
     id,
   })
   return (
-    <FormFieldWrapper label={label} {...select.getLabelProps()}>
+    <FormFieldWrapper label={label} className={className} {...select.getLabelProps()}>
       <SelectView select={select} {...props} />
     </FormFieldWrapper>
   );

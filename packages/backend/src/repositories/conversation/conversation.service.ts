@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RCConversation, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import NewConversation from '@my-monorepo/shared/dist/new-conversation';
 
 @Injectable()
 export class ConversationService {
@@ -10,10 +11,37 @@ export class ConversationService {
     return this.prisma.rCConversation.findMany();
   }
 
-  async createRCConversation(
-    data: Prisma.RCConversationCreateInput,
-  ): Promise<RCConversation> {
-    return this.prisma.rCConversation.create({ data });
+  async createRCConversation(data: NewConversation): Promise<RCConversation> {
+    const conversationData: Prisma.RCConversationCreateInput = {
+      title: data.title,
+      chatHistory: {
+        create: [],
+      },
+      rcAgent: {
+        connect: {
+          id: data.agentId,
+        },
+      },
+      document: {
+        connect: {
+          id: data.documentId,
+        },
+      },
+    };
+
+    return this.prisma.rCConversation.create({
+      data: conversationData,
+      include: {
+        chatHistory: true,
+        rcAgent: {
+          include: {
+            retrievalLanguageModel: true,
+            conversationModel: true,
+          },
+        },
+        document: true,
+      },
+    });
   }
   async rcConversationHistory(id: number) {
     return this.prisma.rCConversation.findUnique({

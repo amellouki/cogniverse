@@ -4,7 +4,7 @@ export type Message = PrismaMessage
 
 export type Conversation = {
   id: number;
-  ChatHistory: Message[];
+  chatHistory: Message[];
   conversationModel: LanguageModel;
   retrievalLanguageModel: LanguageModel;
   document: DocumentMetadata;

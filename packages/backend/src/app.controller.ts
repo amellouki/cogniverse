@@ -16,23 +16,7 @@ export class AppController {
   async createConversation(
     @Body() request: CreateConversationRequestDto,
   ): Promise<RCConversation> {
-    const conversationData: Prisma.RCConversationCreateInput = {
-      title: request.title,
-      chatHistory: {
-        create: [],
-      },
-      rcAgent: {
-        connect: {
-          id: request.agentId,
-        },
-      },
-      document: {
-        connect: {
-          id: request.documentId,
-        },
-      },
-    };
-    return this.conversationService.createRCConversation(conversationData);
+    return this.conversationService.createRCConversation(request);
   }
 
   @Get('conversations')
