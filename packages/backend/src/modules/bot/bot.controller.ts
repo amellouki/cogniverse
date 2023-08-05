@@ -18,7 +18,7 @@ export class BotController {
     return this.agentService.getRcAgentById(Number(id));
   }
 
-  @Get('get-agents')
+  @Get('get-bots')
   async getAgents() {
     return this.agentService.getAgents();
   }

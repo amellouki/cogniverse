@@ -3,7 +3,7 @@ import {useQuery} from "react-query";
 import RcAgent from "../../../../shared/src/types/bot/bot";
 import useEmbeddedDocumentsList from "@/hooks/use-embedded-document-list.hook";
 import {Controller, useForm} from "react-hook-form";
-import {DocumentMetadata} from "@my-monorepo/shared/dist/document-metadata";
+import {DocumentMetadata} from "@my-monorepo/shared/dist/types/document-metadata";
 import {Select} from "@/components/BaseFormFields/Select";
 import SelectOption from "@/types/SelectOption";
 import styles from './styles.module.scss'
@@ -19,10 +19,11 @@ type Props = {
 
 const SelectBot: FunctionComponent<Props> = ({ botSelectionRef }) => {
   const {data: agentsData} = useQuery<RcAgent[]>('agents', () => {
-    return fetch(process.env.NEXT_PUBLIC_BACKEND_API + '/agent/get-agents').then((res) => res.json())
+    return fetch(process.env.NEXT_PUBLIC_BACKEND_API + '/bot/get-bots').then((res) => res.json())
   });
 
   const agentsOptions = useMemo(() => {
+    console.log(agentsData)
     return agentsData?.map((agent) => ({
       label: agent.name,
       value: agent.id + ''

@@ -18,7 +18,7 @@ import { ChatHistoryService } from '../../repositories/chat-history/chat-history
 import NewMessage from '@my-monorepo/shared/dist/types/new-message';
 import RCConversation from '@my-monorepo/shared/dist/types/rc-conversation';
 import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
-import { Bot, BotType } from '@my-monorepo/shared/dist/types/bot';
+import { Bot, BotType } from '@my-monorepo/shared';
 
 type Callbacks = {
   sendToken: (tokenMessage: NewMessage) => Promise<void>;
@@ -125,6 +125,7 @@ export class ConversationalRetrievalQaService {
       // modelName: 'gpt-4', // TODO: make openai model name configurable
       callbackManager: CallbackManager.fromHandlers({
         handleLLMNewToken: (token) => {
+          console.log('handle llm new token on retrieval model', token);
           return callbacks.sendToken({
             content: token,
             rcId: conversation.id,
@@ -173,9 +174,9 @@ export class ConversationalRetrievalQaService {
         }),
         questionGeneratorChainOptions: {
           llm: retrievalModel,
-          template: conversation.rcAgent.retrievalLanguageModel?.prompt,
+          template: bot.configuration.retrievalLm?.prompt,
         },
-        conversationTemplate: conversation.rcAgent.conversationModel?.prompt,
+        conversationTemplate: bot.configuration.conversationalLm?.prompt,
       },
     );
     const chainValues = await chain.call({

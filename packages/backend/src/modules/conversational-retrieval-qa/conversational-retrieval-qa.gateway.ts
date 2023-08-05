@@ -45,7 +45,7 @@ export class ConversationalRetrievalQaGateway {
   ) {
     const { question, conversationId, newConversation } = request;
     let conversation;
-    console.log('request', request);
+
     if (!conversationId && newConversation) {
       conversation = await this.conversationService.createRCConversation({
         ...newConversation,
@@ -65,7 +65,6 @@ export class ConversationalRetrievalQaGateway {
       client.emit('data', getData('token', tokenMessage));
     };
 
-    console.log('sendToken');
     const sendRetrieval = async (retrievedStandaloneQuestion: Message) => {
       client.emit('data', {
         type: 'retrieval',
