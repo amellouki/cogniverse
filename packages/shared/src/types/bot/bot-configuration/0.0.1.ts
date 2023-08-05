@@ -24,27 +24,21 @@ export interface BotConfiguration {
   avatar: BotAvatar,
 }
 
+export type LmConfig = {
+  modelName: string,
+  prompt?: string,
+  apiKey: string,
+}
+
 export interface ConversationalBotConfiguration extends BotConfiguration {
   type: typeof BotType.CONVERSATIONAL
-  lm: {
-    modelName: string,
-    prompt: string,
-    apiKey: string,
-  }
+  lm?: LmConfig
 }
 
 export interface RcBotConfiguration extends BotConfiguration {
   type: typeof BotType.RETRIEVAL_CONVERSATIONAL,
-  retrievalLm?: {
-    modelName: string,
-    prompt?: string,
-    apiKey: string,
-  }
-  conversationalLm?: {
-    modelName: string,
-    prompt?: string,
-    apiKey: string,
-  }
+  retrievalLm?: LmConfig,
+  conversationalLm?: LmConfig,
 }
 
 export interface RcBot extends Bot {

@@ -18,6 +18,7 @@ import { ChatHistoryService } from '../../repositories/chat-history/chat-history
 import NewMessage from '@my-monorepo/shared/src/types/new-message';
 import RCConversation from '@my-monorepo/shared/src/types/rc-conversation';
 import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
+import { Bot, BotType } from '@my-monorepo/shared/dist/types/bot';
 
 type Callbacks = {
   sendToken: (tokenMessage: NewMessage) => Promise<void>;
@@ -57,6 +58,13 @@ export class ConversationalRetrievalQaService {
     callbacks: Callbacks,
   ) {
     this.logger.log('getCompletion', question);
+
+    const bot = conversation.rcAgent as Bot;
+    console.log('agent', bot);
+    if (bot.type !== BotType.RETRIEVAL_CONVERSATIONAL) {
+      throw Error('Bot is not a retrieval conversational');
+    }
+
     // TODO: move side effects away from pure function
     const added = await this.chatHistoryService.saveMessage({
       content: question,

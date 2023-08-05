@@ -1,4 +1,4 @@
-import NewLlm from '@my-monorepo/shared/dist/new-llm';
+import NewLlm from '@my-monorepo/shared/dist/types/new-llm';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 

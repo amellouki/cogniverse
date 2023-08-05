@@ -8,7 +8,7 @@ import { ServicesModule } from './services/services.module';
 import { DocQuestionAnsweringModule } from './modules/doc-question-answering/doc-question-answering.module';
 import { ConversationalRetrievalQaModule } from './modules/conversational-retrieval-qa/conversational-retrieval-qa.module';
 import { RepositoriesModule } from './repositories/repositories.module';
-import { AgentModule } from './modules/agent/agent.module';
+import { BotModule } from './modules/bot/bot.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { AgentModule } from './modules/agent/agent.module';
     PdfEmbeddingModule,
     DocQuestionAnsweringModule,
     ConversationalRetrievalQaModule,
-    AgentModule,
+    BotModule,
     ServicesModule,
     RepositoriesModule,
   ],

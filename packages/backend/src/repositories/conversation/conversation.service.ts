@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RCConversation, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import NewConversation from '@my-monorepo/shared/dist/new-conversation';
+import NewConversation from '@my-monorepo/shared/dist/types/new-conversation';
 
 @Injectable()
 export class ConversationService {

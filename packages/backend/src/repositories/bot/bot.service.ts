@@ -3,13 +3,13 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
-export class AgentService {
+export class BotService {
   constructor(private prisma: PrismaService) {}
-  createRcAgent(data: Prisma.BotCreateInput) {
+  createBot(data: Prisma.BotCreateInput) {
     return this.prisma.bot.create({ data });
   }
 
-  getRcAgentById(id: number) {
+  getBotById(id: number) {
     this.prisma.bot.findUnique({
       where: {
         id,
@@ -21,7 +21,7 @@ export class AgentService {
     });
   }
 
-  getAgents() {
+  getBots() {
     return this.prisma.bot.findMany({
       orderBy: {
         name: 'asc',

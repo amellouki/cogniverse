@@ -11,7 +11,7 @@ import {
 import * as dotenv from 'dotenv';
 import { ConversationService } from '../../repositories/conversation/conversation.service';
 import { Message } from '@prisma/client';
-import NewMessage from '@my-monorepo/shared/dist/new-message';
+import NewMessage from '@my-monorepo/shared/dist/types/new-message';
 import { END_COMPLETION } from '../../constants';
 
 dotenv.config({ path: './.env.local' });
@@ -53,6 +53,8 @@ export class ConversationalRetrievalQaGateway {
       });
       client.emit('data', getData('conversationDetails', conversation));
     } else if (!conversationId) {
+      client.emit('error', 'No conversation id provided');
+      client.disconnect();
       throw new Error('No conversation id provided');
     } else {
       conversation = await this.conversationService.getRcConversationById(
