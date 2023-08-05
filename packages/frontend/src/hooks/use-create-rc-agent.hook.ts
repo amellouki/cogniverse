@@ -1,12 +1,12 @@
 import {useMutation, useQueryClient} from "react-query";
 import axios from "axios";
-import NewRcAgent from "@my-monorepo/shared/dist/new-rc-agent";
+import NewBot from "../../../shared/src/types/bot/new-bot";
 
 const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/agent/create-rc'
 
 export default function useCreateRCAgent(onSuccess?: () => void) {
   const queryClient = useQueryClient()
-  return useMutation((newConversation: NewRcAgent) => axios.post(PATH, newConversation), {
+  return useMutation((newConversation: NewBot) => axios.post(PATH, newConversation), {
     onSuccess: (response) => {
       console.log('response', response)
       queryClient.invalidateQueries('agents');

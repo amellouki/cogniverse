@@ -5,12 +5,12 @@ import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class AgentService {
   constructor(private prisma: PrismaService) {}
-  createRcAgent(data: Prisma.RCAgentCreateInput) {
-    return this.prisma.rCAgent.create({ data });
+  createRcAgent(data: Prisma.BotCreateInput) {
+    return this.prisma.bot.create({ data });
   }
 
   getRcAgentById(id: number) {
-    this.prisma.rCAgent.findUnique({
+    this.prisma.bot.findUnique({
       where: {
         id,
       },
@@ -22,7 +22,7 @@ export class AgentService {
   }
 
   getAgents() {
-    return this.prisma.rCAgent.findMany({
+    return this.prisma.bot.findMany({
       orderBy: {
         name: 'asc',
       },

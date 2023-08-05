@@ -1,6 +1,6 @@
 import React, {FunctionComponent, useEffect, useMemo} from 'react';
 import {useQuery} from "react-query";
-import RcAgent from "@my-monorepo/shared/dist/rc-agent";
+import RcAgent from "../../../../shared/src/types/bot/bot";
 import useEmbeddedDocumentsList from "@/hooks/use-embedded-document-list.hook";
 import {Controller, useForm} from "react-hook-form";
 import {DocumentMetadata} from "@my-monorepo/shared/dist/document-metadata";

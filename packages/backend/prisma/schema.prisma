@@ -5,7 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -17,7 +17,7 @@ model RCConversation {
   document    DocumentMetadata? @relation("DocumentMetadata", fields: [documentId], references: [id])
   chatHistory Message[]
   rcAgentId   Int?
-  rcAgent     RCAgent?          @relation(fields: [rcAgentId], references: [id])
+  rcAgent     Bot?              @relation(fields: [rcAgentId], references: [id])
 }
 
 // Uses a single language model to answer user questions
@@ -29,7 +29,7 @@ model SimpleConversation {
   lm          LanguageModel? @relation(fields: [lmId], references: [id])
 }
 
-model RCAgent {
+model Bot {
   id                       Int              @id @default(autoincrement())
   name                     String           @unique()
   retrievalLanguageModelId Int?
@@ -37,6 +37,10 @@ model RCAgent {
   conversationModelId      Int?
   conversationModel        LanguageModel?   @relation("ConversationModel", fields: [conversationModelId], references: [id])
   RCConversation           RCConversation[]
+  description              String?
+  type                     BotType
+  configVersion            String           @default("0.0.1")
+  configuration            Json
 }
 
 model Message {
@@ -56,8 +60,8 @@ model LanguageModel {
   name                  String
   type                  String
   prompt                String
-  rcRetrievalModel      RCAgent[]            @relation("RetrievalModel")
-  rcConversationalModel RCAgent[]            @relation("ConversationModel")
+  rcRetrievalModel      Bot[]                @relation("RetrievalModel")
+  rcConversationalModel Bot[]                @relation("ConversationModel")
   scModel               SimpleConversation[]
 }
 
@@ -69,4 +73,9 @@ model DocumentMetadata {
   embeddedAt           DateTime         @default(now())
   embeddingStatus      String
   ConversationDocument RCConversation[] @relation("DocumentMetadata")
+}
+
+enum BotType {
+  CONVERSATIONAL
+  RETRIEVAL_CONVERSATIONAL
 }

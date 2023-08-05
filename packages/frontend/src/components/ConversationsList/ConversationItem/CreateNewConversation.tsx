@@ -9,10 +9,10 @@ const CreateNewConversation: FunctionComponent = () => {
   const { pathname } = useRouter()
   const isCreate = pathname === '/conversation/create'
   return (
-    <Link className={clsx(styles.conversationItem, isCreate && styles.selected)} href={`/conversation/create`}>
+    <Link className={clsx(styles.conversationItem, isCreate && styles.selected)} href={`/bot/create`}>
       <SparklesIcon width={24} height={24} />
       <span>
-          Create new conversation
+          Create bot
         </span>
     </Link>
   );

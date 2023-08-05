@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AgentService as AgentRepositoryService } from '../../repositories/agent/agent.service';
-import NewRcAgent from '@my-monorepo/shared/dist/new-rc-agent';
+import NewRcAgent from '../../../../shared/src/types/bot/new-bot';
 import { Prisma } from '@prisma/client';
 
 @Injectable()

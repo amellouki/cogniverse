@@ -8,7 +8,7 @@ import TextInput from "@/components/BaseFormFields/TextInput";
 import Button from "@/components/Button";
 import Prompt from "@/components/BaseFormFields/Prompt";
 import schema, {InputType} from "./form.schema";
-import {getNewAgent} from "./helpers";
+import {getNewBot} from "./helpers";
 import {CLM_PROMPT_PLACEHOLDERS, RLM_PROMPT_PLACEHOLDERS} from "./contants";
 import styles from './styles.module.scss';
 
@@ -28,7 +28,7 @@ const RetrievalConversational: FunctionComponent = () => {
     reset();
   })
 
-  const onSubmit: SubmitHandler<InputType> = (data) => mutation.mutate(getNewAgent(data))
+  const onSubmit: SubmitHandler<InputType> = (data) => mutation.mutate(getNewBot(data))
 
   const isRLMCustomPrompt = watch('isRLMCustomPrompt');
   const isCLMCustomPrompt = watch('isCLMCustomPrompt');

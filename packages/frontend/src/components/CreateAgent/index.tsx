@@ -5,7 +5,7 @@ import RetrievalConversational from "@/components/CreateAgent/RetrievalConversat
 import styles from './styles.module.scss';
 import {AGENT_OPTIONS} from "@/constants";
 
-const CreateAgent: FunctionComponent = () => {
+const CreateBot: FunctionComponent = () => {
   const [
     selectedOption,
     setSelectedOption
@@ -37,4 +37,4 @@ function renderForm(formType: string) {
   }
 }
 
-export default CreateAgent;
+export default CreateBot;

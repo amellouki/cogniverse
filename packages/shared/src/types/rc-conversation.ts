@@ -1,11 +1,11 @@
 import {Message, RCConversation as PrismaRCConversation} from '@prisma/client';
 import {DocumentMetadata} from "./document-metadata";
-import RCAgent from "./rc-agent";
+import Bot from "./bot/bot";
 
 type RCConversation = PrismaRCConversation & {
   document: DocumentMetadata
   chatHistory: Message[]
-  rcAgent: RCAgent
+  rcAgent: Bot
 }
 
 export default RCConversation;
