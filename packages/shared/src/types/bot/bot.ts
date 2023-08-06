@@ -1,7 +1,4 @@
-import {Bot as PrismaBot, LanguageModel} from '@prisma/client'
-type Bot = PrismaBot & {
-  conversationModel: LanguageModel
-  retrievalLanguageModel: LanguageModel
-}
+import {Bot as PrismaBot} from '@prisma/client'
+type Bot = PrismaBot
 
 export default Bot;

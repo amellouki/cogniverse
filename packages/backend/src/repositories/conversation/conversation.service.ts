@@ -33,12 +33,7 @@ export class ConversationService {
       data: conversationData,
       include: {
         chatHistory: true,
-        rcAgent: {
-          include: {
-            retrievalLanguageModel: true,
-            conversationModel: true,
-          },
-        },
+        rcAgent: true,
         document: true,
       },
     });
@@ -69,12 +64,7 @@ export class ConversationService {
             id: 'asc',
           },
         },
-        rcAgent: {
-          include: {
-            retrievalLanguageModel: true,
-            conversationModel: true,
-          },
-        },
+        rcAgent: true,
         document: true,
       },
     });

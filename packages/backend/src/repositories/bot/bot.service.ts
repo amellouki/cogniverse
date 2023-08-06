@@ -14,10 +14,6 @@ export class BotService {
       where: {
         id,
       },
-      include: {
-        retrievalLanguageModel: true,
-        conversationModel: true,
-      },
     });
   }
 

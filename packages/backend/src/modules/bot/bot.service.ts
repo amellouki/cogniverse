@@ -7,16 +7,8 @@ import { NewBot } from '@my-monorepo/shared';
 export class BotService {
   constructor(private agent: AgentRepositoryService) {}
 
-  createBot(newAgent: NewBot) {
-    const botData: Prisma.BotCreateInput = {
-      ...newAgent,
-      retrievalLanguageModel: {
-        create: newAgent.retrievalLanguageModel,
-      },
-      conversationModel: {
-        create: newAgent.conversationModel,
-      },
-    };
+  createBot(newBot: NewBot) {
+    const botData: Prisma.BotCreateInput = { ...newBot };
     return this.agent.createBot(botData);
   }
 

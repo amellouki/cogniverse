@@ -20,49 +20,24 @@ model RCConversation {
   rcAgent     Bot?              @relation(fields: [rcAgentId], references: [id])
 }
 
-// Uses a single language model to answer user questions
-model SimpleConversation {
-  id          Int            @id @default(autoincrement())
-  title       String
-  ChatHistory Message[]
-  lmId        Int?
-  lm          LanguageModel? @relation(fields: [lmId], references: [id])
-}
-
 model Bot {
-  id                       Int              @id @default(autoincrement())
-  name                     String           @unique()
-  retrievalLanguageModelId Int?
-  retrievalLanguageModel   LanguageModel?   @relation("RetrievalModel", fields: [retrievalLanguageModelId], references: [id])
-  conversationModelId      Int?
-  conversationModel        LanguageModel?   @relation("ConversationModel", fields: [conversationModelId], references: [id])
-  RCConversation           RCConversation[]
-  description              String?
-  type                     BotType
-  configVersion            String           @default("0.0.1")
-  configuration            Json
+  id             Int              @id @default(autoincrement())
+  name           String           @unique()
+  RCConversation RCConversation[]
+  description    String?
+  type           BotType
+  configVersion  String           @default("0.0.1")
+  configuration  Json
 }
 
 model Message {
-  id                   Int                 @id @default(autoincrement())
-  type                 String
-  content              String
-  fromId               Int?
-  fromType             String
-  rcId                 Int?
-  rc                   RCConversation?     @relation(fields: [rcId], references: [id])
-  simpleConversationId Int?
-  simpleConversation   SimpleConversation? @relation(fields: [simpleConversationId], references: [id])
-}
-
-model LanguageModel {
-  id                    Int                  @id @default(autoincrement())
-  name                  String
-  type                  String
-  prompt                String
-  rcRetrievalModel      Bot[]                @relation("RetrievalModel")
-  rcConversationalModel Bot[]                @relation("ConversationModel")
-  scModel               SimpleConversation[]
+  id       Int             @id @default(autoincrement())
+  type     String
+  content  String
+  fromId   Int?
+  fromType String
+  rcId     Int?
+  rc       RCConversation? @relation(fields: [rcId], references: [id])
 }
 
 model DocumentMetadata {

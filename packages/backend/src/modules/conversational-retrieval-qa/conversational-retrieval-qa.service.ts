@@ -69,7 +69,6 @@ export class ConversationalRetrievalQaService {
     const added = await this.chatHistoryService.saveMessage({
       content: question,
       rcId: conversation.id,
-      simpleConversationId: undefined,
       fromType: 'human',
       type: 'message',
       fromId: null,
@@ -110,10 +109,9 @@ export class ConversationalRetrievalQaService {
           return callbacks.sendToken({
             content: token,
             rcId: conversation.id,
-            simpleConversationId: undefined,
             fromType: 'ai',
             type: 'response-token',
-            fromId: conversation.rcAgent.conversationModelId,
+            fromId: bot.id,
           });
         },
       }),
@@ -129,10 +127,9 @@ export class ConversationalRetrievalQaService {
           return callbacks.sendToken({
             content: token,
             rcId: conversation.id,
-            simpleConversationId: undefined,
             fromType: 'ai',
             type: 'retrieval-token',
-            fromId: conversation.rcAgent.retrievalLanguageModelId,
+            fromId: conversation.rcAgent.id,
           });
         },
         handleLLMEnd: async (chainValues) => {
@@ -141,10 +138,9 @@ export class ConversationalRetrievalQaService {
             const message: NewMessage = {
               content: chainValues.generations[0][0]?.text,
               rcId: conversation.id,
-              simpleConversationId: undefined,
               fromType: 'ai',
               type: 'idea',
-              fromId: conversation.rcAgent.retrievalLanguageModelId,
+              fromId: conversation.rcAgent.id,
             };
             // TODO: use observable to split side effects from pure function
             this.chatHistoryService
@@ -188,10 +184,9 @@ export class ConversationalRetrievalQaService {
     const response = await this.chatHistoryService.saveMessage({
       content: chainValues.text,
       rcId: conversation.id,
-      simpleConversationId: undefined,
       fromType: 'ai',
       type: 'message',
-      fromId: conversation.rcAgent.conversationModelId,
+      fromId: bot.id,
     });
 
     return response;
