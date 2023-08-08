@@ -27,8 +27,8 @@ type Callbacks = {
 };
 
 @Injectable()
-export class ConversationalRetrievalQaService {
-  logger = new Logger(ConversationalRetrievalQaService.name);
+export class RetrievalConversationalService {
+  logger = new Logger(RetrievalConversationalService.name);
   constructor(
     private configService: ConfigService,
     private pinecone: PineconeService,
@@ -46,7 +46,7 @@ export class ConversationalRetrievalQaService {
         case 'human':
           return new HumanChatMessage(message.content);
         default:
-          throw new Error('message type not supported');
+          throw new Error('Message type not supported');
       }
     });
     return new ChatMessageHistory(messages);

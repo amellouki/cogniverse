@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConversationalRetrievalQaService } from './conversational-retrieval-qa.service';
+import { RetrievalConversationalService } from './retrieval-conversational.service';
 
 describe('ConversationalRetrievalQaService', () => {
-  let service: ConversationalRetrievalQaService;
+  let service: RetrievalConversationalService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ConversationalRetrievalQaService],
+      providers: [RetrievalConversationalService],
     }).compile();
 
-    service = module.get<ConversationalRetrievalQaService>(ConversationalRetrievalQaService);
+    service = module.get<RetrievalConversationalService>(RetrievalConversationalService);
   });
 
   it('should be defined', () => {

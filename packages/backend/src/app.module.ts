@@ -6,7 +6,7 @@ import { PdfEmbeddingModule } from './modules/pdf-embedding/pdf-embedding.module
 import { ConfigModule } from '@nestjs/config';
 import { ServicesModule } from './services/services.module';
 import { DocQuestionAnsweringModule } from './modules/doc-question-answering/doc-question-answering.module';
-import { ConversationalRetrievalQaModule } from './modules/conversational-retrieval-qa/conversational-retrieval-qa.module';
+import { RetrievalConversationalModule } from './modules/retrieval-conversational/retrieval-conversational.module';
 import { RepositoriesModule } from './repositories/repositories.module';
 import { BotModule } from './modules/bot/bot.module';
 
@@ -19,7 +19,7 @@ import { BotModule } from './modules/bot/bot.module';
     ChatSessionModule,
     PdfEmbeddingModule,
     DocQuestionAnsweringModule,
-    ConversationalRetrievalQaModule,
+    RetrievalConversationalModule,
     BotModule,
     ServicesModule,
     RepositoriesModule,

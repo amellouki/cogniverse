@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { ConversationalRetrievalQaService } from './conversational-retrieval-qa.service';
+import { RetrievalConversationalService } from './retrieval-conversational.service';
 import { DocConversationRequestDto } from '../../dto/doc-conversation-request.dto';
 import { Socket } from 'socket.io';
 import {
@@ -30,11 +30,11 @@ function getData(type: string, content: unknown) {
     methods: 'GET,HEAD',
   },
 })
-export class ConversationalRetrievalQaGateway {
-  private readonly logger = new Logger(ConversationalRetrievalQaGateway.name);
+export class RetrievalConversationalGateway {
+  private readonly logger = new Logger(RetrievalConversationalGateway.name);
 
   constructor(
-    private service: ConversationalRetrievalQaService,
+    private service: RetrievalConversationalService,
     private conversationService: ConversationService,
   ) {}
 
