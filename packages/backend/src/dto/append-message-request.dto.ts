@@ -1,4 +1,4 @@
-import NewMessage from '@my-monorepo/shared/dist/types/new-message';
+import { NewMessage } from '@my-monorepo/shared';
 
 type AppendMessageRequestDto = NewMessage;
 

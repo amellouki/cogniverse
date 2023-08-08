@@ -6,8 +6,8 @@ import {
   RcBot,
   ConversationalBot,
 } from '@my-monorepo/shared/dist/types/bot/bot-configuration/0.0.1';
-import { BOT_CONFIG_VERSION_V0_0_1 } from '@my-monorepo/shared/dist/constants';
-import BotType from '@my-monorepo/shared/dist/types/bot/bot-type';
+import { BOT_CONFIG_VERSION_V0_0_1 } from '@my-monorepo/shared';
+import { BotType } from '@my-monorepo/shared';
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 
@@ -104,4 +104,4 @@ export class ConversationalBotDto implements ConversationalBot {
 
 export type BotDto = RcBotDto | ConversationalBotDto;
 
-export type CreateBotDto = Omit<BotDto, 'id'>
+export type CreateBotDto = Omit<BotDto, 'id'>;

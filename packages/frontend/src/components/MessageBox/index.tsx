@@ -2,7 +2,7 @@ import React, {FunctionComponent} from "react";
 import clsx from "clsx";
 import styles from "./styles.module.scss";
 import {Message} from "@/types/ChatThread";
-import NewMessage from '@my-monorepo/shared/dist/new-message';
+import {NewMessage} from '@my-monorepo/shared';
 import Sender from "@/components/Sender";
 
 export type MessageBoxProps = {

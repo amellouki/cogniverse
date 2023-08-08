@@ -1,4 +1,4 @@
-import NewTitelessConversation from '@my-monorepo/shared/dist/types/new-titeless-conversation';
+import { NewTitelessConversation } from '@my-monorepo/shared';
 
 export class DocConversationRequestDto {
   conversationId?: number;

@@ -2,7 +2,7 @@ import React, {FunctionComponent} from 'react'
 import MessageBox from '@/components/MessageBox'
 import styles from './styles.module.scss'
 import {ChatHistory} from "@/types/ChatRequest";
-import NewMessage from '@my-monorepo/shared/dist/new-message';
+import {NewMessage} from '@my-monorepo/shared';
 
 type ChatThreadProps = {
   response?: NewMessage,

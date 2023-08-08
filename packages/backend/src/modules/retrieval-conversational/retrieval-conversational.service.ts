@@ -15,8 +15,8 @@ import {
 import DocConversationalChain from '../../models/chains/doc-conversational-chain';
 import { Message } from '@prisma/client';
 import { ChatHistoryService } from '../../repositories/chat-history/chat-history.service';
-import NewMessage from '@my-monorepo/shared/dist/types/new-message';
-import RCConversation from '@my-monorepo/shared/dist/types/rc-conversation';
+import { NewMessage } from '@my-monorepo/shared';
+import { RCConversation } from '@my-monorepo/shared';
 import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
 import { Bot, BotType } from '@my-monorepo/shared';
 

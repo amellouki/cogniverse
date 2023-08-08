@@ -3,7 +3,7 @@ import {useQuery} from "react-query";
 import RcAgent from "../../../../shared/src/types/bot/bot";
 import useEmbeddedDocumentsList from "@/hooks/use-embedded-document-list.hook";
 import {Controller, useForm} from "react-hook-form";
-import {DocumentMetadata} from "@my-monorepo/shared/dist/types/document-metadata";
+import {DocumentMetadata} from "@my-monorepo/shared";
 import {Select} from "@/components/BaseFormFields/Select";
 import SelectOption from "@/types/SelectOption";
 import styles from './styles.module.scss'

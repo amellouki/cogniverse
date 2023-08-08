@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DocumentMetadataService } from '../../repositories/document-metadata/document-metadata.service';
-import { UploadedFileType } from '@my-monorepo/shared/dist/types/uploaded-file';
+import { UploadedFileType } from '@my-monorepo/shared';
 import { DocumentMetadata } from '@prisma/client';
 
 @Injectable()

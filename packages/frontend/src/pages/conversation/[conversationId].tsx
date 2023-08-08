@@ -43,7 +43,6 @@ const Conversation: React.FC = () => {
           type: 'question',
           fromId: 0,
           fromType: 'human',
-          simpleConversationId: null,
         });
         sendQuestion(
           question,

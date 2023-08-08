@@ -11,7 +11,7 @@ import {
 import * as dotenv from 'dotenv';
 import { ConversationService } from '../../repositories/conversation/conversation.service';
 import { Message } from '@prisma/client';
-import NewMessage from '@my-monorepo/shared/dist/types/new-message';
+import { NewMessage } from '@my-monorepo/shared';
 import { END_COMPLETION } from '../../constants';
 
 dotenv.config({ path: './.env.local' });

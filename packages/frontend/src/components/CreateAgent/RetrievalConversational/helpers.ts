@@ -1,8 +1,5 @@
 import {InputType} from "./form.schema";
-import {NewBot} from "@my-monorepo/shared/dist/types/bot"
-import {BOT_CONFIG_VERSION_LATEST} from "@my-monorepo/shared/dist/constants";
-import BotType from "../../../../../shared/src/types/bot/bot-type";
-import {BotAvatarType} from "@my-monorepo/shared/dist/types/bot/bot-avatar-type";
+import {BOT_CONFIG_VERSION_LATEST, NewBot, BotAvatarType, BotType} from "@my-monorepo/shared";
 
 export function getNewBot(data: InputType): NewBot {
   return {

@@ -1,9 +1,7 @@
 import {useCallback, useState} from 'react'
 import {io} from "socket.io-client";
 import {Message} from "@/types/ChatThread";
-import NewMessage from '@my-monorepo/shared/dist/types/new-message';
-import RCConversation from "@my-monorepo/shared/dist/types/rc-conversation";
-import NewTitelessConversation from "@my-monorepo/shared/dist/types/new-titeless-conversation";
+import {NewMessage, RCConversation, NewTitelessConversation} from '@my-monorepo/shared';
 
 const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/conversational-retrieval-qa'
 
