@@ -1,8 +1,8 @@
-name: Push images to Dockerhub and deploy on Elastic Beanstalk
+name: Build & Push frontend image to Dockerhub and deploy on Elastic Beanstalk
 on:
   push:
     branches:
-      - master
+      - remodel
     paths:
       - 'packages/frontend/**'
       - 'packages/shared/**'
@@ -23,8 +23,6 @@ jobs:
 
       - name: Create .env files
         run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> ./packages/backend/prisma/.env
-
           echo "NODE_ENV=production" >> ./packages/frontend/.env.local
           echo "NEXT_PUBLIC_BACKEND_API=${{ secrets.NEXT_PUBLIC_BACKEND_API }}" >> ./packages/frontend/.env.local
 

@@ -13,7 +13,6 @@ RUN npm install
 
 COPY . .
 
-RUN npm run prisma:migrate
 RUN npm run prisma:generate
 
 RUN npm run shared:build
@@ -41,8 +40,7 @@ RUN npm ci --omit=dev
 # Install nestjs globally
 RUN npm install -g @nestjs/cli
 
-# Run migrations and generate prisma client
-RUN npm run prisma:migrate
+# Generate prisma client
 RUN npm run prisma:generate
 
 # Expose port 3000
