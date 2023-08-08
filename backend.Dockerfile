@@ -22,7 +22,6 @@ FROM node:18.16.0
 
 WORKDIR /app
 
-COPY --from=build /app/node_modules/@my-monorepo/shared /app/node_modules/@my-monorepo/shared
 # Copy build folders
 COPY --from=build /app/packages/backend/dist /app/packages/backend/dist
 
@@ -42,7 +41,7 @@ RUN npm ci --omit=dev
 RUN npm install -g @nestjs/cli
 
 # Generate prisma client
-#RUN npm run prisma:generate
+RUN npm run prisma:generate
 
 # Export port
 EXPOSE 3001
