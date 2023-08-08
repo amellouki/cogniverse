@@ -24,6 +24,8 @@ WORKDIR /app
 
 # Copy build folders
 COPY --from=build /app/packages/backend/dist /app/packages/backend/dist
+COPY --from=build /app/packages/shared/dist /app/packages/shared/dist
+COPY --from=build /app/node_modules/@my-monorepo/shared /app/node_modules/@my-monorepo/shared
 
 # Copy package.json and package-lock.json files
 COPY --from=build /app/package*.json /app/
