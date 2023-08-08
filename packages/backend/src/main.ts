@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 dotenv.config({ path: './.env.local' });
+console.log('allowed domains', process.env.ALLOWED_DOMAINS?.split(','));
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
