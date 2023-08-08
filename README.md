@@ -74,11 +74,10 @@ npm run start:frontend:dev
 Build the image locally
 
 ```
-docker build -t my-app-dev .
+docker build -t cogniverse-frontend . -f frontend.Dockerfile
 ```
 
-Run the image locally
 
 ```
-docker run -p 3000:3000 -p 3001:3001 my-app-dev
+docker build -t cogniverse-backend . -f backend.Dockerfile
 ```
