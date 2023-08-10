@@ -1,9 +1,9 @@
 import React, {FunctionComponent} from 'react';
 import WrappedSelect from "@/components/BaseFormFields/Select/WrappedSelect";
 import SelectOption from "@/types/SelectOption";
-import RetrievalConversational from "@/components/CreateAgent/RetrievalConversational";
-import styles from './styles.module.scss';
+import RetrievalConversational from "@/components/CreateBot/RetrievalConversational";
 import {AGENT_OPTIONS} from "@/constants";
+import styles from './styles.module.scss';
 
 const CreateBot: FunctionComponent = () => {
   const [

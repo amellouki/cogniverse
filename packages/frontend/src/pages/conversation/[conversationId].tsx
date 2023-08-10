@@ -4,13 +4,16 @@ import ChatThread from "@/components/ChatThread";
 import useChatHistory from "@/hooks/use-chat-history.hook";
 import useConversation from "@/hooks/use-conversation.hook";
 import {useRouter} from "next/router";
-import styles from "./styles.module.scss";
 import useConversations from "@/hooks/use-conversations.hook";
-import SelectBot from "../../components/SelectBot";
+import SelectBot from "@/components/SelectBot";
+import {useQueryClient} from "react-query";
+import ConversationElements from "@/components/ConversationElements";
+import styles from "./styles.module.scss";
 
 const Conversation: React.FC = () => {
   const router = useRouter()
   const conversationId = parseInt(router.query.conversationId as string)
+  const queryClient = useQueryClient()
   const [newlyCreatedConversationId, setNewlyCreatedConversationId] = React.useState<number>()
 
   const {data, isLoading} = useConversations(conversationId || newlyCreatedConversationId)
@@ -31,11 +34,13 @@ const Conversation: React.FC = () => {
     return <center>Loading...</center>
   }
 
+  console.log('Avatar', data?.rcAgent.configuration.avatar)
+
   return (
     <div className={styles.Conversation}>
       {(!isLoading && !data) && <SelectBot botSelectionRef={botSelectionRef}/>}
-      {(data) && <h1>{conversationId}</h1>}
-      <ChatThread chatHistory={history} response={response}/>
+      {data && <ConversationElements conversationElements={data} />}
+      <ChatThread chatHistory={history} response={response} avatar={data?.rcAgent.configuration.avatar}/>
       <QueryForm className={styles.queryForm} onSubmit={(question: string) => {
         const id = data?.id || newlyCreatedConversationId
         appendOptimistic({
@@ -50,7 +55,6 @@ const Conversation: React.FC = () => {
           newlyCreatedConversationId ? undefined : botSelectionRef.current
         );
       }}/>
-      {data?.document && <div><em>Retrieving data from <strong>{data.document.title}</strong></em></div>}
     </div>
   );
 };

@@ -13,8 +13,8 @@ export function getNewBot(data: InputType): NewBot {
       type: BotType.RETRIEVAL_CONVERSATIONAL,
       description: "[TODO]",
       avatar: {
-        type: BotAvatarType.BOT_AVATAR_IMAGE,
-        url: 'https://picsum.photos/200',
+        type: BotAvatarType.BOT_AVATAR_EMOTE,
+        backgroundColor: data.color,
       },
       retrievalLm: {
         modelName: '[TODO]gpt3.5',

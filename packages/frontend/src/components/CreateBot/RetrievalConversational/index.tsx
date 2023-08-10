@@ -42,14 +42,19 @@ const RetrievalConversational: FunctionComponent = () => {
   const isRLMCustomPrompt = watch('isRLMCustomPrompt');
   const isCLMCustomPrompt = watch('isCLMCustomPrompt');
 
-  const [color, setColor] = React.useState<string | undefined>(undefined);
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.CreateBot}>
-      <section className={styles.avatarSelection}>
-        <SimpleColorPicker onChange={setColor} options={COLOR_OPTIONS} selected={color} />
-        {color && <Planet size={100} mood="happy" color={color}/>}
-      </section>
+      <Controller
+        render={({ field: {onChange, value}}) => (
+          <section className={styles.avatarSelection}>
+            <SimpleColorPicker onChange={onChange} options={COLOR_OPTIONS} selected={value} legend={'Pick color'} error={errors.color} />
+            {value && <Planet size={100} mood="happy" color={value}/>}
+          </section>
+        )}
+        control={control}
+        name={'color'}
+        defaultValue={''}
+      />
       <FormFieldWrapper
         htmlFor={'agent-name'}
         label={'Agent Name'}

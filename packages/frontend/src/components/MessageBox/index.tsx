@@ -2,17 +2,19 @@ import React, {FunctionComponent} from "react";
 import clsx from "clsx";
 import styles from "./styles.module.scss";
 import {Message} from "@/types/ChatThread";
-import {NewMessage} from '@my-monorepo/shared';
+import {BotAvatar, NewMessage} from '@my-monorepo/shared';
 import Sender from "@/components/Sender";
 
 export type MessageBoxProps = {
   message: Message | NewMessage;
+  avatar?: BotAvatar;
   bubble?: boolean;
 };
 
 const MessageBox: FunctionComponent<MessageBoxProps> = ({
   message,
   bubble,
+  avatar,
 }) => {
 
   const shouldWrapInBubble = bubble || (message.fromType === "ai" && message.type !== "idea");
@@ -30,7 +32,6 @@ const MessageBox: FunctionComponent<MessageBoxProps> = ({
     )
   }
 
-  console.log('MessageBox', message)
   return (
     <div
       className={clsx(
@@ -39,7 +40,7 @@ const MessageBox: FunctionComponent<MessageBoxProps> = ({
       )}
     >
       <div className="flex-shrink-0">
-        <Sender sender={message.fromType} />
+        <Sender sender={message.fromType} avatar={avatar} />
       </div>
       <div className={styles.messageText}>
         {message.content}

@@ -1,5 +1,5 @@
 import React, {FunctionComponent} from 'react';
-import CreateBot from "@/components/CreateAgent";
+import CreateBot from "../../components/CreateBot";
 import styles from './styles.module.scss'
 
 const Create: FunctionComponent = () => {

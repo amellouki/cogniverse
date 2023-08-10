@@ -1,30 +1,40 @@
-import React, {ChangeEventHandler, FunctionComponent} from 'react';
-import styles from './styles.module.scss';
-import useOptionsSelection from "@/hooks/use-options-selection.hook";
-import LabelValuePair from "@/types/LabelValuePair";
+import React, {FunctionComponent} from 'react';
+import {FieldError} from "react-hook-form";
 import clsx from "clsx";
+import LabelValuePair from "@/types/LabelValuePair";
+import wrapperStyles from '@/components/FormFieldWrapper/styles.module.scss';
+import styles from './styles.module.scss';
 
 type Props = {
-  options: LabelValuePair[];
   selected?: string;
   onChange: (value: string) => void;
+  options: LabelValuePair[];
+  legend: string;
+  error?: FieldError;
 }
 
 const SimpleColorPicker: FunctionComponent<Props> = (props) => {
 
-  return (<div className={styles.SimpleColorPicker}>
-    {
-      props.options.map((option, index) => {
-      const checked = option.value === props.selected;
-      return (
-        <React.Fragment key={index}>
-          {ColorOption('color', option.value, (newValue) => {
-            props.onChange(newValue)
-          }, checked)}
-        </React.Fragment>
-      );
-    })}
-  </div>);
+  return (
+    <fieldset className={styles.SimpleColorPicker}>
+      <legend className={wrapperStyles.LabelText}>{props.legend}</legend>
+      <section className={styles.options}>
+        {
+          props.options.map((option, index) => {
+            const checked = option.value === props.selected;
+            return (
+              <React.Fragment key={index}>
+                {ColorOption('color', option.value, (newValue) => {
+                  props.onChange(newValue)
+                }, checked)}
+              </React.Fragment>
+            );
+          })
+        }
+      </section>
+      {props.error && <p className={wrapperStyles.Error} role="alert"> {props.error.message} </p>}
+    </fieldset>
+  );
 }
 
 const ColorOption = (name: string, color: string, onChange: (selected: string) => void, checked: boolean) => {

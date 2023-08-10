@@ -12,6 +12,7 @@ const schema = z.object({
   // CLM: Conversational Language Model
   isCLMCustomPrompt: z.boolean(),
   clmPrompt: z.string().optional(),
+  color: z.string().nonempty({ message: "Pick a color" }),
 }).refine((data) => {
   return !(data.isRLMCustomPrompt && !data.rlmPrompt);
 }, {
