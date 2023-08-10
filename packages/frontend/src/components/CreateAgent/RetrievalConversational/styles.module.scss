@@ -1,4 +1,4 @@
-.CreateConversation {
+.CreateBot {
   display: flex;
   flex-direction: column;
   max-width: 600px;
@@ -20,4 +20,10 @@
 .SubmitButton {
   display: block;
   align-self: flex-end;
+}
+
+.avatarSelection {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
 }

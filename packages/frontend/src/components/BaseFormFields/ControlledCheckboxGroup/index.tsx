@@ -1,7 +1,7 @@
 import React, {FunctionComponent} from 'react';
 import Checkbox from "@/components/BaseFormFields/Checkbox";
 import LabelValuePair from "@/types/LabelValuePair";
-import useOptionsChecking from '@/hooks/use-options-checking.hook';
+import useOptionsSelection from '@/hooks/use-options-selection.hook';
 import styles from './styles.module.scss'
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 }
 
 const ControlledCheckboxGroup: FunctionComponent<Props> = ({options, checkedOptions, onChange}) => {
-  const {isChecked, handleChange} = useOptionsChecking(checkedOptions, onChange);
+  const {isChecked, handleChange} = useOptionsSelection(checkedOptions, onChange);
 
   return (
     <div className={styles.CheckboxGroup}>
@@ -21,7 +21,7 @@ const ControlledCheckboxGroup: FunctionComponent<Props> = ({options, checkedOpti
             const checked = e.target.checked;
             handleChange(option, checked)
           }}
-          checked={isChecked(option)} key={option.value} id={option.value}
+          checked={isChecked(option.value)} key={option.value} id={option.value}
         >
           {option.label}
         </Checkbox>

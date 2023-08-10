@@ -5,7 +5,7 @@ import Link from "next/link";
 import {useRouter} from "next/router";
 import clsx from "clsx";
 
-const CreateNewConversation: FunctionComponent = () => {
+const CreateNewBot: FunctionComponent = () => {
   const { pathname } = useRouter()
   const isCreate = pathname === '/conversation/create'
   return (
@@ -18,4 +18,4 @@ const CreateNewConversation: FunctionComponent = () => {
   );
 }
 
-export default CreateNewConversation;
+export default CreateNewBot;

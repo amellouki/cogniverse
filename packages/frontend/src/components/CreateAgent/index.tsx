@@ -15,7 +15,7 @@ const CreateBot: FunctionComponent = () => {
       <h2 className={styles.formTitle}>Create a new agent</h2>
       <WrappedSelect
         options={AGENT_OPTIONS}
-        label={'Select Agent Type'}
+        label={'Select Bot Type'}
         placeholder={'Select...'}
         selected={selectedOption}
         onChange={setSelectedOption}
@@ -30,7 +30,7 @@ function renderForm(formType: string) {
   switch (formType) {
     case 'rc':
       return <RetrievalConversational />
-    case 'simpleAgent':
+    case 'conversational':
       return <div>Working on it...</div>
     default:
       return <div>Unknown</div>

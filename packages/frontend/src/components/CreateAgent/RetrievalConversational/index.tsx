@@ -10,7 +10,16 @@ import Prompt from "@/components/BaseFormFields/Prompt";
 import schema, {InputType} from "./form.schema";
 import {getNewBot} from "./helpers";
 import {CLM_PROMPT_PLACEHOLDERS, RLM_PROMPT_PLACEHOLDERS} from "./contants";
+import SimpleColorPicker from "@/components/BaseFormFields/SimpleColorPicker";
+import {Planet} from "react-kawaii";
 import styles from './styles.module.scss';
+
+const COLOR_OPTIONS = [
+  {label: 'Weldon Blue', value: '#749da1'},
+  {label: 'Sage', value: '#b4be89'},
+  {label: 'Gold', value: '#e0be99'},
+  {label: 'Ruddy Pink', value: '#eb9191'},
+];
 
 const RetrievalConversational: FunctionComponent = () => {
   const {
@@ -33,8 +42,14 @@ const RetrievalConversational: FunctionComponent = () => {
   const isRLMCustomPrompt = watch('isRLMCustomPrompt');
   const isCLMCustomPrompt = watch('isCLMCustomPrompt');
 
+  const [color, setColor] = React.useState<string | undefined>(undefined);
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.CreateConversation}>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.CreateBot}>
+      <section className={styles.avatarSelection}>
+        <SimpleColorPicker onChange={setColor} options={COLOR_OPTIONS} selected={color} />
+        {color && <Planet size={100} mood="happy" color={color}/>}
+      </section>
       <FormFieldWrapper
         htmlFor={'agent-name'}
         label={'Agent Name'}
