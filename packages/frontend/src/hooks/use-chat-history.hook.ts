@@ -13,7 +13,7 @@ export default function useChatHistory(initHistory?: Message[]) {
   }, [setHistory])
   const appendSuccess = useCallback((message: Message) => {
     setHistory((prev) => {
-      if (prev[prev.length - 1].id === 0) {
+      if (prev[prev.length - 1]?.id === 0) {
         return [...prev.slice(0, -1), message];
       }
       return [...prev, message];
