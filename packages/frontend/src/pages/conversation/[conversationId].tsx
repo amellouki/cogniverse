@@ -6,14 +6,12 @@ import useConversation from "@/hooks/use-conversation.hook";
 import {useRouter} from "next/router";
 import useConversations from "@/hooks/use-conversations.hook";
 import SelectBot from "@/components/SelectBot";
-import {useQueryClient} from "react-query";
 import ConversationElements from "@/components/ConversationElements";
 import styles from "./styles.module.scss";
 
 const Conversation: React.FC = () => {
   const router = useRouter()
   const conversationId = parseInt(router.query.conversationId as string)
-  const queryClient = useQueryClient()
   const [newlyCreatedConversationId, setNewlyCreatedConversationId] = React.useState<number>()
 
   const {data, isLoading} = useConversations(conversationId || newlyCreatedConversationId)
