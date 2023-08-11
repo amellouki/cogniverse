@@ -6,20 +6,20 @@ import { CreateBotDto } from '../../dto/bot-config/0.0.1.dto';
 export class BotController {
   constructor(private agentService: BotService) {}
   @Post('create')
-  async createRcAgent(@Body() request: CreateBotDto) {
+  async createBot(@Body() request: CreateBotDto) {
     console.log('request', request);
     const result = await this.agentService.createBot(request);
     console.log('result', result);
     return result;
   }
 
-  @Get('get-rc')
-  async getRcAgent(@Query('id') id: string) {
-    return this.agentService.getRcAgentById(Number(id));
+  @Get('get-bot')
+  async getBot(@Query('id') id: string) {
+    return this.agentService.getBotById(Number(id));
   }
 
   @Get('get-bots')
-  async getAgents() {
+  async getBots() {
     return this.agentService.getAgents();
   }
 }

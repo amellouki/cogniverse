@@ -1,5 +1,5 @@
 export type NewConversation = {
   title: string
-  agentId: number
+  botId: number
   documentId: number
 }

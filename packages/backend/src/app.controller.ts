@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ConversationService } from './repositories/conversation/conversation.service';
 import { ChatHistoryService } from './repositories/chat-history/chat-history.service';
-import { Message, Prisma, RCConversation } from '@prisma/client';
+import { Message, Prisma, Conversation } from '@prisma/client';
 import CreateConversationRequestDto from './dto/create-conversation-request.dto';
 import AppendMessageRequestDto from './dto/append-message-request.dto';
 
@@ -15,20 +15,20 @@ export class AppController {
   @Post('/create_conversation')
   async createConversation(
     @Body() request: CreateConversationRequestDto,
-  ): Promise<RCConversation> {
-    return this.conversationService.createRCConversation(request);
+  ): Promise<Conversation> {
+    return this.conversationService.createConversation(request);
   }
 
   @Get('conversations')
-  async getConversations(): Promise<RCConversation[]> {
+  async getConversations(): Promise<Conversation[]> {
     return this.conversationService.conversations();
   }
 
   @Get('conversation')
   async getConversationHistory(
     @Query('id') id: string,
-  ): Promise<RCConversation> {
-    return this.conversationService.getRcConversationById(Number(id));
+  ): Promise<Conversation> {
+    return this.conversationService.getConversationById(Number(id));
   }
 
   @Post('append-to-history')
@@ -37,9 +37,9 @@ export class AppController {
   ): Promise<Message> {
     const messageCreateInput: Prisma.MessageCreateInput = {
       ...request,
-      rc: {
+      conversation: {
         connect: {
-          id: request.rcId,
+          id: request.conversationId,
         },
       },
     };

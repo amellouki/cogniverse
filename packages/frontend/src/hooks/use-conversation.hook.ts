@@ -1,7 +1,7 @@
 import {useCallback, useState} from 'react'
 import {io} from "socket.io-client";
 import {Message} from "@/types/ChatThread";
-import {NewMessage, RCConversation, NewTitelessConversation} from '@my-monorepo/shared';
+import {NewMessage, Conversation, NewTitelessConversation} from '@my-monorepo/shared';
 
 const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/conversational-retrieval-qa'
 
@@ -24,7 +24,7 @@ const useConversation = (
       console.log('handle emitted data', data)
       const tokenMessage = data.content as NewMessage
       if (data.type === 'conversationDetails') {
-        const conversation = data.content as RCConversation
+        const conversation = data.content as Conversation
         setConversationId(conversation.id)
       }
       console.log(tokenMessage)

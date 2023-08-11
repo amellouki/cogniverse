@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RCConversation, Prisma } from '@prisma/client';
+import { Conversation, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { NewConversation } from '@my-monorepo/shared';
 
@@ -7,19 +7,19 @@ import { NewConversation } from '@my-monorepo/shared';
 export class ConversationService {
   constructor(private prisma: PrismaService) {}
 
-  async conversations(): Promise<RCConversation[]> {
-    return this.prisma.rCConversation.findMany();
+  async conversations(): Promise<Conversation[]> {
+    return this.prisma.conversation.findMany();
   }
 
-  async createRCConversation(data: NewConversation): Promise<RCConversation> {
-    const conversationData: Prisma.RCConversationCreateInput = {
+  async createConversation(data: NewConversation): Promise<Conversation> {
+    const conversationData: Prisma.ConversationCreateInput = {
       title: data.title,
       chatHistory: {
         create: [],
       },
-      rcAgent: {
+      bot: {
         connect: {
-          id: data.agentId,
+          id: data.botId,
         },
       },
       document: {
@@ -29,17 +29,17 @@ export class ConversationService {
       },
     };
 
-    return this.prisma.rCConversation.create({
+    return this.prisma.conversation.create({
       data: conversationData,
       include: {
         chatHistory: true,
-        rcAgent: true,
+        bot: true,
         document: true,
       },
     });
   }
-  async rcConversationHistory(id: number) {
-    return this.prisma.rCConversation.findUnique({
+  async conversationHistory(id: number) {
+    return this.prisma.conversation.findUnique({
       where: {
         id: id,
       },
@@ -53,8 +53,8 @@ export class ConversationService {
     });
   }
 
-  async getRcConversationById(id: number) {
-    return this.prisma.rCConversation.findUnique({
+  async getConversationById(id: number) {
+    return this.prisma.conversation.findUnique({
       where: {
         id,
       },
@@ -64,7 +64,7 @@ export class ConversationService {
             id: 'asc',
           },
         },
-        rcAgent: true,
+        bot: true,
         document: true,
       },
     });

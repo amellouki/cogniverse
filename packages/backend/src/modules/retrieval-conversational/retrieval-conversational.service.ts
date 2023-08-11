@@ -16,7 +16,7 @@ import DocConversationalChain from '../../models/chains/doc-conversational-chain
 import { Message } from '@prisma/client';
 import { ChatHistoryService } from '../../repositories/chat-history/chat-history.service';
 import { NewMessage } from '@my-monorepo/shared';
-import { RCConversation } from '@my-monorepo/shared';
+import { Conversation } from '@my-monorepo/shared';
 import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
 import { Bot, BotType } from '@my-monorepo/shared';
 
@@ -54,12 +54,12 @@ export class RetrievalConversationalService {
 
   async getCompletion(
     question: string,
-    conversation: RCConversation,
+    conversation: Conversation,
     callbacks: Callbacks,
   ) {
     this.logger.log('getCompletion', question);
 
-    const bot = conversation.rcAgent as Bot;
+    const bot = conversation.bot as Bot;
     console.log('agent', bot);
     if (bot.type !== BotType.RETRIEVAL_CONVERSATIONAL) {
       throw Error('Bot is not a retrieval conversational');
@@ -68,7 +68,7 @@ export class RetrievalConversationalService {
     // TODO: move side effects away from pure function
     const added = await this.chatHistoryService.saveMessage({
       content: question,
-      rcId: conversation.id,
+      conversationId: conversation.id,
       fromType: 'human',
       type: 'message',
       fromId: null,
@@ -108,7 +108,7 @@ export class RetrievalConversationalService {
           // TODO: use observable to split side effects from pure function
           return callbacks.sendToken({
             content: token,
-            rcId: conversation.id,
+            conversationId: conversation.id,
             fromType: 'ai',
             type: 'response-token',
             fromId: bot.id,
@@ -126,10 +126,10 @@ export class RetrievalConversationalService {
           console.log('handle llm new token on retrieval model', token);
           return callbacks.sendToken({
             content: token,
-            rcId: conversation.id,
+            conversationId: conversation.id,
             fromType: 'ai',
             type: 'retrieval-token',
-            fromId: conversation.rcAgent.id,
+            fromId: conversation.bot.id,
           });
         },
         handleLLMEnd: async (chainValues) => {
@@ -137,10 +137,10 @@ export class RetrievalConversationalService {
           if (chainValues.generations[0][0]?.text) {
             const message: NewMessage = {
               content: chainValues.generations[0][0]?.text,
-              rcId: conversation.id,
+              conversationId: conversation.id,
               fromType: 'ai',
               type: 'idea',
-              fromId: conversation.rcAgent.id,
+              fromId: conversation.bot.id,
             };
             // TODO: use observable to split side effects from pure function
             this.chatHistoryService
@@ -183,7 +183,7 @@ export class RetrievalConversationalService {
     // TODO: Use observable to split side effects from pure function
     const response = await this.chatHistoryService.saveMessage({
       content: chainValues.text,
-      rcId: conversation.id,
+      conversationId: conversation.id,
       fromType: 'ai',
       type: 'message',
       fromId: bot.id,

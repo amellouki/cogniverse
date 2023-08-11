@@ -6,7 +6,7 @@ export function getNewConversation(data: InputType): NewConversation {
 
   return {
     title: data.title,
-    agentId: 0,
+    botId: 0,
     documentId: data.documentId,
   }
 }

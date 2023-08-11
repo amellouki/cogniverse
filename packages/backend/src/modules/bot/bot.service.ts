@@ -12,7 +12,7 @@ export class BotService {
     return this.agent.createBot(botData);
   }
 
-  getRcAgentById(id: number) {
+  getBotById(id: number) {
     return this.agent.getBotById(id);
   }
 

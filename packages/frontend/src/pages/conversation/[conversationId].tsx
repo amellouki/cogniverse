@@ -34,13 +34,13 @@ const Conversation: React.FC = () => {
     return <center>Loading...</center>
   }
 
-  console.log('Avatar', data?.rcAgent.configuration.avatar)
+  console.log('Avatar', data?.bot.configuration.avatar)
 
   return (
     <div className={styles.Conversation}>
       {(!isLoading && !data) && <SelectBot botSelectionRef={botSelectionRef}/>}
       {data && <ConversationElements conversationElements={data} />}
-      <ChatThread chatHistory={history} response={response} avatar={data?.rcAgent.configuration.avatar}/>
+      <ChatThread chatHistory={history} response={response} avatar={data?.bot.configuration.avatar}/>
       <QueryForm className={styles.queryForm} onSubmit={(question: string) => {
         const id = data?.id || newlyCreatedConversationId
         appendOptimistic({

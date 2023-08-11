@@ -7,7 +7,7 @@ export default class CreateConversationRequestDto implements NewConversation {
   title: string;
 
   @ApiProperty()
-  agentId: number;
+  botId: number;
 
   @IsNotEmpty()
   documentId: number;

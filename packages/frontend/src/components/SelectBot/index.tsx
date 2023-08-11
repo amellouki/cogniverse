@@ -1,6 +1,6 @@
 import React, {FunctionComponent, useEffect, useMemo} from 'react';
 import {useQuery} from "react-query";
-import RcAgent from "../../../../shared/src/types/bot/bot";
+import {Bot} from "@my-monorepo/shared";
 import useEmbeddedDocumentsList from "@/hooks/use-embedded-document-list.hook";
 import {Controller, useForm} from "react-hook-form";
 import {DocumentMetadata} from "@my-monorepo/shared";
@@ -9,7 +9,7 @@ import SelectOption from "@/types/SelectOption";
 import styles from './styles.module.scss'
 
 export type BotSelection = {
-  agentId: number;
+  botId: number;
   documentId?: number;
 }
 
@@ -18,21 +18,21 @@ type Props = {
 }
 
 const SelectBot: FunctionComponent<Props> = ({ botSelectionRef }) => {
-  const {data: agentsData} = useQuery<RcAgent[]>('agents', () => {
+  const {data: botsData} = useQuery<Bot[]>('bots', () => {
     return fetch(process.env.NEXT_PUBLIC_BACKEND_API + '/bot/get-bots').then((res) => res.json())
   });
 
-  const agentsOptions = useMemo(() => {
-    console.log(agentsData)
-    return agentsData?.map((agent) => ({
-      label: agent.name,
-      value: agent.id + ''
+  const botsOptions = useMemo(() => {
+    console.log(botsData)
+    return botsData?.map((bot) => ({
+      label: bot.name,
+      value: bot.id + ''
     })) ?? [];
-  }, [agentsData]);
+  }, [botsData]);
 
-  const agentsMap = useMemo(() => {
-    return new Map(agentsData?.map(option => [option.id, option]))
-  }, [agentsData])
+  const botsMap = useMemo(() => {
+    return new Map(botsData?.map(option => [option.id, option]))
+  }, [botsData])
 
   const {data: documentsData} = useEmbeddedDocumentsList();
 
@@ -58,14 +58,14 @@ const SelectBot: FunctionComponent<Props> = ({ botSelectionRef }) => {
       <Controller
         render={({field: {onChange, value}}) => (
           <Select
-            id={'agent'}
+            id={'bot'}
             className={styles.select}
-            options={agentsOptions}
+            options={botsOptions}
             onChange={(selected) => selected && onChange(parseInt(selected.value))}
-            selected={agentToSelected(value, agentsMap)}
+            selected={botToSelected(value, botsMap)}
           />
         )}
-        name={'agentId'}
+        name={'botId'}
         control={control}
       />
       <Controller
@@ -85,14 +85,14 @@ const SelectBot: FunctionComponent<Props> = ({ botSelectionRef }) => {
   );
 }
 
-function agentToSelected(id: number | undefined, optionsMap: Map<number, RcAgent>): SelectOption | undefined {
+function botToSelected(id: number | undefined, optionsMap: Map<number, Bot>): SelectOption | undefined {
   if (!id) {
     return undefined;
   }
-  const agent = optionsMap.get(id);
-  return agent ? {
-    label: agent.name,
-    value: agent.id + ''
+  const bot = optionsMap.get(id);
+  return bot ? {
+    label: bot.name,
+    value: bot.id + ''
   } : undefined;
 }
 

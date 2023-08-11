@@ -47,9 +47,9 @@ export class RetrievalConversationalGateway {
     let conversation;
 
     if (!conversationId && newConversation) {
-      conversation = await this.conversationService.createRCConversation({
+      conversation = await this.conversationService.createConversation({
         ...newConversation,
-        title: `hello there! ${Date.now()}`,
+        title: `New Conversation ${Date.now()}`,
       });
       client.emit('data', getData('conversationDetails', conversation));
     } else if (!conversationId) {
@@ -57,7 +57,7 @@ export class RetrievalConversationalGateway {
       client.disconnect();
       throw new Error('No conversation id provided');
     } else {
-      conversation = await this.conversationService.getRcConversationById(
+      conversation = await this.conversationService.getConversationById(
         conversationId,
       );
     }

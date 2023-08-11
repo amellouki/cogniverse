@@ -1,7 +1,7 @@
 import {useQuery} from "react-query";
-import {RCConversation} from "@my-monorepo/shared";
+import {Conversation} from "@my-monorepo/shared";
 
-const useConversations = (conversationId?: number) => useQuery<RCConversation>(`conversation${conversationId}`, () => {
+const useConversations = (conversationId?: number) => useQuery<Conversation>(`conversation${conversationId}`, () => {
   return fetch(process.env.NEXT_PUBLIC_BACKEND_API + `/api/conversation?id=${conversationId}`).then((res) => res.json());
 }, {
   enabled: !!conversationId,

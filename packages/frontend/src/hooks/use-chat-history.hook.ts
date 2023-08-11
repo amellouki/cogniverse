@@ -8,8 +8,8 @@ export default function useChatHistory(initHistory?: Message[]) {
   useEffect(() => {
     setHistory(initHistory || [])
   }, [initHistory])
-  const appendOptimistic = useCallback((message: Omit<NewMessage, 'rcId'>) => {
-    setHistory((prev) => ([...prev, {...message, id:0, rcId: 0}]));
+  const appendOptimistic = useCallback((message: Omit<NewMessage, 'conversationId'>) => {
+    setHistory((prev) => ([...prev, {...message, id:0, conversationId: 0}]));
   }, [setHistory])
   const appendSuccess = useCallback((message: Message) => {
     setHistory((prev) => {
