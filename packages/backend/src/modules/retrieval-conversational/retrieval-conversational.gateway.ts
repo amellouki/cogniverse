@@ -12,7 +12,9 @@ import * as dotenv from 'dotenv';
 import { ConversationService } from '../../repositories/conversation/conversation.service';
 import { Message } from '@prisma/client';
 import { NewMessage } from '@my-monorepo/shared';
-import { END_COMPLETION } from '../../constants';
+import {ChatHistoryService} from "../../repositories/chat-history/chat-history.service";
+import {catchError, filter, of, throwError} from "rxjs";
+import {END_COMPLETION} from "../../constants";
 
 dotenv.config({ path: './.env.local' });
 
@@ -36,6 +38,7 @@ export class RetrievalConversationalGateway {
   constructor(
     private service: RetrievalConversationalService,
     private conversationService: ConversationService,
+    private chatHistoryService: ChatHistoryService,
   ) {}
 
   @SubscribeMessage('getCompletion')
@@ -78,20 +81,40 @@ export class RetrievalConversationalGateway {
       });
     };
 
-    this.service
-      .getCompletion(question || '', conversation, {
-        sendToken,
-        sendRetrieval,
-        sendConfirmQuestion,
-      })
-      .then((response) => {
-        client.emit('data', getData('response', response));
-        client.emit('event', { state: END_COMPLETION });
-        client.disconnect();
-      })
-      .catch((error) => {
-        this.logger.error('Completion error', error);
-        client.emit('error', JSON.stringify(error));
+    const added = await this.chatHistoryService.saveMessage({
+      content: question,
+      conversationId: conversation.id,
+      fromType: 'human',
+      type: 'message',
+      fromId: null,
+    });
+    sendConfirmQuestion(added);
+
+    try {
+      const events$ = this.service
+        .getCompletion$(question || '', conversation)
+
+      events$.pipe(filter((event) => event.type === 'response-token')).subscribe(sendToken);
+      events$.pipe(filter((event) => event.type === 'idea')).subscribe((idea) => {
+        this.chatHistoryService
+          .saveMessage(idea)
+          .then((message) => {
+            sendRetrieval(message);
+          })
+          .catch((e) => {
+            throw e;
+          });
       });
+      events$.pipe(filter((event) => event.type === 'message')).subscribe((response) => {
+        this.chatHistoryService.saveMessage(response).then((message) => {
+          client.emit('data', getData('response', response));
+          client.emit('event', { state: END_COMPLETION });
+          client.disconnect();
+        })
+      });
+    } catch (e) {
+      client.emit('error', e);
+      client.disconnect();
+    }
   }
 }
