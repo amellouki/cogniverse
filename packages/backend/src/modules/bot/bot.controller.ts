@@ -7,9 +7,7 @@ export class BotController {
   constructor(private agentService: BotService) {}
   @Post('create')
   async createBot(@Body() request: CreateBotDto) {
-    console.log('request', request);
     const result = await this.agentService.createBot(request);
-    console.log('result', result);
     return result;
   }
 

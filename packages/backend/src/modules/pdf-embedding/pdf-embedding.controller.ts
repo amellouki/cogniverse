@@ -7,7 +7,6 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ChatSessionController } from '../chat-session/chat-session.controller';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PineconeStore } from 'langchain/vectorstores';
 import { OpenAIEmbeddings } from 'langchain/embeddings';
@@ -22,7 +21,7 @@ import { DocumentNamespaceService } from '../../services/document-namespace/docu
 
 @Controller('pdf-embedding')
 export class PdfEmbeddingController {
-  private readonly logger = new Logger(ChatSessionController.name);
+  private readonly logger = new Logger(PdfEmbeddingService.name);
 
   constructor(
     private configService: ConfigService,
