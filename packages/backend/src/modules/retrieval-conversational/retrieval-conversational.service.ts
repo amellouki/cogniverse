@@ -19,13 +19,13 @@ export class RetrievalConversationalService {
     conversation: Conversation,
   ) {
     return new Observable<NewMessage>((subscriber) => {
-      this.subscribeToCompletion(question, conversation, subscriber)
+      this.getCompletion(question, conversation, subscriber)
         .then(() => subscriber.complete())
         .catch((e) => subscriber.error(e));
     }).pipe(share());
   }
 
-  async subscribeToCompletion(question: string, conversation: Conversation, subscriber: Subscriber<NewMessage>) {
+  async getCompletion(question: string, conversation: Conversation, subscriber: Subscriber<NewMessage>) {
     const bot = conversation.bot as Bot;
     if (bot.type !== BotType.RETRIEVAL_CONVERSATIONAL) {
       throw Error('Bot is not a retrieval conversational');
