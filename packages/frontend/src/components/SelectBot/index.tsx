@@ -1,6 +1,7 @@
+// TODO: Component can be simplified
 import React, {FunctionComponent, useEffect, useMemo} from 'react';
 import {useQuery} from "react-query";
-import {Bot} from "@my-monorepo/shared";
+import {Bot, BotType} from "@my-monorepo/shared";
 import useEmbeddedDocumentsList from "@/hooks/use-embedded-document-list.hook";
 import {Controller, useForm} from "react-hook-form";
 import {DocumentMetadata} from "@my-monorepo/shared";
@@ -13,8 +14,13 @@ export type BotSelection = {
   documentId?: number;
 }
 
+export type SelectionRef = {
+  bot: Bot;
+  document?: DocumentMetadata;
+}
+
 type Props = {
-  botSelectionRef: React.MutableRefObject<BotSelection | undefined>;
+  botSelectionRef: React.MutableRefObject<SelectionRef | undefined>;
 }
 
 const SelectBot: FunctionComponent<Props> = ({ botSelectionRef }) => {
@@ -49,8 +55,23 @@ const SelectBot: FunctionComponent<Props> = ({ botSelectionRef }) => {
 
   const {control, watch, formState: { errors }} = useForm<BotSelection>({ mode: 'onChange' })
   const watchAllFields = watch();
+  const selectedBot = botsMap.get(watchAllFields.botId)
   useEffect(() => {
-    botSelectionRef.current = watchAllFields;
+    const selectedBot = botsMap.get(watchAllFields.botId)
+    if (!selectedBot) {
+      return;
+    }
+    const selectedDocument =
+      (selectedBot.type === BotType.RETRIEVAL_CONVERSATIONAL && watchAllFields.documentId)
+        ? documentsMap.get(watchAllFields.documentId)
+        : undefined;
+    if (!selectedDocument && selectedBot.type === BotType.RETRIEVAL_CONVERSATIONAL) {
+      return; // TODO: show error
+    }
+    botSelectionRef.current = {
+      bot: selectedBot,
+      document: selectedDocument
+    }
   }, [botSelectionRef, watchAllFields, errors]);
 
   return (
@@ -63,24 +84,28 @@ const SelectBot: FunctionComponent<Props> = ({ botSelectionRef }) => {
             options={botsOptions}
             onChange={(selected) => selected && onChange(parseInt(selected.value))}
             selected={botToSelected(value, botsMap)}
+            placeholder={'Select bot'}
           />
         )}
         name={'botId'}
         control={control}
       />
-      <Controller
-        render={({field: {onChange, value}}) => (
-          <Select
-            id={'document'}
-            className={styles.select}
-            options={documentsOptions}
-            onChange={(selected) => selected && onChange(parseInt(selected.value))}
-            selected={documentToSelected(value, documentsMap)}
-          />
-        )}
-        name={'documentId'}
-        control={control}
-      />
+      {selectedBot?.type === BotType.RETRIEVAL_CONVERSATIONAL &&
+        <Controller
+          render={({field: {onChange, value}}) => (
+            <Select
+              id={'document'}
+              className={styles.select}
+              options={documentsOptions}
+              onChange={(selected) => selected && onChange(parseInt(selected.value))}
+              selected={documentToSelected(value, documentsMap)}
+              placeholder={'Select document'}
+            />
+          )}
+          name={'documentId'}
+          control={control}
+        />
+      }
     </div>
   );
 }

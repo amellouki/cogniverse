@@ -8,6 +8,11 @@
   border-bottom-right-radius: 0;
 }
 
+.textarea:last-child {
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
 .placeholders {
   border: 1px solid var(--color-border);
   background-color: var(--primary-inverse-background);
@@ -23,7 +28,7 @@
   gap: 0.5rem;
 }
 
-.promptPlaceholder {
+  .promptPlaceholder {
   padding: 0.1rem 0.25rem;
   background-color: var(--color-3);
   border-radius: 0.25rem;
