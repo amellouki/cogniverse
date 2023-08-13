@@ -5,7 +5,7 @@ import useChatHistory from "@/hooks/use-chat-history.hook";
 import useConversation from "@/hooks/use-conversation.hook";
 import {useRouter} from "next/router";
 import useConversations from "@/hooks/use-conversations.hook";
-import SelectBot from "@/components/SelectBot";
+import SelectBot, {SelectionRef} from "@/components/SelectBot";
 import ConversationElements from "@/components/ConversationElements";
 import styles from "./styles.module.scss";
 
@@ -26,18 +26,16 @@ const Conversation: React.FC = () => {
     (id) => setNewlyCreatedConversationId(id)
   );
 
-  const botSelectionRef = useRef()
+  const botSelectionRef = useRef<SelectionRef>()
 
   if (isLoading) {
     return <center>Loading...</center>
   }
 
-  console.log('Avatar', data?.bot.configuration.avatar)
-
   return (
     <div className={styles.Conversation}>
       {(!isLoading && !data) && <SelectBot botSelectionRef={botSelectionRef}/>}
-      {data && <ConversationElements conversationElements={data} />}
+      {data && <ConversationElements conversationElements={data}/>}
       <ChatThread chatHistory={history} response={response} avatar={data?.bot.configuration.avatar}/>
       <QueryForm className={styles.queryForm} onSubmit={(question: string) => {
         const id = data?.id || newlyCreatedConversationId
@@ -50,11 +48,24 @@ const Conversation: React.FC = () => {
         sendQuestion(
           question,
           conversationId || newlyCreatedConversationId,
-          newlyCreatedConversationId ? undefined : botSelectionRef.current
+          newlyCreatedConversationId
+            ? undefined
+            : getNewConversation()
         );
       }}/>
     </div>
   );
+
+  function getNewConversation() {
+    const current = botSelectionRef.current
+    return current
+      ?
+      {
+        botId: current.bot.id,
+        documentId: current.document?.id
+      }
+      : undefined
+  }
 };
 
 export default Conversation;
