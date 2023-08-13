@@ -3,6 +3,7 @@ import WrappedSelect from "@/components/BaseFormFields/Select/WrappedSelect";
 import SelectOption from "@/types/SelectOption";
 import RetrievalConversational from "@/components/CreateBot/RetrievalConversational";
 import {AGENT_OPTIONS} from "@/constants";
+import Conversational from "@/components/CreateBot/Conversational";
 import styles from './styles.module.scss';
 
 const CreateBot: FunctionComponent = () => {
@@ -31,7 +32,7 @@ function renderForm(formType: string) {
     case 'rc':
       return <RetrievalConversational />
     case 'conversational':
-      return <div>Working on it...</div>
+      return <Conversational />
     default:
       return <div>Unknown</div>
   }

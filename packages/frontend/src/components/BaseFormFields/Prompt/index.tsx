@@ -5,7 +5,7 @@ import textInputStyles from "../TextInput/styles.module.scss";
 import styles from './styles.module.scss';
 
 type Props = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-  placeholders: string[];
+  placeholders?: string[];
   hasError?: boolean;
 }
 
@@ -27,7 +27,7 @@ const Prompt: FunctionComponent<Props> = forwardRef<HTMLTextAreaElement, Props>(
           styles.textarea
         )}
       />
-      <div className={styles.placeholders}>
+      {placeholders?.length && <div className={styles.placeholders}>
         <span>Should contain the following placeholders:</span>
         {placeholders.map((placeholder, index) => (
           <div
@@ -37,7 +37,7 @@ const Prompt: FunctionComponent<Props> = forwardRef<HTMLTextAreaElement, Props>(
             {placeholder}
           </div>
         ))}
-      </div>
+      </div>}
     </div>
   );
 });
