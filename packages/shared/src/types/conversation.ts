@@ -3,7 +3,7 @@ import {DocumentMetadata} from "./document-metadata";
 import {Bot} from "./bot";
 
 export type Conversation = PrismaConversation & {
-  document: DocumentMetadata
+  document?: DocumentMetadata
   chatHistory: Message[]
   bot: Bot
 }

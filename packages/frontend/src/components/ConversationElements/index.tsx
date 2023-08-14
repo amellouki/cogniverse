@@ -14,7 +14,7 @@ const ConversationElements: FunctionComponent<Props> = ({
   return (
     <section className={styles.ConversationElements}>
       <BotSummary bot={bot} />
-      <DocumentSummary document={document} />
+      {document && <DocumentSummary document={document}/>}
     </section>
   );
 }

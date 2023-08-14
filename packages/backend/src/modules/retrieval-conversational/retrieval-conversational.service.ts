@@ -4,7 +4,7 @@ import {NewMessage} from '@my-monorepo/shared';
 import {Conversation} from '@my-monorepo/shared';
 import {Bot, BotType} from '@my-monorepo/shared';
 import {Observable, share, Subscriber} from "rxjs";
-import {RetrievalConversationalChainService} from "../../services/chain/retrieval-conversational-chain.service";
+import {RetrievalConversationalChainService} from "../../services/chains/retrieval-conversational/retrieval-conversational-chain.service";
 
 @Injectable()
 export class RetrievalConversationalService {
@@ -76,7 +76,7 @@ export class RetrievalConversationalService {
 
     const chainValues = await chain.call({
       question,
-      chat_history: this.retrievalConversationalChainService.constructHistory(conversation.chatHistory),
+      chat_history: RetrievalConversationalChainService.constructHistory(conversation.chatHistory),
     });
 
     subscriber.next({

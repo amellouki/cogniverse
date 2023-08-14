@@ -22,7 +22,7 @@ export class ConversationService {
           id: data.botId,
         },
       },
-      document: {
+      document: data.documentId && {
         connect: {
           id: data.documentId,
         },
