@@ -1,6 +1,6 @@
 import React, {FunctionComponent} from 'react';
 import LabelValuePair from "@/types/LabelValuePair";
-import useOptionsChecking from '@/hooks/use-options-checking.hook';
+import useOptionsSelection from '@/hooks/use-options-selection.hook';
 import clsx from "clsx";
 import styles from './styles.module.scss'
 import DocumentIcon from "@/components/DocumentIcon";
@@ -13,7 +13,7 @@ type Props = {
 }
 
 const ControlledOptionSelection: FunctionComponent<Props> = ({options, checkedOptions, onChange, multiSelection}) => {
-  const {isChecked, handleChange} = useOptionsChecking(checkedOptions, onChange, !multiSelection);
+  const {isChecked, handleChange} = useOptionsSelection(checkedOptions, onChange, !multiSelection);
 
   return (
     <div className={styles.OptionSelection}>
@@ -21,8 +21,8 @@ const ControlledOptionSelection: FunctionComponent<Props> = ({options, checkedOp
         <button
           key={option.value}
           type={'button'}
-          className={clsx(styles.option, isChecked(option) && styles.selected)}
-          onClick={() => handleChange(option, !isChecked(option))}
+          className={clsx(styles.option, isChecked(option.value) && styles.selected)}
+          onClick={() => handleChange(option, !isChecked(option.value))}
         >
           <DocumentIcon extension={'PDF'} />
           <span className={styles.filename}>{option.label}</span>

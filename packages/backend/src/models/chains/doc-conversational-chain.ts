@@ -53,23 +53,23 @@ export default class DocConversationalChain extends ConversationalRetrievalQACha
         values[this.chatHistoryKey],
       );
     let newQuestion = question;
-    if (chatHistory.length > 0) {
-      const result = await this.questionGeneratorChain.call(
-        {
-          question,
-          chat_history: chatHistory,
-        },
-        runManager?.getChild(),
+
+    const result1 = await this.questionGeneratorChain.call(
+      {
+        question,
+        chat_history: chatHistory || '[no chat history]',
+      },
+      runManager?.getChild(),
+    );
+    const keys = Object.keys(result1);
+    if (keys.length === 1) {
+      newQuestion = result1[keys[0]];
+    } else {
+      throw new Error(
+        'Return from llm chain has multiple values, only single values supported.',
       );
-      const keys = Object.keys(result);
-      if (keys.length === 1) {
-        newQuestion = result[keys[0]];
-      } else {
-        throw new Error(
-          'Return from llm chain has multiple values, only single values supported.',
-        );
-      }
     }
+
     let docs: Document[] = [];
     if (newQuestion.length > 0 && newQuestion !== '[no-question]') {
       docs = await this.retriever.getRelevantDocuments(newQuestion);

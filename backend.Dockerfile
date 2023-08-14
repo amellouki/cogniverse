@@ -12,9 +12,6 @@ RUN npm install
 
 COPY . .
 
-ARG DATABASE_URL
-ENV DATABASE_URL ${DATABASE_URL}
-RUN npm run prisma:migrate
 RUN npm run prisma:generate
 
 RUN npm run shared:build
@@ -27,10 +24,12 @@ WORKDIR /app
 
 # Copy build folders
 COPY --from=build /app/packages/backend/dist /app/packages/backend/dist
+COPY --from=build /app/packages/shared/dist /app/packages/shared/dist
 
 # Copy package.json and package-lock.json files
 COPY --from=build /app/package*.json /app/
 COPY --from=build /app/packages/backend/package*.json /app/packages/backend/
+COPY --from=build /app/packages/shared/package*.json /app/packages/shared/
 
 COPY --from=build /app/packages/backend/prisma /app/packages/backend/prisma
 
@@ -40,14 +39,10 @@ COPY --from=build /app/packages/backend/.env* /app/packages/backend/
 # Install production dependencies for backend
 RUN npm ci --omit=dev
 
-# Install nestjs globally
-RUN npm install -g @nestjs/cli
-
-# Run migrations and generate prisma client
-ARG DATABASE_URL
-ENV DATABASE_URL ${DATABASE_URL}
-RUN npm run prisma:migrate
+# Generate prisma client
 RUN npm run prisma:generate
+
+COPY --from=build /app/node_modules/@my-monorepo/shared /app/node_modules/@my-monorepo/shared
 
 # Export port
 EXPOSE 3001

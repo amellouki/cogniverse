@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
     "outDir": "dist",
     "declaration": true,
     "module": "commonjs",
-    "target": "es2017",
+    "target": "es5",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
   },
   "include": ["src"]
 }

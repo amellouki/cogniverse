@@ -14,6 +14,7 @@ type Props = {
   select: UseSelectReturnValue<SelectOption>
   options: SelectOption[];
   placeholder?: string;
+  className?: string;
 }
 
 const SelectView: FunctionComponent<Props> = (props) => {
@@ -34,7 +35,7 @@ const SelectView: FunctionComponent<Props> = (props) => {
   } = useOverlay();
 
   return (
-    <div className={styles.SelectView}>
+    <div className={clsx(styles.SelectView, props.className)}>
       <div ref={setReferenceElement}>
         <button
           {...getToggleButtonProps()}

@@ -4,7 +4,7 @@
   grid-template-columns: repeat(3, calc(33.33% - calc(2rem / 3)));
 }
 
-.option {
+.ColorOption {
   display: flex;
   flex-direction: column;
   align-items: center;

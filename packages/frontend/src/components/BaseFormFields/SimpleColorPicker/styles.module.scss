@@ -1,0 +1,41 @@
+.ColorOption {
+  cursor: pointer;
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  position: relative;
+
+  input {
+    cursor: pointer;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  span {
+    position: absolute;
+    content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    top: 4px;
+    left: 3px;
+    opacity: 0.5;
+    background-color: white;
+    border-radius: 50%;
+  }
+}
+
+.checked {
+  box-shadow: 0 0 0 2px  var(--primary-button-focus-outline);
+  span {
+    opacity: 1;
+  }
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

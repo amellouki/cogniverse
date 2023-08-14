@@ -13,11 +13,12 @@ export class PineconeService {
 
   async getClient() {
     if (this.client === null) {
-      this.client = new PineconeClient();
-      await this.client.init({
+      const client = new PineconeClient();
+      await client.init({
         apiKey: this.configService.get<string>(ENV.PINECONE_API_KEY),
         environment: this.configService.get<string>(ENV.PINECONE_ENVIRONMENT),
       });
+      this.client = client; // only assign if init is successful to avoid race conditions
     }
     return this.client;
   }

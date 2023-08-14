@@ -1,14 +1,5 @@
-type LanguageModel = {
-  name: string
-  type: string
-  prompt: string
-}
-
-type NewConversation = {
+export type NewConversation = {
   title: string
-  retrievalLanguageModel?: LanguageModel
-  conversationModel?: LanguageModel
-  documentId: number
+  botId: number
+  documentId?: number
 }
-
-export default NewConversation;

@@ -1,4 +1,4 @@
-name: Push images to Dockerhub and deploy on Elastic Beanstalk
+name: Build & Push frontend image to Dockerhub and deploy on Elastic Beanstalk
 on:
   push:
     branches:
@@ -15,7 +15,7 @@ on:
       - 'package-lock.json'
 jobs:
   build_docker_images:
-    name: Set up Environment Variables & Build Docker Image
+    name: Build/Push Docker Image and Deploy to Elastic Beanstalk
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -23,8 +23,6 @@ jobs:
 
       - name: Create .env files
         run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> ./packages/backend/prisma/.env
-
           echo "NODE_ENV=production" >> ./packages/frontend/.env.local
           echo "NEXT_PUBLIC_BACKEND_API=${{ secrets.NEXT_PUBLIC_BACKEND_API }}" >> ./packages/frontend/.env.local
 

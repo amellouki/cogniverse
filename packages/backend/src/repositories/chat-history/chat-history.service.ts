@@ -26,10 +26,10 @@ export class ChatHistoryService {
   }
 
   async saveMessage(message: AppendMessageRequestDto): Promise<Message> {
-    const cloneMessage = { ...message };
-    delete cloneMessage.conversationId;
+    const clonedMessage = { ...message };
+    delete clonedMessage.conversationId;
     const messageCreateInput: Prisma.MessageCreateInput = {
-      ...cloneMessage,
+      ...clonedMessage,
       conversation: {
         connect: {
           id: message.conversationId,

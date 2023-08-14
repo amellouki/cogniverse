@@ -1,24 +1,33 @@
 import {useCallback, useState} from 'react'
 import {io} from "socket.io-client";
 import {Message} from "@/types/ChatThread";
-import NewMessage from '@my-monorepo/shared/dist/new-message';
+import {NewMessage, Conversation, NewTitelessConversation} from '@my-monorepo/shared';
 
 const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/conversational-retrieval-qa'
 
 const useConversation = (
   onQuestionReceived: (message: Message) => void,
-  onLatestResponseComplete: (message: Message) => void) => {
+  onLatestResponseComplete: (message: Message) => void,
+  setConversationId: (id: number) => void) => {
   const [response, setResponse] = useState<NewMessage>();
   const [resources, setResources] = useState<any>();
 
-  const sendQuestion = useCallback((conversationId: number, question: string) => {
+  const sendQuestion = useCallback((question: string, conversationId?: number, newConversation?: NewTitelessConversation ) => {
     const socket = io(PATH)
+    console.log('sendQuestion')
     socket.emit('getCompletion', {
       conversationId,
-      question
+      question,
+      newConversation
     })
     socket.on('data', (data) => {
+      console.log('handle emitted data', data)
       const tokenMessage = data.content as NewMessage
+      if (data.type === 'conversationDetails') {
+        const conversation = data.content as Conversation
+        setConversationId(conversation.id)
+      }
+      console.log(tokenMessage)
       if (data.type === 'token' && tokenMessage.type === 'response-token') {
         setResponse((prev) => {
           if (!prev) return tokenMessage

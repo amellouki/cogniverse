@@ -1,4 +1,4 @@
-name: Push images to Dockerhub and deploy on Elastic Beanstalk
+name: Build & Push backend image to Dockerhub and deploy on Elastic Beanstalk
 on:
   push:
     branches:
@@ -14,7 +14,7 @@ on:
         - 'package-lock.json'
 jobs:
   build_docker_images:
-    name: Set up Environment Variables & Build Docker Image
+    name: Build/Push Docker Image and Deploy to Elastic Beanstalk
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -27,7 +27,7 @@ jobs:
           password: ${{secrets.DOCKERHUB_TOKEN}}
           logout: true
       - name: Build Docker Backend Image
-        run: docker build --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} -t ${{ secrets.DOCKERHUB_BACKEND_REPO }} -f
+        run: docker build -t ${{ secrets.DOCKERHUB_BACKEND_REPO }} -f
           ./backend.Dockerfile .
       - name: Tag Our Image
         run: docker tag ${{ secrets.DOCKERHUB_BACKEND_REPO }}

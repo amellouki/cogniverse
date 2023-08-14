@@ -7,7 +7,6 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ChatSessionController } from '../chat-session/chat-session.controller';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PineconeStore } from 'langchain/vectorstores';
 import { OpenAIEmbeddings } from 'langchain/embeddings';
@@ -15,14 +14,14 @@ import { ConfigService } from '@nestjs/config';
 import { DOC_EMBEDDING_MODEL, ENV } from '../../constants';
 import { PineconeService } from '../../services/pinecone/pinecone.service';
 import { PdfUploadDto } from '../../dto/pdf-upload.dto';
-import { UploadedFileType } from '@my-monorepo/shared/dist/uploaded-file';
+import { UploadedFileType } from '@my-monorepo/shared';
 import { PdfSplitterService } from '../../services/pdf-splitter/pdf-splitter.service';
 import { PdfEmbeddingService } from './pdf-embedding.service';
 import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
 
 @Controller('pdf-embedding')
 export class PdfEmbeddingController {
-  private readonly logger = new Logger(ChatSessionController.name);
+  private readonly logger = new Logger(PdfEmbeddingService.name);
 
   constructor(
     private configService: ConfigService,

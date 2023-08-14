@@ -6,4 +6,5 @@ export type SelectProps = {
   onChange: (value: SelectOption | undefined | null) => void;
   selected: SelectOption | undefined | null;
   id: string;
+  className?: string;
 }
