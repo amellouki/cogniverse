@@ -7,10 +7,10 @@ import { LlmModule } from './llm/llm.module';
 import { EmbeddingsModule } from './embeddings/embeddings.module';
 import { DocumentNamespaceModule } from './document-namespace/document-namespace.module';
 import { PineconeModule } from './pinecone/pinecone.module';
-import { ChainModule } from './chain/chain.module';
+import { ChainsModule } from './chains/chains.module';
 
 @Module({
   providers: [PineconeService, PdfSplitterService, DocumentNamespaceService],
-  imports: [VectorStoreModule, LlmModule, EmbeddingsModule, DocumentNamespaceModule, PineconeModule, ChainModule],
+  imports: [VectorStoreModule, LlmModule, EmbeddingsModule, DocumentNamespaceModule, PineconeModule, ChainsModule],
 })
 export class ServicesModule {}

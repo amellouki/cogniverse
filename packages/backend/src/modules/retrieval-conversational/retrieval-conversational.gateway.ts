@@ -10,11 +10,12 @@ import {
 } from '@nestjs/websockets';
 import * as dotenv from 'dotenv';
 import { ConversationService } from '../../repositories/conversation/conversation.service';
-import { Message } from '@prisma/client';
-import { NewMessage } from '@my-monorepo/shared';
+import {Message} from '@prisma/client';
+import {NewMessage, BotType, Conversation} from '@my-monorepo/shared';
 import {ChatHistoryService} from "../../repositories/chat-history/chat-history.service";
-import {catchError, filter, of, throwError} from "rxjs";
+import {filter} from "rxjs";
 import {END_COMPLETION} from "../../constants";
+import {ConversationalService} from "./conversational.service";
 
 dotenv.config({ path: './.env.local' });
 
@@ -36,10 +37,22 @@ export class RetrievalConversationalGateway {
   private readonly logger = new Logger(RetrievalConversationalGateway.name);
 
   constructor(
-    private service: RetrievalConversationalService,
+    private retrievalConversationalService: RetrievalConversationalService,
+    private conversationalService: ConversationalService,
     private conversationService: ConversationService,
     private chatHistoryService: ChatHistoryService,
   ) {}
+
+  private getService(botType: BotType) {
+    switch (botType) {
+      case BotType.RETRIEVAL_CONVERSATIONAL:
+        return this.retrievalConversationalService;
+      case BotType.CONVERSATIONAL:
+        return this.conversationalService;
+      default:
+        throw new Error('Invalid bot type');
+    }
+  }
 
   @SubscribeMessage('getCompletion')
   async getCompletion(
@@ -47,13 +60,13 @@ export class RetrievalConversationalGateway {
     @ConnectedSocket() client: Socket,
   ) {
     const { question, conversationId, newConversation } = request;
-    let conversation;
+    let conversation: Conversation;
 
     if (!conversationId && newConversation) {
       conversation = await this.conversationService.createConversation({
         ...newConversation,
         title: `New Conversation ${Date.now()}`,
-      });
+      }) as Conversation; // TODO: fix this;
       client.emit('data', getData('conversationDetails', conversation));
     } else if (!conversationId) {
       client.emit('error', 'No conversation id provided');
@@ -62,7 +75,7 @@ export class RetrievalConversationalGateway {
     } else {
       conversation = await this.conversationService.getConversationById(
         conversationId,
-      );
+      ) as Conversation; // TODO: fix this;
     }
     const sendToken = async (tokenMessage: NewMessage) => {
       client.emit('data', getData('token', tokenMessage));
@@ -90,9 +103,10 @@ export class RetrievalConversationalGateway {
     });
     sendConfirmQuestion(added);
 
+    const service = this.getService(conversation.bot.type);
+
     try {
-      const events$ = this.service
-        .getCompletion$(question || '', conversation)
+      const events$ = service.getCompletion$(question || '', conversation)
 
       events$.pipe(filter((event) => event.type === 'response-token')).subscribe(sendToken);
       events$.pipe(filter((event) => event.type === 'idea')).subscribe((idea) => {

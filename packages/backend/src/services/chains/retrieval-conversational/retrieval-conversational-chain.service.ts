@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import {BaseChain} from "langchain/chains";
 import {Bot, BotType, Conversation} from "@my-monorepo/shared";
-import {ENV, QUERY_EMBEDDING_MODEL} from "../../constants";
-import createLlm from "../llm/create-llm";
+import {ENV, QUERY_EMBEDDING_MODEL} from "../../../constants";
+import createLlm from "../../llm/create-llm";
 import {CallbackManager} from "langchain/callbacks";
-import DocConversationalChain from "../../models/chains/doc-conversational-chain";
+import DocConversationalChain from "../../../models/chains/doc-conversational-chain";
 import {BufferMemory, ChatMessageHistory} from "langchain/memory";
 import {ConfigService} from "@nestjs/config";
-import {VectorStoreService} from "../vector-store/vector-store.service";
+import {VectorStoreService} from "../../vector-store/vector-store.service";
 import {Message} from "@prisma/client";
 import {AIChatMessage, HumanChatMessage, SystemChatMessage} from "langchain/schema";
 
@@ -18,7 +18,7 @@ export class RetrievalConversationalChainService {
     private vectorStoreService: VectorStoreService,
   ) {}
 
-  constructHistory(array: Message[]): ChatMessageHistory {
+  static constructHistory(array: Message[]): ChatMessageHistory {
     const messages = array.map((message) => {
       switch (message.fromType) {
         case 'system':
@@ -80,7 +80,7 @@ export class RetrievalConversationalChainService {
           inputKey: 'question', // The key for the input to the chain
           outputKey: 'text', // The key for the final conversational output of the chain
           returnMessages: true, // If using with a chat model
-          chatHistory: this.constructHistory(conversation.chatHistory),
+          chatHistory: RetrievalConversationalChainService.constructHistory(conversation.chatHistory),
         }),
         questionGeneratorChainOptions: {
           llm: retrievalModel,
