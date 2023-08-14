@@ -2,7 +2,7 @@ name: Build & Push backend image to Dockerhub and deploy on Elastic Beanstalk
 on:
   push:
     branches:
-      - remodel
+      - master
     paths:
         - 'packages/backend/**'
         - 'packages/shared/**'
@@ -14,7 +14,7 @@ on:
         - 'package-lock.json'
 jobs:
   build_docker_images:
-    name: Set up Environment Variables & Build Docker Image
+    name: Build/Push Docker Image and Deploy to Elastic Beanstalk
     runs-on: ubuntu-latest
     steps:
       - name: checkout
