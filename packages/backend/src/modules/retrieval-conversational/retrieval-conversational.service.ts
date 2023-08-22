@@ -5,6 +5,7 @@ import {Conversation} from '@my-monorepo/shared';
 import {Bot, BotType} from '@my-monorepo/shared';
 import {Observable, share, Subscriber} from "rxjs";
 import {RetrievalConversationalChainService} from "../../services/chains/retrieval-conversational/retrieval-conversational-chain.service";
+import {ChatHistoryBuilderService} from "../../services/chat-history-builder/chat-history-builder.service";
 
 @Injectable()
 export class RetrievalConversationalService {
@@ -12,6 +13,7 @@ export class RetrievalConversationalService {
 
   constructor(
     private retrievalConversationalChainService: RetrievalConversationalChainService,
+    private chatHistoryBuilder: ChatHistoryBuilderService,
   ) {}
 
   getCompletion$(
@@ -67,7 +69,7 @@ export class RetrievalConversationalService {
       },
     })
 
-    const chain = await this.retrievalConversationalChainService.createChain(
+    const chain = await this.retrievalConversationalChainService.fromConversation(
       question,
       conversation,
       retrievalCallbackManager,
@@ -76,7 +78,7 @@ export class RetrievalConversationalService {
 
     const chainValues = await chain.call({
       question,
-      chat_history: RetrievalConversationalChainService.constructHistory(conversation.chatHistory),
+      chat_history: this.chatHistoryBuilder.build(conversation.chatHistory),
     });
 
     subscriber.next({

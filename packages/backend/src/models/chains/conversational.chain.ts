@@ -31,12 +31,13 @@ class ConversationalChain extends LLMChain {
         );
     }
 
-    static instantiate(input: Omit<LLMChainInput, 'prompt'> & {template: string}) {
+    static instantiate(input: Omit<LLMChainInput, 'prompt'> & {template: string}) { // TODO: debugging
         const {template, ...rest} = input
-        return new ConversationalChain({
+        const chain = new ConversationalChain({
             ...rest,
             prompt: PromptTemplate.fromTemplate((template ?? DEFAULT_PROMPT) + INSTRUCTIONS)
         })
+        return chain
     }
 }
 

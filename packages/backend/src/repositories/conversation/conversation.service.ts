@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Conversation, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { NewConversation } from '@my-monorepo/shared';
+import {Conversation, NewConversation} from '@my-monorepo/shared';
 
 @Injectable()
 export class ConversationService {
   constructor(private prisma: PrismaService) {}
 
   async conversations(): Promise<Conversation[]> {
-    return this.prisma.conversation.findMany();
+    return this.prisma.conversation.findMany() as unknown as Promise<Conversation[]>;
   }
 
   async createConversation(data: NewConversation): Promise<Conversation> {
@@ -36,7 +36,7 @@ export class ConversationService {
         bot: true,
         document: true,
       },
-    });
+    }) as unknown as Promise<Conversation>;
   }
   async conversationHistory(id: number) {
     return this.prisma.conversation.findUnique({
@@ -53,7 +53,7 @@ export class ConversationService {
     });
   }
 
-  async getConversationById(id: number) {
+  async getConversationById(id: number): Promise<Conversation> {
     return this.prisma.conversation.findUnique({
       where: {
         id,
@@ -67,6 +67,6 @@ export class ConversationService {
         bot: true,
         document: true,
       },
-    });
+    }) as unknown as Promise<Conversation>;
   }
 }
