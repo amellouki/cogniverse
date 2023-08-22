@@ -9,7 +9,9 @@ describe('ConversationalRetrievalQaService', () => {
       providers: [RetrievalConversationalService],
     }).compile();
 
-    service = module.get<RetrievalConversationalService>(RetrievalConversationalService);
+    service = module.get<RetrievalConversationalService>(
+      RetrievalConversationalService,
+    );
   });
 
   it('should be defined', () => {

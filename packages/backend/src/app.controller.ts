@@ -25,9 +25,7 @@ export class AppController {
   }
 
   @Get('conversation')
-  async getConversationHistory(
-    @Query('id') id: string,
-  ): Promise<Conversation> {
+  async getConversationHistory(@Query('id') id: string): Promise<Conversation> {
     return this.conversationService.getConversationById(Number(id));
   }
 

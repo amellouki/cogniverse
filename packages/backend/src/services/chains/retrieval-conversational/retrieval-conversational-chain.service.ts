@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import {BaseChain} from "langchain/chains";
-import {Bot, BotType, Conversation} from "@my-monorepo/shared";
-import {ENV, QUERY_EMBEDDING_MODEL} from "../../../constants";
-import createLlm from "../../llm/create-llm";
-import {CallbackManager} from "langchain/callbacks";
-import DocConversationalChain from "../../../models/chains/doc-conversational-chain";
-import {BufferMemory} from "langchain/memory";
-import {ConfigService} from "@nestjs/config";
-import {VectorStoreService} from "../../vector-store/vector-store.service";
-import {ChatHistoryBuilderService} from "../../chat-history-builder/chat-history-builder.service";
+import { BaseChain } from 'langchain/chains';
+import { Bot, BotType, Conversation } from '@my-monorepo/shared';
+import { ENV, QUERY_EMBEDDING_MODEL } from '../../../constants';
+import createLlm from '../../llm/create-llm';
+import { CallbackManager } from 'langchain/callbacks';
+import DocConversationalChain from '../../../models/chains/doc-conversational-chain';
+import { BufferMemory } from 'langchain/memory';
+import { ConfigService } from '@nestjs/config';
+import { VectorStoreService } from '../../vector-store/vector-store.service';
+import { ChatHistoryBuilderService } from '../../chat-history-builder/chat-history-builder.service';
 
 @Injectable()
 export class RetrievalConversationalChainService {
@@ -22,7 +22,7 @@ export class RetrievalConversationalChainService {
     question: string,
     conversation: Conversation,
     retrievalCallbackManager: CallbackManager,
-    conversationalCallbackManager: CallbackManager
+    conversationalCallbackManager: CallbackManager,
   ): Promise<BaseChain> {
     const bot = conversation.bot as Bot;
     if (bot.type !== BotType.RETRIEVAL_CONVERSATIONAL) {
@@ -43,7 +43,7 @@ export class RetrievalConversationalChainService {
         type: QUERY_EMBEDDING_MODEL,
       },
       document: conversation.document,
-    })
+    });
     const retrievalModel = createLlm({
       type: 'gpt-3.5-turbo',
       apiKey: openAiApiKey,
@@ -64,7 +64,9 @@ export class RetrievalConversationalChainService {
           inputKey: 'question', // The key for the input to the chain
           outputKey: 'text', // The key for the final conversational output of the chain
           returnMessages: true, // If using with a chat model
-          chatHistory: this.chatHistoryBuilderService.build(conversation.chatHistory),
+          chatHistory: this.chatHistoryBuilderService.build(
+            conversation.chatHistory,
+          ),
         }),
         questionGeneratorChainOptions: {
           llm: retrievalModel,

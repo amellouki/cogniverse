@@ -12,6 +12,14 @@ import { ChatHistoryBuilderModule } from './chat-history-builder/chat-history-bu
 
 @Module({
   providers: [PineconeService, PdfSplitterService, DocumentNamespaceService],
-  imports: [VectorStoreModule, LlmModule, EmbeddingsModule, DocumentNamespaceModule, PineconeModule, ChainsModule, ChatHistoryBuilderModule],
+  imports: [
+    VectorStoreModule,
+    LlmModule,
+    EmbeddingsModule,
+    DocumentNamespaceModule,
+    PineconeModule,
+    ChainsModule,
+    ChatHistoryBuilderModule,
+  ],
 })
 export class ServicesModule {}

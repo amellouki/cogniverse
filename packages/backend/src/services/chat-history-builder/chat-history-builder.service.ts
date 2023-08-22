@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import {Message} from "@prisma/client";
-import {ChatMessageHistory} from "langchain/memory";
-import {AIChatMessage, HumanChatMessage, SystemChatMessage} from "langchain/schema";
-import {DiscordMessage} from "@my-monorepo/shared";
+import { Message } from '@prisma/client';
+import { ChatMessageHistory } from 'langchain/memory';
+import {
+  AIChatMessage,
+  HumanChatMessage,
+  SystemChatMessage,
+} from 'langchain/schema';
+import { DiscordMessage } from '@my-monorepo/shared';
 
 @Injectable()
 export class ChatHistoryBuilderService {
