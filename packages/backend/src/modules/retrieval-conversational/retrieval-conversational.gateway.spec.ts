@@ -9,7 +9,9 @@ describe('ConversationalRetrievalQaController', () => {
       controllers: [RetrievalConversationalGateway],
     }).compile();
 
-    controller = module.get<RetrievalConversationalGateway>(RetrievalConversationalGateway);
+    controller = module.get<RetrievalConversationalGateway>(
+      RetrievalConversationalGateway,
+    );
   });
 
   it('should be defined', () => {

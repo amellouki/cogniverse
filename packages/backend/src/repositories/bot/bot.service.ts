@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import {Bot} from "@my-monorepo/shared";
+import { Bot } from '@my-monorepo/shared';
 
 @Injectable()
 export class BotService {
