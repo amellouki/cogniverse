@@ -5,7 +5,7 @@ import {
 } from "./contants";
 
 const schema = z.object({
-  name: z.string().nonempty(),
+  name: z.string().nonempty().regex(/^[a-zA-Z0-9_-]+$/i, {message: "Name must be alphanumeric, underscores and dashes are allowed"}),
   // RLM: Retrieval Language Model
   isRLMCustomPrompt: z.boolean(),
   rlmPrompt: z.string().optional(),

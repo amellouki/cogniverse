@@ -75,7 +75,7 @@ export class RetrievalConversationalGateway {
     } else {
       conversation = await this.conversationService.getConversationById(
         conversationId,
-      ) as Conversation; // TODO: fix this;
+      )
     }
     const sendToken = async (tokenMessage: NewMessage) => {
       client.emit('data', getData('token', tokenMessage));
