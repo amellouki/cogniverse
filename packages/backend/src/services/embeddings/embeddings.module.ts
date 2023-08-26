@@ -3,6 +3,6 @@ import { EmbeddingsService } from './embeddings.service';
 
 @Module({
   providers: [EmbeddingsService],
-  exports: [EmbeddingsService]
+  exports: [EmbeddingsService],
 })
 export class EmbeddingsModule {}

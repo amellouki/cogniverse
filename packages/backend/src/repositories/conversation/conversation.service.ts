@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import {Conversation, NewConversation} from '@my-monorepo/shared';
+import { Conversation, NewConversation } from '@my-monorepo/shared';
 
 @Injectable()
 export class ConversationService {
   constructor(private prisma: PrismaService) {}
 
   async conversations(): Promise<Conversation[]> {
-    return this.prisma.conversation.findMany() as unknown as Promise<Conversation[]>;
+    return this.prisma.conversation.findMany() as unknown as Promise<
+      Conversation[]
+    >;
   }
 
   async createConversation(data: NewConversation): Promise<Conversation> {

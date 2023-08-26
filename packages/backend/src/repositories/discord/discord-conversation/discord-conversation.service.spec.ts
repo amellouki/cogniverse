@@ -9,7 +9,9 @@ describe('DiscordConversationService', () => {
       providers: [DiscordConversationService],
     }).compile();
 
-    service = module.get<DiscordConversationService>(DiscordConversationService);
+    service = module.get<DiscordConversationService>(
+      DiscordConversationService,
+    );
   });
 
   it('should be defined', () => {

@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import {ConfigService} from "@nestjs/config";
-import {Bot, BotType, Conversation, DiscordConversation} from "@my-monorepo/shared";
-import {CallbackManager} from "langchain/callbacks";
-import createLlm from "../../llm/create-llm";
-import {ENV} from "../../../constants";
-import {BufferMemory} from "langchain/memory";
-import ConversationalChain from "../../../models/chains/conversational.chain";
-import {ChatHistoryBuilderService} from "../../chat-history-builder/chat-history-builder.service";
+import { ConfigService } from '@nestjs/config';
+import {
+  Bot,
+  BotType,
+  Conversation,
+  DiscordConversation,
+} from '@my-monorepo/shared';
+import { CallbackManager } from 'langchain/callbacks';
+import createLlm from '../../llm/create-llm';
+import { ENV } from '../../../constants';
+import { BufferMemory } from 'langchain/memory';
+import ConversationalChain from '../../../models/chains/conversational.chain';
+import { ChatHistoryBuilderService } from '../../chat-history-builder/chat-history-builder.service';
 
 @Injectable()
 export class ConversationalChainService {
@@ -46,8 +51,8 @@ export class ConversationalChainService {
         outputKey: 'text', // The key for the final conversational output of the chain
         returnMessages: true, // If using with a chat model
         chatHistory: this.chatHistoryBuilder.build(conversation.chatHistory),
-      })
-    })
+      }),
+    });
   }
 
   fromDiscordConversation(
@@ -80,8 +85,10 @@ export class ConversationalChainService {
         inputKey: 'question', // The key for the input to the chain
         outputKey: 'text', // The key for the final conversational output of the chain
         returnMessages: true, // If using with a chat model
-        chatHistory: this.chatHistoryBuilder.buildFromDiscord(conversation.chatHistory),
-      })
-    })
+        chatHistory: this.chatHistoryBuilder.buildFromDiscord(
+          conversation.chatHistory,
+        ),
+      }),
+    });
   }
 }
