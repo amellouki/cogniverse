@@ -5,36 +5,20 @@ import {ENV, QUERY_EMBEDDING_MODEL} from "../../../constants";
 import createLlm from "../../llm/create-llm";
 import {CallbackManager} from "langchain/callbacks";
 import DocConversationalChain from "../../../models/chains/doc-conversational-chain";
-import {BufferMemory, ChatMessageHistory} from "langchain/memory";
+import {BufferMemory} from "langchain/memory";
 import {ConfigService} from "@nestjs/config";
 import {VectorStoreService} from "../../vector-store/vector-store.service";
-import {Message} from "@prisma/client";
-import {AIChatMessage, HumanChatMessage, SystemChatMessage} from "langchain/schema";
+import {ChatHistoryBuilderService} from "../../chat-history-builder/chat-history-builder.service";
 
 @Injectable()
 export class RetrievalConversationalChainService {
   constructor(
     private configService: ConfigService,
     private vectorStoreService: VectorStoreService,
+    private chatHistoryBuilderService: ChatHistoryBuilderService,
   ) {}
 
-  static constructHistory(array: Message[]): ChatMessageHistory {
-    const messages = array.map((message) => {
-      switch (message.fromType) {
-        case 'system':
-          return new SystemChatMessage(message.content);
-        case 'ai':
-          return new AIChatMessage(message.content);
-        case 'human':
-          return new HumanChatMessage(message.content);
-        default:
-          throw new Error('Message type not supported');
-      }
-    });
-    return new ChatMessageHistory(messages);
-  }
-
-  async createChain(
+  async fromConversation(
     question: string,
     conversation: Conversation,
     retrievalCallbackManager: CallbackManager,
@@ -80,7 +64,7 @@ export class RetrievalConversationalChainService {
           inputKey: 'question', // The key for the input to the chain
           outputKey: 'text', // The key for the final conversational output of the chain
           returnMessages: true, // If using with a chat model
-          chatHistory: RetrievalConversationalChainService.constructHistory(conversation.chatHistory),
+          chatHistory: this.chatHistoryBuilderService.build(conversation.chatHistory),
         }),
         questionGeneratorChainOptions: {
           llm: retrievalModel,

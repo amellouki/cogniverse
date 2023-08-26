@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import {Bot} from "@my-monorepo/shared";
 
 @Injectable()
 export class BotService {
@@ -23,5 +24,13 @@ export class BotService {
         name: 'asc',
       },
     });
+  }
+
+  getBotByName(name: string): Prisma.PrismaPromise<Bot> {
+    return this.prisma.bot.findUnique({
+      where: {
+        name,
+      },
+    }) as unknown as Prisma.PrismaPromise<Bot>;
   }
 }

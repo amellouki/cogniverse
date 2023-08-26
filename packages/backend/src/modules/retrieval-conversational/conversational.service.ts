@@ -6,6 +6,7 @@ import {CallbackManager} from "langchain/callbacks";
 import {
   RetrievalConversationalChainService
 } from "../../services/chains/retrieval-conversational/retrieval-conversational-chain.service";
+import {ChatHistoryBuilderService} from "../../services/chat-history-builder/chat-history-builder.service";
 
 @Injectable()
 export class ConversationalService {
@@ -13,6 +14,7 @@ export class ConversationalService {
 
   constructor(
     private conversationalChainService: ConversationalChainService,
+    private chatHistoryBuilder: ChatHistoryBuilderService,
   ) {}
 
   getCompletion$(
@@ -44,17 +46,14 @@ export class ConversationalService {
       },
     })
 
-    const chain = await this.conversationalChainService.createChain(
-      question,
+    const chain = await this.conversationalChainService.fromConversation(
       conversation,
       callbackManager,
     )
 
-    console.log('created chain', chain)
-
     const chainValues = await chain.call({
       question,
-      chat_history: RetrievalConversationalChainService.constructHistory(conversation.chatHistory),
+      chat_history: this.chatHistoryBuilder.build(conversation.chatHistory),
     });
 
     subscriber.next({
