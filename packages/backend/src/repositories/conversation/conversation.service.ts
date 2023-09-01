@@ -35,7 +35,11 @@ export class ConversationService {
       data: conversationData,
       include: {
         chatHistory: true,
-        bot: true,
+        bot: {
+          include: {
+            boundDocument: true,
+          },
+        },
         document: true,
       },
     }) as unknown as Promise<Conversation>;
@@ -66,7 +70,11 @@ export class ConversationService {
             id: 'asc',
           },
         },
-        bot: true,
+        bot: {
+          include: {
+            boundDocument: true,
+          },
+        },
         document: true,
       },
     }) as unknown as Promise<Conversation>;

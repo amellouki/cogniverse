@@ -13,6 +13,8 @@ import {CLM_PROMPT_PLACEHOLDERS, RLM_PROMPT_PLACEHOLDERS} from "./contants";
 import SimpleColorPicker from "@/components/BaseFormFields/SimpleColorPicker";
 import {Planet} from "react-kawaii";
 import styles from './styles.module.scss';
+import EmbeddedDocumentsSelector from "@/components/EmbeddedDocumentsSelector";
+import Checkbox from "@/components/BaseFormFields/Checkbox";
 
 const COLOR_OPTIONS = [
   {label: 'Weldon Blue', value: '#749da1'},
@@ -41,13 +43,15 @@ const RetrievalConversational: FunctionComponent = () => {
 
   const isRLMCustomPrompt = watch('isRLMCustomPrompt');
   const isCLMCustomPrompt = watch('isCLMCustomPrompt');
+  const isBoundToDocument = watch('isBoundToDocument');
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.CreateBot}>
       <Controller
-        render={({ field: {onChange, value}}) => (
+        render={({field: {onChange, value}}) => (
           <section className={styles.avatarSelection}>
-            <SimpleColorPicker onChange={onChange} options={COLOR_OPTIONS} selected={value} legend={'Pick color'} error={errors.color} />
+            <SimpleColorPicker onChange={onChange} options={COLOR_OPTIONS} selected={value} legend={'Pick color'}
+                               error={errors.color}/>
             {value && <Planet size={100} mood="happy" color={value}/>}
           </section>
         )}
@@ -70,7 +74,7 @@ const RetrievalConversational: FunctionComponent = () => {
       <div className={styles.ToggleButtonRow}>
         <span>Retrieval model prompt</span>
         <Controller
-          render={({ field: {onChange, value} }) => (
+          render={({field: {onChange, value}}) => (
             <ControlledToggleButton
               id={'rlm'}
               pressed={value}
@@ -103,7 +107,7 @@ const RetrievalConversational: FunctionComponent = () => {
       <div className={styles.ToggleButtonRow}>
         <span>Conversational model prompt</span>
         <Controller
-          render={({ field: {onChange, value} }) => (
+          render={({field: {onChange, value}}) => (
             <ControlledToggleButton
               id={'clm'}
               pressed={value}
@@ -131,6 +135,26 @@ const RetrievalConversational: FunctionComponent = () => {
             placeholders={CLM_PROMPT_PLACEHOLDERS}
           />
         </FormFieldWrapper>
+      )}
+      <Checkbox
+        id={'bind-document'}
+        {...register('isBoundToDocument', {required: true})}
+      >
+        Bind document?
+      </Checkbox>
+      {isBoundToDocument && (
+        <Controller
+          control={control}
+          name={'boundDocumentId'}
+          defaultValue={null}
+          render={({field: {onChange, value}}) => (
+            <EmbeddedDocumentsSelector
+              onChange={onChange}
+              selectedDocumentId={value}
+              fieldError={errors.boundDocumentId}
+            />
+          )}
+        />
       )}
       <Button type={'submit'} className={styles.SubmitButton}>Create</Button>
     </form>

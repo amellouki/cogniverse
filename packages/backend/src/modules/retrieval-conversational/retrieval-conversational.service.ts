@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CallbackManager } from 'langchain/callbacks';
 import { NewMessage } from '@my-monorepo/shared';
 import { Conversation } from '@my-monorepo/shared';
-import { Bot, BotType } from '@my-monorepo/shared';
+import { BotType } from '@my-monorepo/shared';
 import { Observable, share, Subscriber } from 'rxjs';
 import { RetrievalConversationalChainService } from '../../services/chains/retrieval-conversational/retrieval-conversational-chain.service';
 import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
@@ -29,7 +29,7 @@ export class RetrievalConversationalService {
     conversation: Conversation,
     subscriber: Subscriber<NewMessage>,
   ) {
-    const bot = conversation.bot as Bot;
+    const bot = conversation.bot;
     if (bot.type !== BotType.RETRIEVAL_CONVERSATIONAL) {
       throw Error('Bot is not a retrieval conversational');
     }

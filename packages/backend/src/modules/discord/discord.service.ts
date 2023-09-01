@@ -3,7 +3,13 @@ import { Client, GatewayIntentBits, Message, Partials } from 'discord.js';
 import { ConfigService } from '@nestjs/config';
 import { DiscordConversationService } from '../../repositories/discord/discord-conversation/discord-conversation.service';
 import { ConversationalChainService } from '../../services/chains/conversational-chain/conversational-chain.service';
-import { DiscordMessage } from '@my-monorepo/shared';
+import { RetrievalConversationalChainService } from '../../services/chains/retrieval-conversational/retrieval-conversational-chain.service';
+import {
+  Bot,
+  BotType,
+  DiscordConversation,
+  DiscordMessage,
+} from '@my-monorepo/shared';
 import { CallbackManager } from 'langchain/callbacks';
 import { BotService } from '../../repositories/bot/bot.service';
 import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
@@ -20,6 +26,7 @@ export class DiscordService implements OnModuleInit {
     private readonly configService: ConfigService,
     private discordConversationService: DiscordConversationService,
     private conversationalChainService: ConversationalChainService,
+    private retrievalConversationalChainService: RetrievalConversationalChainService,
     private botService: BotService,
     private chatHistoryBuilder: ChatHistoryBuilderService,
   ) {}
@@ -67,7 +74,40 @@ export class DiscordService implements OnModuleInit {
       message.channel.send(`Bot ${parsedMessage.bot} not found`);
       return;
     }
-    const chain = this.conversationalChainService.fromDiscordConversation(
+    const chain = await this.getChain(conversation, bot, message);
+    await chain.call({
+      question: parsedMessage.question,
+      chat_history: this.chatHistoryBuilder.buildFromDiscord(
+        conversation.chatHistory,
+      ),
+    });
+  }
+
+  private async getChain(
+    conversation: DiscordConversation,
+    bot: Bot,
+    message: Message,
+  ) {
+    switch (bot.type) {
+      case BotType.CONVERSATIONAL:
+        return this.getConversationalChain(conversation, bot, message);
+      case BotType.RETRIEVAL_CONVERSATIONAL:
+        return await this.getRetrievalConversationalChain(
+          conversation,
+          bot,
+          message,
+        );
+      default:
+        throw new Error('Bot type not supported');
+    }
+  }
+
+  private getConversationalChain(
+    conversation: DiscordConversation,
+    bot: Bot,
+    message: Message,
+  ) {
+    return this.conversationalChainService.fromDiscordConversation(
       conversation,
       bot,
       CallbackManager.fromHandlers({
@@ -91,12 +131,38 @@ export class DiscordService implements OnModuleInit {
         },
       }),
     );
-    await chain.call({
-      question: parsedMessage.question,
-      chat_history: this.chatHistoryBuilder.buildFromDiscord(
-        conversation.chatHistory,
-      ),
-    });
+  }
+
+  private getRetrievalConversationalChain(
+    conversation: DiscordConversation,
+    bot: Bot,
+    message: Message,
+  ) {
+    return this.retrievalConversationalChainService.fromDiscordConversation(
+      conversation,
+      bot,
+      CallbackManager.fromHandlers({}),
+      CallbackManager.fromHandlers({
+        handleLLMEnd: async (result) => {
+          if (result.generations[0][0]?.text) {
+            message.channel
+              .send(result.generations[0][0]?.text)
+              .then(async (message) => {
+                await this.discordConversationService.saveMessage({
+                  content: result.generations[0][0]?.text,
+                  discordConversationId: message.channel.id,
+                  botId: bot.id,
+                  isBot: true,
+                  authorId: message.author.id,
+                  username: message.author.username,
+                  createdAt: message.createdAt,
+                  id: message.id,
+                });
+              });
+          }
+        },
+      }),
+    );
   }
 
   private mapHumanMessage(message: Message): DiscordMessage {

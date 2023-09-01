@@ -6,6 +6,7 @@ import styles from './styles.module.scss';
 import {FieldError} from "react-hook-form";
 import {getErrorText} from "@/helpers/get-error-text";
 import Link from "next/link";
+import DocumentIcon from "@/components/DocumentIcon";
 
 type Props = {
   onChange: (selectedDocumentId: number) => void
@@ -40,6 +41,12 @@ const EmbeddedDocumentsSelector: FunctionComponent<Props> = ({onChange, selected
         onChange={(option) => {
           onChange(parseInt(option[0].value));
         }}
+        renderOptionContent={(option) => (
+          <div className={styles.option}>
+            <DocumentIcon extension={'PDF'} />
+            <span className={styles.filename}>{option.label}</span>
+          </div>
+        )}
       />
       {fieldError && <span className={styles.error}>{getErrorText('Document', fieldError)}</span>}
     </div>

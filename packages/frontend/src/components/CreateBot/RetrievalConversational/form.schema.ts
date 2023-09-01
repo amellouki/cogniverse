@@ -5,7 +5,7 @@ import {
 } from "./contants";
 
 const schema = z.object({
-  name: z.string().nonempty(),
+  name: z.string().nonempty().regex(/^[a-zA-Z0-9_-]+$/i, {message: "Name must be alphanumeric, underscores and dashes are allowed"}),
   // RLM: Retrieval Language Model
   isRLMCustomPrompt: z.boolean(),
   rlmPrompt: z.string().optional(),
@@ -13,6 +13,8 @@ const schema = z.object({
   isCLMCustomPrompt: z.boolean(),
   clmPrompt: z.string().optional(),
   color: z.string().nonempty({ message: "Pick a color" }),
+  isBoundToDocument: z.boolean(),
+  boundDocumentId: z.number().nullable(),
 }).refine((data) => {
   return !(data.isRLMCustomPrompt && !data.rlmPrompt);
 }, {
@@ -39,6 +41,12 @@ const schema = z.object({
 }, {
   message: "Conversational Language Model prompt is missing required placeholders",
   path: ["clmPrompt"],
+}).refine(({isBoundToDocument, boundDocumentId}) => {
+  if (!isBoundToDocument) return true;
+  return boundDocumentId !== null;
+}, {
+  message: "Document is required",
+  path: ["boundDocumentId"],
 });
 
 export type InputType = z.infer<typeof schema>

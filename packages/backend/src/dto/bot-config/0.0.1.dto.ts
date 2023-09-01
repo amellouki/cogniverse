@@ -80,6 +80,12 @@ export class RcBotDto implements RcBot {
 
   @ApiProperty()
   configuration: Prisma.JsonObject & RcBotConfigurationDto;
+
+  @ApiProperty()
+  boundDocumentId: number | null;
+
+  @ApiProperty()
+  boundDocument: null;
 }
 
 export class ConversationalBotDto implements ConversationalBot {
@@ -100,8 +106,14 @@ export class ConversationalBotDto implements ConversationalBot {
 
   @ApiProperty()
   configuration: Prisma.JsonObject & ConversationalBotConfigurationDto;
+
+  @ApiProperty()
+  boundDocumentId: null;
+
+  @ApiProperty()
+  boundDocument: null;
 }
 
 export type BotDto = RcBotDto | ConversationalBotDto;
 
-export type CreateBotDto = Omit<BotDto, 'id'>;
+export type CreateBotDto = Omit<BotDto, 'id' | 'boundDocument'>;

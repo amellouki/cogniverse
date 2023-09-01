@@ -15,6 +15,9 @@ export class BotService {
       where: {
         id,
       },
+      include: {
+        boundDocument: true,
+      },
     });
   }
 
@@ -30,6 +33,9 @@ export class BotService {
     return this.prisma.bot.findUnique({
       where: {
         name,
+      },
+      include: {
+        boundDocument: true,
       },
     }) as unknown as Prisma.PrismaPromise<Bot>;
   }

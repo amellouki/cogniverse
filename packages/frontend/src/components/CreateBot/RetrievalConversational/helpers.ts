@@ -26,6 +26,7 @@ export function getNewBot(data: InputType): NewBot {
         prompt: data.clmPrompt,
         apiKey: '[TODO]1234',
       }
-    }
+    },
+    boundDocumentId: data.isBoundToDocument ? data.boundDocumentId : null,
   }
 }
