@@ -10,8 +10,8 @@ export class BotService {
     return this.prisma.bot.create({ data });
   }
 
-  getBotById(id: number) {
-    this.prisma.bot.findUnique({
+  async getBotById(id: number) {
+    return this.prisma.bot.findUnique({
       where: {
         id,
       },
@@ -21,8 +21,11 @@ export class BotService {
     });
   }
 
-  getBots() {
+  getBotsByCreatorId(creatorId: string) {
     return this.prisma.bot.findMany({
+      where: {
+        creatorId,
+      },
       orderBy: {
         name: 'asc',
       },

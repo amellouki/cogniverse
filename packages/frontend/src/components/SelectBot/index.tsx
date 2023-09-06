@@ -8,6 +8,7 @@ import {DocumentMetadata} from "@my-monorepo/shared";
 import {Select} from "@/components/BaseFormFields/Select";
 import SelectOption from "@/types/SelectOption";
 import styles from './styles.module.scss'
+import apiInstance from "@/helpers/api";
 
 export type BotSelection = {
   botId: number;
@@ -25,11 +26,9 @@ type Props = {
 
 const SelectBot: FunctionComponent<Props> = ({ botSelectionRef }) => {
   const {data: botsData} = useQuery<Bot[]>('bots', () => {
-    return fetch(process.env.NEXT_PUBLIC_BACKEND_API + '/bot/get-bots').then((res) => res.json())
+    return apiInstance.get('/bot/get-bots').then((res) => res.data)
   });
-
   const botsOptions = useMemo(() => {
-    console.log(botsData)
     return botsData?.map((bot) => ({
       label: bot.name,
       value: bot.id + ''

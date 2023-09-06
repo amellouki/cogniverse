@@ -1,23 +1,27 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
 import { BotService } from './bot.service';
 import { CreateBotDto } from '../../dto/bot-config/0.0.1.dto';
+import { SecureRequest } from '../../types/secure-request';
 
 @Controller('bot')
 export class BotController {
   constructor(private agentService: BotService) {}
   @Post('create')
-  async createBot(@Body() request: CreateBotDto) {
-    const result = await this.agentService.createBot(request);
-    return result;
+  async createBot(
+    @Body() body: CreateBotDto,
+    @Request() request: SecureRequest,
+  ) {
+    const creatorId = request.authPayload.uid;
+    return this.agentService.createBot(creatorId, body);
   }
 
   @Get('get-bot')
   async getBot(@Query('id') id: string) {
-    return this.agentService.getBotById(Number(id));
+    return await this.agentService.getBotById(Number(id));
   }
 
   @Get('get-bots')
-  async getBots() {
-    return this.agentService.getAgents();
+  async getBots(@Request() request: SecureRequest) {
+    return this.agentService.getBotsByCreatorId(request.authPayload.uid);
   }
 }

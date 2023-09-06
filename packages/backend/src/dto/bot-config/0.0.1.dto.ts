@@ -5,11 +5,13 @@ import {
   LmConfig,
   RcBot,
   ConversationalBot,
+  ThirdPartyIntegration,
 } from '@my-monorepo/shared/dist/types/bot/bot-configuration/0.0.1';
 import { BOT_CONFIG_VERSION_V0_0_1 } from '@my-monorepo/shared';
 import { BotType } from '@my-monorepo/shared';
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
+import { SecureRequest } from '../../types/secure-request';
 
 export class ConversationalBotConfigurationDto
   implements ConversationalBotConfiguration
@@ -34,6 +36,9 @@ export class ConversationalBotConfigurationDto
 
   @ApiProperty()
   lm?: LmConfig;
+
+  @ApiProperty()
+  thirdPartyIntegration?: ThirdPartyIntegration;
 }
 
 export class RcBotConfigurationDto implements RcBotConfiguration {
@@ -60,9 +65,12 @@ export class RcBotConfigurationDto implements RcBotConfiguration {
 
   @ApiProperty()
   conversationalLm?: LmConfig;
+
+  @ApiProperty()
+  thirdPartyIntegration?: ThirdPartyIntegration;
 }
 
-export class RcBotDto implements RcBot {
+export class RcBotDto extends SecureRequest implements RcBot {
   @ApiProperty()
   id: number;
 
@@ -84,11 +92,18 @@ export class RcBotDto implements RcBot {
   @ApiProperty()
   boundDocumentId: number | null;
 
-  @ApiProperty()
   boundDocument: null;
+
+  creatorId: string;
+
+  @ApiProperty()
+  private: boolean;
 }
 
-export class ConversationalBotDto implements ConversationalBot {
+export class ConversationalBotDto
+  extends SecureRequest
+  implements ConversationalBot
+{
   @ApiProperty()
   id: number;
 
@@ -110,10 +125,14 @@ export class ConversationalBotDto implements ConversationalBot {
   @ApiProperty()
   boundDocumentId: null;
 
-  @ApiProperty()
   boundDocument: null;
+
+  creatorId: string;
+
+  @ApiProperty()
+  private: boolean;
 }
 
 export type BotDto = RcBotDto | ConversationalBotDto;
 
-export type CreateBotDto = Omit<BotDto, 'id' | 'boundDocument'>;
+export type CreateBotDto = Omit<BotDto, 'id' | 'boundDocument' | 'creatorId'>;

@@ -62,7 +62,7 @@ const Conversation: React.FC = () => {
       ?
       {
         botId: current.bot.id,
-        documentId: current.document?.id
+        documentId: current.document?.id,
       }
       : undefined
   }

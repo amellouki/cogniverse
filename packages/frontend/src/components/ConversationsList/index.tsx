@@ -4,10 +4,11 @@ import {ConversationItem as Conversation} from "@/types/ChatThread";
 import ConversationItem from "@/components/ConversationsList/ConversationItem";
 import styles from "@/components/ConversationsList/styles.module.scss";
 import CreateNewBot from "@/components/ConversationsList/ConversationItem/CreateNewBot";
+import apiInstance from "@/helpers/api";
 
 const ConversationsList: FunctionComponent = () => {
   const {data} = useQuery<Conversation[]>("conversations", () => {
-    return fetch(process.env.NEXT_PUBLIC_BACKEND_API + "/api/conversations").then((res) => res.json());
+    return apiInstance.get("/api/conversations").then((res) => res.data);
   });
   return (
     <div className={styles.ConversationList}>

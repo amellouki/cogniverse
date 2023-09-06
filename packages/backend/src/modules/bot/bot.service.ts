@@ -1,22 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { BotService as AgentRepositoryService } from '../../repositories/bot/bot.service';
+import { BotService as BotRepositoryService } from '../../repositories/bot/bot.service';
 import { Prisma } from '@prisma/client';
 import { NewBot } from '@my-monorepo/shared';
 
 @Injectable()
 export class BotService {
-  constructor(private agent: AgentRepositoryService) {}
+  constructor(private botRepository: BotRepositoryService) {}
 
-  createBot(newBot: NewBot) {
-    const botData: Prisma.BotCreateInput = { ...newBot };
-    return this.agent.createBot(botData);
+  createBot(creatorId: string, newBot: NewBot) {
+    const botData: Prisma.BotCreateInput = {
+      ...newBot,
+      creator: {
+        connect: {
+          id: creatorId,
+        },
+      },
+    };
+    return this.botRepository.createBot(botData);
   }
 
   getBotById(id: number) {
-    return this.agent.getBotById(id);
+    return this.botRepository.getBotById(id);
   }
 
-  getAgents() {
-    return this.agent.getBots();
+  getBotsByCreatorId(creatorId: string) {
+    return this.botRepository.getBotsByCreatorId(creatorId);
   }
 }

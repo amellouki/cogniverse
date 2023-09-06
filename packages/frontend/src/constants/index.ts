@@ -13,3 +13,7 @@ export const COLOR_OPTIONS = [
   {label: 'Gold', value: '#e0be99'},
   {label: 'Ruddy Pink', value: '#eb9191'},
 ];
+
+export const LOCAL_STORAGE = {
+  TOKEN: 'token',
+}

@@ -1,11 +1,9 @@
 import {useMutation, useQueryClient} from "react-query";
-import axios from "axios";
-
-const PATH = process.env.NEXT_PUBLIC_BACKEND_API + "/pdf-embedding/embed";
+import apiInstance from "@/helpers/api";
 
 export function useMutateDocs(onUploadProgress: (progress: string) => void, onSuccess: () => void, onComplete: () => void) {
   const queryClient = useQueryClient()
-  return useMutation((embedDocument: FormData) => axios.post(PATH, embedDocument, {
+  return useMutation((embedDocument: FormData) => apiInstance.post("/pdf-embedding/embed", embedDocument, {
     onUploadProgress: ({progress}) => {
       if (!progress) {
         return

@@ -3,12 +3,14 @@ import { ConversationModule } from './conversation/conversation.module';
 import { ChatHistoryModule } from './chat-history/chat-history.module';
 import { DocumentMetadataModule } from './document-metadata/document-metadata.module';
 import { BotModule } from './bot/bot.module';
+import { AccountModule } from './account/account.module';
 
 const repositoryModules = [
   ConversationModule,
   ChatHistoryModule,
   DocumentMetadataModule,
   BotModule,
+  AccountModule,
 ];
 
 @Module({

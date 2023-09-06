@@ -7,13 +7,18 @@ import { Conversation, NewConversation } from '@my-monorepo/shared';
 export class ConversationService {
   constructor(private prisma: PrismaService) {}
 
-  async conversations(): Promise<Conversation[]> {
-    return this.prisma.conversation.findMany() as unknown as Promise<
-      Conversation[]
-    >;
+  async conversations(creatorId: string): Promise<Conversation[]> {
+    return this.prisma.conversation.findMany({
+      where: {
+        creatorId,
+      },
+    }) as unknown as Promise<Conversation[]>;
   }
 
-  async createConversation(data: NewConversation): Promise<Conversation> {
+  async createConversation(
+    creatorId: string,
+    data: NewConversation,
+  ): Promise<Conversation> {
     const conversationData: Prisma.ConversationCreateInput = {
       title: data.title,
       chatHistory: {
@@ -27,6 +32,11 @@ export class ConversationService {
       document: data.documentId && {
         connect: {
           id: data.documentId,
+        },
+      },
+      creator: {
+        connect: {
+          id: creatorId,
         },
       },
     };

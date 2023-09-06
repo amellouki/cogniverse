@@ -15,6 +15,9 @@ import { ChatHistoryService } from '../../repositories/chat-history/chat-history
 import { filter } from 'rxjs';
 import { END_COMPLETION } from '../../constants';
 import { ConversationalService } from './conversational.service';
+import { WsAuthGuard } from '../../guards/ws-auth/ws-auth.guard';
+import { UseGuards } from '@nestjs/common';
+import { Public } from '../../decorator/public';
 
 dotenv.config({ path: './.env.local' });
 
@@ -25,6 +28,7 @@ function getData(type: string, content: unknown) {
   };
 }
 
+@UseGuards(WsAuthGuard)
 @WebSocketGateway({
   namespace: 'conversational-retrieval-qa',
   cors: {
@@ -56,14 +60,17 @@ export class RetrievalConversationalGateway {
     @MessageBody() request: DocConversationRequestDto,
     @ConnectedSocket() client: Socket,
   ) {
-    const { question, conversationId, newConversation } = request;
+    const { authPayload, question, conversationId, newConversation } = request;
     let conversation: Conversation;
 
     if (!conversationId && newConversation) {
-      conversation = (await this.conversationService.createConversation({
-        ...newConversation,
-        title: `New Conversation ${Date.now()}`,
-      })) as Conversation; // TODO: fix this;
+      conversation = (await this.conversationService.createConversation(
+        authPayload.uid,
+        {
+          ...newConversation,
+          title: `New Conversation ${Date.now()}`,
+        },
+      )) as Conversation; // TODO: fix this;
       client.emit('data', getData('conversationDetails', conversation));
     } else if (!conversationId) {
       client.emit('error', 'No conversation id provided');

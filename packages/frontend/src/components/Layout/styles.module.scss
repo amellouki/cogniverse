@@ -16,7 +16,7 @@
     padding: 1rem;
     gap: 2rem;
     align-items: center;
-    @include background-pattern-2(var(--secondary-background), var(--primary-background));
+    background-color: var(--secondary-background);
   }
 
   > aside, > main {

@@ -17,12 +17,26 @@ export type EmoteAvatar = {
 
 export type BotAvatar = ImageAvatar | EmoteAvatar
 
+export interface PrivateDiscordIntegration {
+  isPrivate: true
+  allowedChannels: string[] // Allowed discord channel IDs
+}
+
+export interface PublicDiscordIntegration {
+  isPrivate: false
+}
+
+export interface ThirdPartyIntegration {
+  discord?: PrivateDiscordIntegration | PublicDiscordIntegration
+}
+
 export interface BotConfiguration {
   name: string
   version: typeof BOT_CONFIG_VERSION_V0_0_1
   type: BotType,
   description: string,
   avatar: BotAvatar,
+  thirdPartyIntegration?: ThirdPartyIntegration
 }
 
 export type LmConfig = {

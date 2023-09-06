@@ -13,6 +13,7 @@ import {
 import { CallbackManager } from 'langchain/callbacks';
 import { BotService } from '../../repositories/bot/bot.service';
 import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
+import { LLMResult } from 'langchain/schema';
 
 const DISCORD_MESSAGE_REQUEST_REGEX =
   /<@([a-zA-Z0-9]{1,20})> -bot ([a-zA-Z0-9]{1,20}) (.*)/;
@@ -111,24 +112,7 @@ export class DiscordService implements OnModuleInit {
       conversation,
       bot,
       CallbackManager.fromHandlers({
-        handleLLMEnd: async (result) => {
-          if (result.generations[0][0]?.text) {
-            message.channel
-              .send(result.generations[0][0]?.text)
-              .then(async (message) => {
-                await this.discordConversationService.saveMessage({
-                  content: result.generations[0][0]?.text,
-                  discordConversationId: message.channel.id,
-                  botId: bot.id,
-                  isBot: true,
-                  authorId: message.author.id,
-                  username: message.author.username,
-                  createdAt: message.createdAt,
-                  id: message.id,
-                });
-              });
-          }
-        },
+        handleLLMEnd: this.handleLLMEnd(bot, message),
       }),
     );
   }
@@ -143,26 +127,33 @@ export class DiscordService implements OnModuleInit {
       bot,
       CallbackManager.fromHandlers({}),
       CallbackManager.fromHandlers({
-        handleLLMEnd: async (result) => {
-          if (result.generations[0][0]?.text) {
-            message.channel
-              .send(result.generations[0][0]?.text)
-              .then(async (message) => {
-                await this.discordConversationService.saveMessage({
-                  content: result.generations[0][0]?.text,
-                  discordConversationId: message.channel.id,
-                  botId: bot.id,
-                  isBot: true,
-                  authorId: message.author.id,
-                  username: message.author.username,
-                  createdAt: message.createdAt,
-                  id: message.id,
-                });
-              });
-          }
-        },
+        handleLLMEnd: this.handleLLMEnd(bot, message),
       }),
     );
+  }
+
+  private handleLLMEnd(
+    bot: Bot,
+    message: Message,
+  ): (result: LLMResult) => Promise<void> {
+    return async (result: LLMResult) => {
+      if (result.generations[0][0]?.text) {
+        message.channel
+          .send(result.generations[0][0]?.text)
+          .then(async (message) => {
+            await this.discordConversationService.saveMessage({
+              content: result.generations[0][0]?.text,
+              discordConversationId: message.channel.id,
+              botId: bot.id,
+              isBot: true,
+              authorId: message.author.id,
+              username: message.author.username,
+              createdAt: message.createdAt,
+              id: message.id,
+            });
+          });
+      }
+    };
   }
 
   private mapHumanMessage(message: Message): DiscordMessage {
