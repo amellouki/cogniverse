@@ -69,6 +69,7 @@ export class GithubOAuthService {
     const payload: GithubAuthPayload = {
       OAuthProvider: OAuthProvider.GITHUB,
       accessToken: accessTokenResponse.access_token,
+      tokenType: accessTokenResponse.token_type,
       uid: account.id,
     };
     const access_token = await this.jwtService.signAsync(payload);

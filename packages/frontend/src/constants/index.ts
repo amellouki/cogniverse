@@ -16,4 +16,5 @@ export const COLOR_OPTIONS = [
 
 export const LOCAL_STORAGE = {
   TOKEN: 'token',
+  TOKEN_EXPIRES_AT: 'token_expires_at',
 }

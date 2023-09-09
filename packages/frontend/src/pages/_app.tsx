@@ -6,6 +6,7 @@ import Layout from "@/components/Layout";
 import styles from "@/pages/styles.module.scss";
 import {ReactElement, ReactNode} from "react";
 import {NextPage} from "next";
+import RouteGuard from "@/components/RouteGuard";
 
 const outfit = Outfit({ subsets: ['latin'] });
 
@@ -20,12 +21,14 @@ type AppPropsWithLayout = AppProps & {
 
 export default function App({Component, pageProps}: AppPropsWithLayout) {
   const getLayout = Component.getLayout || ((page: ReactElement) => (
-    <Layout
-      className={styles.chat}
-      mainClassName={styles.main}
-    >
-      {page}
-    </Layout>
+    <RouteGuard>
+      <Layout
+        className={styles.chat}
+        mainClassName={styles.main}
+      >
+        {page}
+      </Layout>
+    </RouteGuard>
   ))
   return (
     <QueryClientProvider client={queryClient}>
