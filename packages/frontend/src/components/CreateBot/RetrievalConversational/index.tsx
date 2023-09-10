@@ -15,6 +15,8 @@ import {Planet} from "react-kawaii";
 import styles from './styles.module.scss';
 import EmbeddedDocumentsSelector from "@/components/EmbeddedDocumentsSelector";
 import Checkbox from "@/components/BaseFormFields/Checkbox";
+import DiscordIcon from "@/components/icons/Discord.icon";
+import GithubIcon from "@/components/icons/Github.icon";
 
 const COLOR_OPTIONS = [
   {label: 'Weldon Blue', value: '#749da1'},
@@ -44,6 +46,7 @@ const RetrievalConversational: FunctionComponent = () => {
   const isRLMCustomPrompt = watch('isRLMCustomPrompt');
   const isCLMCustomPrompt = watch('isCLMCustomPrompt');
   const isBoundToDocument = watch('isBoundToDocument');
+  const integrateWithDiscord = watch('integrateWithDiscord');
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.CreateBot}>
@@ -146,7 +149,7 @@ const RetrievalConversational: FunctionComponent = () => {
         <Controller
           control={control}
           name={'boundDocumentId'}
-          defaultValue={null}
+          defaultValue={undefined}
           render={({field: {onChange, value}}) => (
             <EmbeddedDocumentsSelector
               onChange={onChange}
@@ -155,6 +158,32 @@ const RetrievalConversational: FunctionComponent = () => {
             />
           )}
         />
+      )}
+      <Checkbox
+        id={'is-public'}
+        {...register('isPublic', {required: true})}
+      >
+        Should this bot be public?
+      </Checkbox>
+      <Checkbox
+        id={'integrate-with-discord'}
+        {...register('integrateWithDiscord', {required: true})}
+      >
+        <span className="flex items-center gap-2"><DiscordIcon width={"24px"} height={"24px"} /><span>Integrate with Discord?</span></span>
+      </Checkbox>
+      {integrateWithDiscord && (
+        <FormFieldWrapper
+          htmlFor={'discord-channel-id'}
+          label={'Discord channel ID'}
+          fieldError={errors.discordChannelId}
+        >
+          <TextInput
+            id={'discord-channel-id'}
+            placeholder={'Provide your Discord channel ID'}
+            hasError={!!errors.discordChannelId}
+            {...register('discordChannelId', {required: true})}
+          />
+        </FormFieldWrapper>
       )}
       <Button type={'submit'} className={styles.SubmitButton}>Create</Button>
     </form>

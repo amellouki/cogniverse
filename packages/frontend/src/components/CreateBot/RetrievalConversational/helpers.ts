@@ -25,8 +25,15 @@ export function getNewBot(data: InputType): NewBot {
         modelName: '[TODO]gpt3.5',
         prompt: data.clmPrompt,
         apiKey: '[TODO]1234',
+      },
+      thirdPartyIntegration: {
+        discord: data.integrateWithDiscord && data.discordChannelId ? {
+          isPrivate: true,
+          allowedChannels: [data.discordChannelId],
+        } : undefined,
       }
     },
-    boundDocumentId: data.isBoundToDocument ? data.boundDocumentId : null,
+    boundDocumentId: data.isBoundToDocument ? data.boundDocumentId ?? null : null,
+    public: data.isPublic,
   }
 }

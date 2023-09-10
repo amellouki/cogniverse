@@ -23,7 +23,7 @@ import { AuthGuard } from './guards/auth/auth.guard';
     JwtModule.register({
       global: true,
       secret: 'SECRET HERE!',
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '30d' },
     }),
     LoginModule,
     PdfEmbeddingModule,

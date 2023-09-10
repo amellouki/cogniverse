@@ -13,8 +13,11 @@ const schema = z.object({
   isCLMCustomPrompt: z.boolean(),
   clmPrompt: z.string().optional(),
   color: z.string().nonempty({ message: "Pick a color" }),
-  isBoundToDocument: z.boolean(),
-  boundDocumentId: z.number().nullable(),
+  isBoundToDocument: z.boolean().default(false),
+  boundDocumentId: z.number().optional(),
+  isPublic: z.boolean().default(false),
+  integrateWithDiscord: z.boolean(),
+  discordChannelId: z.string().optional(),
 }).refine((data) => {
   return !(data.isRLMCustomPrompt && !data.rlmPrompt);
 }, {
@@ -43,10 +46,15 @@ const schema = z.object({
   path: ["clmPrompt"],
 }).refine(({isBoundToDocument, boundDocumentId}) => {
   if (!isBoundToDocument) return true;
-  return boundDocumentId !== null;
+  return !!boundDocumentId;
 }, {
   message: "Document is required",
   path: ["boundDocumentId"],
+}).refine(({integrateWithDiscord, discordChannelId}) => {
+  return !(integrateWithDiscord && !discordChannelId);
+}, {
+  message: "Discord channel is required",
+  path: ["discordChannelId"],
 });
 
 export type InputType = z.infer<typeof schema>

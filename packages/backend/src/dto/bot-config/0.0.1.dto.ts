@@ -97,7 +97,7 @@ export class RcBotDto extends SecureRequest implements RcBot {
   creatorId: string;
 
   @ApiProperty()
-  private: boolean;
+  public: boolean;
 }
 
 export class ConversationalBotDto
@@ -130,7 +130,7 @@ export class ConversationalBotDto
   creatorId: string;
 
   @ApiProperty()
-  private: boolean;
+  public: boolean;
 }
 
 export type BotDto = RcBotDto | ConversationalBotDto;

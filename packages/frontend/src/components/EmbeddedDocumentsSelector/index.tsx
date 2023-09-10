@@ -10,7 +10,7 @@ import DocumentIcon from "@/components/DocumentIcon";
 
 type Props = {
   onChange: (selectedDocumentId: number) => void
-  selectedDocumentId: number | null
+  selectedDocumentId: number | undefined
   fieldError?: FieldError
 }
 

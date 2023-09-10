@@ -13,6 +13,8 @@ import SimpleColorPicker from "@/components/BaseFormFields/SimpleColorPicker";
 import {Planet} from "react-kawaii";
 import styles from '../RetrievalConversational/styles.module.scss';
 import {COLOR_OPTIONS} from "@/constants";
+import Checkbox from "@/components/BaseFormFields/Checkbox";
+import DiscordIcon from "@/components/icons/Discord.icon";
 
 const RetrievalConversational: FunctionComponent = () => {
   const {
@@ -33,6 +35,7 @@ const RetrievalConversational: FunctionComponent = () => {
   const onSubmit: SubmitHandler<InputType> = (data) => mutation.mutate(getNewBot(data))
 
   const isCustomPrompt = watch('isCustomPrompt');
+  const integrateWithDiscord = watch('integrateWithDiscord');
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.CreateBot}>
@@ -88,6 +91,32 @@ const RetrievalConversational: FunctionComponent = () => {
             aria-invalid={errors.prompt ? 'true' : 'false'}
             placeholder={'Provide model prompt'}
             hasError={!!errors.prompt}
+          />
+        </FormFieldWrapper>
+      )}
+      <Checkbox
+        id={'is-public'}
+        {...register('isPublic', {required: true})}
+      >
+        Should this bot be public?
+      </Checkbox>
+      <Checkbox
+        id={'integrate-with-discord'}
+        {...register('integrateWithDiscord', {required: true})}
+      >
+        <span className="flex items-center gap-2"><DiscordIcon width={"24px"} height={"24px"} /><span>Integrate with Discord?</span></span>
+      </Checkbox>
+      {integrateWithDiscord && (
+        <FormFieldWrapper
+          htmlFor={'discord-channel-id'}
+          label={'Discord channel ID'}
+          fieldError={errors.discordChannelId}
+        >
+          <TextInput
+            id={'discord-channel-id'}
+            placeholder={'Provide your Discord channel ID'}
+            hasError={!!errors.discordChannelId}
+            {...register('discordChannelId', {required: true})}
           />
         </FormFieldWrapper>
       )}

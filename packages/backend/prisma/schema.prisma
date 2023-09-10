@@ -32,7 +32,7 @@ model Bot {
   discordMessages DiscordMessage[]
   boundDocument   DocumentMetadata? @relation("boundDocument", fields: [boundDocumentId], references: [id])
   boundDocumentId Int?
-  private         Boolean           @default(false)
+  public          Boolean           @default(false)
   creator         Account           @relation("creator", fields: [creatorId], references: [id])
   creatorId       String
 
@@ -79,7 +79,7 @@ model DocumentMetadata {
   embeddedAt           DateTime       @default(now())
   embeddingStatus      String
   conversationDocument Conversation[] @relation("DocumentMetadata")
-  Bot                  Bot[]          @relation("boundDocument")
+  bots                 Bot[]          @relation("boundDocument")
 }
 
 model Account {

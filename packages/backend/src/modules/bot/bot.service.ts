@@ -8,8 +8,13 @@ export class BotService {
   constructor(private botRepository: BotRepositoryService) {}
 
   createBot(creatorId: string, newBot: NewBot) {
+    const copy = { ...newBot };
+    delete copy.boundDocumentId;
     const botData: Prisma.BotCreateInput = {
-      ...newBot,
+      ...copy,
+      boundDocument: newBot.boundDocumentId
+        ? { connect: { id: newBot.boundDocumentId } }
+        : undefined,
       creator: {
         connect: {
           id: creatorId,
