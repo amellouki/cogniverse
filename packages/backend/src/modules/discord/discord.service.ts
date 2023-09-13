@@ -62,6 +62,34 @@ export class DiscordService implements OnModuleInit {
     )
       return;
 
+    const bot = await this.botService.getBotByName(parsedMessage.bot);
+    if (!bot) {
+      this.logger.error(`Bot ${parsedMessage.bot} does not exist`);
+      message.channel.send(
+        `Bot ${parsedMessage.bot} is not available, please check the bot name and try again!`,
+      );
+      return;
+    }
+    const discordIntegration = bot.configuration.thirdPartyIntegration.discord;
+    if (!discordIntegration) {
+      this.logger.error(`Bot ${parsedMessage.bot} is not integrated`);
+      message.channel.send(
+        `Bot ${parsedMessage.bot} is not available, please check the bot name and try again!`,
+      );
+      return;
+    }
+    if (
+      discordIntegration.isPrivate &&
+      !discordIntegration.allowedChannels.includes(message.channel.id)
+    ) {
+      this.logger.error(
+        `Bot ${parsedMessage.bot} is not available for this channel`,
+      );
+      message.channel.send(
+        `Bot ${parsedMessage.bot} is not available, please check the bot name and try again!`,
+      );
+      return;
+    }
     await this.discordConversationService.saveMessage(
       this.mapHumanMessage(message),
     );
@@ -69,12 +97,6 @@ export class DiscordService implements OnModuleInit {
       await this.discordConversationService.getConversationById(
         message.channel.id,
       );
-    const bot = await this.botService.getBotByName(parsedMessage.bot);
-    if (!bot) {
-      this.logger.error(`Bot ${parsedMessage.bot} not found`);
-      message.channel.send(`Bot ${parsedMessage.bot} not found`);
-      return;
-    }
     const chain = await this.getChain(conversation, bot, message);
     await chain.call({
       question: parsedMessage.question,
@@ -136,6 +158,7 @@ export class DiscordService implements OnModuleInit {
     bot: Bot,
     message: Message,
   ): (result: LLMResult) => Promise<void> {
+    const parsedMessage = this.parseMessage(message.content);
     return async (result: LLMResult) => {
       if (result.generations[0][0]?.text) {
         message.channel
@@ -147,7 +170,7 @@ export class DiscordService implements OnModuleInit {
               botId: bot.id,
               isBot: true,
               authorId: message.author.id,
-              username: message.author.username,
+              username: parsedMessage.bot,
               createdAt: message.createdAt,
               id: message.id,
             });
@@ -157,11 +180,12 @@ export class DiscordService implements OnModuleInit {
   }
 
   private mapHumanMessage(message: Message): DiscordMessage {
+    const parsedMessage = this.parseMessage(message.content);
     return {
       id: message.id,
       createdAt: message.createdAt,
-      content: message.content,
-      isBot: true,
+      content: parsedMessage.bot + ' ' + parsedMessage.question,
+      isBot: false,
       authorId: message.author.id,
       username: message.author.username,
       discordConversationId: message.channel.id,

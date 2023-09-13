@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Message } from '@prisma/client';
 import { ChatMessageHistory } from 'langchain/memory';
-import {
-  AIChatMessage,
-  HumanChatMessage,
-  SystemChatMessage,
-} from 'langchain/schema';
+import { SystemChatMessage } from 'langchain/schema';
 import { DiscordMessage } from '@my-monorepo/shared';
+import { ChatMessage } from '../../models/chat-message';
 
 @Injectable()
 export class ChatHistoryBuilderService {
@@ -16,9 +13,9 @@ export class ChatHistoryBuilderService {
         case 'system':
           return new SystemChatMessage(message.content);
         case 'ai':
-          return new AIChatMessage(message.content);
+          return ChatMessage.createAIMessage(message.content);
         case 'human':
-          return new HumanChatMessage(message.content);
+          return ChatMessage.createHumanMessage(message.content, '');
         default:
           throw new Error('Message type not supported');
       }
@@ -30,9 +27,12 @@ export class ChatHistoryBuilderService {
     const messages = chatHistory.map((message) => {
       switch (message.isBot) {
         case false:
-          return new HumanChatMessage(message.content);
+          return ChatMessage.createHumanMessage(
+            message.content,
+            message.username,
+          );
         case true:
-          return new AIChatMessage(message.content);
+          return ChatMessage.createAIMessage(message.content, message.username);
         default:
           throw new Error('Message type not supported');
       }

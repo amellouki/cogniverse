@@ -20,7 +20,15 @@ export function getNewBot(data: InputType): NewBot {
         modelName: "[TODO]",
         prompt: data.prompt,
         apiKey: "[TODO]",
+      },
+      thirdPartyIntegration: {
+        discord: data.integrateWithDiscord && data.discordChannelId ? {
+          isPrivate: true,
+          allowedChannels: [data.discordChannelId],
+        } : undefined,
       }
-    }
+    },
+    boundDocumentId: null,
+    public: data.isPublic,
   }
 }

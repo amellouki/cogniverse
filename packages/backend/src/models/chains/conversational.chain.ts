@@ -1,11 +1,8 @@
-import {
-  ConversationalRetrievalQAChain,
-  LLMChain,
-  LLMChainInput,
-} from 'langchain/chains';
+import { LLMChain, LLMChainInput } from 'langchain/chains';
 import { ChainValues } from 'langchain/schema';
 import { CallbackManagerForChainRun } from 'langchain/callbacks';
 import { PromptTemplate } from 'langchain';
+import { ChatMessage } from '../chat-message';
 
 const DEFAULT_PROMPT = `The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.`;
 const INSTRUCTIONS = `use the chat history and answer the following question.
@@ -28,10 +25,9 @@ class ConversationalChain extends LLMChain {
     }
 
     const question: string = values[this.inputKey];
-    const chatHistory: string =
-      ConversationalRetrievalQAChain.getChatHistoryString(
-        values[this.chatHistoryKey],
-      );
+    const chatHistory: string = ChatMessage.getChatHistoryString(
+      values[this.chatHistoryKey],
+    );
     return super._call(
       {
         question,
