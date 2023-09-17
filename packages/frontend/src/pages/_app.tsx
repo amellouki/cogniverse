@@ -2,11 +2,9 @@ import "@/styles/globals.scss";
 import type {AppProps} from "next/app";
 import {QueryClient, QueryClientProvider} from "react-query";
 import { Outfit } from "next/font/google";
-import Layout from "@/components/Layout";
-import styles from "@/pages/styles.module.scss";
+import {getGuardedLayout} from "@/components/Layouts/DefaultLayout";
 import {ReactElement, ReactNode} from "react";
 import {NextPage} from "next";
-import RouteGuard from "@/components/RouteGuard";
 
 const outfit = Outfit({ subsets: ['latin'] });
 
@@ -20,16 +18,7 @@ type AppPropsWithLayout = AppProps & {
 }
 
 export default function App({Component, pageProps}: AppPropsWithLayout) {
-  const getLayout = Component.getLayout || ((page: ReactElement) => (
-    <RouteGuard>
-      <Layout
-        className={styles.chat}
-        mainClassName={styles.main}
-      >
-        {page}
-      </Layout>
-    </RouteGuard>
-  ))
+  const getLayout = Component.getLayout || getGuardedLayout;
   return (
     <QueryClientProvider client={queryClient}>
       <>

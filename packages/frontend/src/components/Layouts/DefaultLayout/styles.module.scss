@@ -1,0 +1,35 @@
+@import '../../../styles/background-patterns';
+
+$header-height: 80px;
+$layout-gap: 1rem;
+
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  > header {
+    grid-area: header;
+    display: flex;
+    padding: 1rem;
+    gap: 2rem;
+    align-items: center;
+    background-color: var(--secondary-background);
+    height: $header-height;
+  }
+
+  > section {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+.body {
+  display: flex;
+  background-color: transparent;
+  height: calc(100vh - #{$header-height});
+}
+
+.spacer {
+  margin-left: auto;
+}

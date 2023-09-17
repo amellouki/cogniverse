@@ -1,0 +1,37 @@
+@import '../../../../styles/background-patterns';
+
+$layout-gap: 1rem;
+
+.content {
+  padding: $layout-gap 0;
+  display: flex;
+  flex-grow: 1;
+  gap: $layout-gap;
+  background-color: transparent;
+}
+
+.conversationsList {
+  width: 300px;
+  overflow: auto;
+  margin-left: $layout-gap;
+  @include background-pattern-1(var(--secondary-background), var(--primary-background));
+}
+
+.conversationsList,
+.main {
+  padding: 1rem;
+  border-radius: 2rem;
+}
+
+.main {
+  margin-right: $layout-gap;
+}
+
+.main {
+  padding: 1.5rem;
+  width: 100%;
+  @include background-pattern-1(var(--secondary-background), var(--primary-background));
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}

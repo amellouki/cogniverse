@@ -7,9 +7,11 @@ import {useRouter} from "next/router";
 import useConversations from "@/hooks/use-conversations.hook";
 import SelectBot, {SelectionRef} from "@/components/SelectBot";
 import ConversationElements from "@/components/ConversationElements";
+import {NextPageWithLayout} from "@/pages/_app";
 import styles from "./styles.module.scss";
+import {getLayout} from "@/components/Layouts/DefaultLayout/ConversationsNestedLayout";
 
-const Conversation: React.FC = () => {
+const Conversation: NextPageWithLayout = () => {
   const router = useRouter()
   const conversationId = parseInt(router.query.conversationId as string)
   const [newlyCreatedConversationId, setNewlyCreatedConversationId] = React.useState<number>()
@@ -67,5 +69,7 @@ const Conversation: React.FC = () => {
       : undefined
   }
 };
+
+Conversation.getLayout = getLayout
 
 export default Conversation;

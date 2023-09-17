@@ -12,7 +12,7 @@ const CreateBot: FunctionComponent = () => {
     setSelectedOption
   ] = React.useState<SelectOption | undefined | null>(null);
   return (
-    <div className={styles.CreateConversation}>
+    <div className={styles.CreateBot}>
       <h2 className={styles.formTitle}>Create a new agent</h2>
       <WrappedSelect
         options={AGENT_OPTIONS}

@@ -9,11 +9,11 @@ const CreateNewBot: FunctionComponent = () => {
   const { pathname } = useRouter()
   const isCreate = pathname === '/conversation/create'
   return (
-    <Link className={clsx(styles.conversationItem, isCreate && styles.selected)} href={`/bot/create`}>
+    <Link className={clsx(styles.conversationItem, isCreate && styles.selected)} href={`/bots/create`}>
       <SparklesIcon width={24} height={24} />
       <span>
-          Create bot
-        </span>
+        Create bot
+      </span>
     </Link>
   );
 }
