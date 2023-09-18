@@ -40,3 +40,9 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.panel {
+  padding: 1rem;
+  border-radius: 2rem;
+  @include background-pattern-1(var(--secondary-background), var(--primary-background));
+}

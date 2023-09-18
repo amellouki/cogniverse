@@ -1,7 +1,7 @@
 import React, {FunctionComponent} from 'react';
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import useCreateAgent from "@/hooks/use-create-bot.hook";
+import useCreateBot from "@/hooks/use-create-bot.hook";
 import ControlledToggleButton from "../../BaseFormFields/ControlledToggleButton";
 import FormFieldWrapper from "@/components/FormFieldWrapper";
 import TextInput from "@/components/BaseFormFields/TextInput";
@@ -37,7 +37,7 @@ const RetrievalConversational: FunctionComponent = () => {
     resolver: zodResolver(schema),
   })
 
-  const mutation = useCreateAgent(() => {
+  const mutation = useCreateBot(() => {
     reset();
   })
 

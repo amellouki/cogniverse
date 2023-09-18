@@ -1,5 +1,9 @@
-.CreateBot {
+.CreateBot,
+.BotsPage{
   width: 100%;
   display: flex;
   justify-content: center;
+  overflow: auto;
+  margin: 1rem;
+  padding: 2rem;
 }

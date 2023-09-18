@@ -9,6 +9,7 @@ import {Select} from "@/components/BaseFormFields/Select";
 import SelectOption from "@/types/SelectOption";
 import styles from './styles.module.scss'
 import apiInstance from "@/helpers/api";
+import {useBots} from "@/hooks/use-bots.hook";
 
 export type BotSelection = {
   botId: number;
@@ -25,9 +26,7 @@ type Props = {
 }
 
 const SelectBot: FunctionComponent<Props> = ({ botSelectionRef }) => {
-  const {data: botsData} = useQuery<Bot[]>('bots', () => {
-    return apiInstance.get('/bot/get-bots').then((res) => res.data)
-  });
+  const {data: botsData} = useBots();
   const botsOptions = useMemo(() => {
     return botsData?.map((bot) => ({
       label: bot.name,
