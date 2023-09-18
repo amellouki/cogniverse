@@ -25,9 +25,7 @@ $layout-gap: 1rem;
 
 .main {
   margin-right: $layout-gap;
-}
 
-.main {
   padding: 1.5rem;
   width: 100%;
   @include background-pattern-1(var(--secondary-background), var(--primary-background));

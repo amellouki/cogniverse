@@ -1,6 +1,5 @@
 import React, {FC, PropsWithChildren, ReactElement, ReactNode} from 'react';
 import ConversationsList from "@/components/ConversationsList";
-import clsx from "clsx";
 import styles from "./styles.module.scss";
 import {getGuardedLayout} from "@/components/Layouts/DefaultLayout";
 
@@ -10,7 +9,7 @@ const ConversationsNestedLayout: FC<PropsWithChildren> = ({ children }) => {
       <nav className={styles.conversationsList}>
         <ConversationsList/>
       </nav>
-      <main className={clsx(styles.main, styles.mainClassName)}>
+      <main className={styles.main}>
         {children}
       </main>
     </section>
