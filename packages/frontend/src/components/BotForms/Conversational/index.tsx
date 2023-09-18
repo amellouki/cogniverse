@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, MutableRefObject, useEffect} from 'react';
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import useCreateBot from "@/hooks/use-create-bot.hook";
@@ -15,8 +15,9 @@ import styles from '../RetrievalConversational/styles.module.scss';
 import {COLOR_OPTIONS} from "@/constants";
 import Checkbox from "@/components/BaseFormFields/Checkbox";
 import DiscordIcon from "@/components/icons/Discord.icon";
+import {BotFormProps} from "@/components/BotForms/BotFormProps";
 
-const RetrievalConversational: FunctionComponent = () => {
+const RetrievalConversational: FunctionComponent<BotFormProps> = (props) => {
   const {
     register,
     handleSubmit,
@@ -28,11 +29,12 @@ const RetrievalConversational: FunctionComponent = () => {
     resolver: zodResolver(schema),
   })
 
-  const mutation = useCreateBot(() => {
-    reset();
-  })
+  useEffect(() => {
+    if(!props.resetRef) return;
+    props.resetRef.current = reset
+  }, [props.resetRef, reset])
 
-  const onSubmit: SubmitHandler<InputType> = (data) => mutation.mutate(getNewBot(data))
+  const onSubmit: SubmitHandler<InputType> = (data) => props.onSubmit(getNewBot(data))
 
   const isCustomPrompt = watch('isCustomPrompt');
   const integrateWithDiscord = watch('integrateWithDiscord');

@@ -2,7 +2,7 @@ import SelectOption from "@/types/SelectOption";
 
 export const END_COMPLETION = '[DONE]';
 
-export const AGENT_OPTIONS: SelectOption[] = [
+export const BOTS_OPTIONS: SelectOption[] = [
   { value: 'rc', label: 'PDF Retrieval Conversational' },
   { value: 'conversational', label: 'Conversational Bot' },
 ]

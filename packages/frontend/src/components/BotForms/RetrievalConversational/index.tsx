@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, MutableRefObject, useEffect} from 'react';
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import useCreateBot from "@/hooks/use-create-bot.hook";
@@ -12,11 +12,11 @@ import {getNewBot} from "./helpers";
 import {CLM_PROMPT_PLACEHOLDERS, RLM_PROMPT_PLACEHOLDERS} from "./contants";
 import SimpleColorPicker from "@/components/BaseFormFields/SimpleColorPicker";
 import {Planet} from "react-kawaii";
-import styles from './styles.module.scss';
 import EmbeddedDocumentsSelector from "@/components/EmbeddedDocumentsSelector";
 import Checkbox from "@/components/BaseFormFields/Checkbox";
 import DiscordIcon from "@/components/icons/Discord.icon";
-import GithubIcon from "@/components/icons/Github.icon";
+import styles from './styles.module.scss';
+import {BotFormProps} from "@/components/BotForms/BotFormProps";
 
 const COLOR_OPTIONS = [
   {label: 'Weldon Blue', value: '#749da1'},
@@ -25,7 +25,7 @@ const COLOR_OPTIONS = [
   {label: 'Ruddy Pink', value: '#eb9191'},
 ];
 
-const RetrievalConversational: FunctionComponent = () => {
+const RetrievalConversational: FunctionComponent<BotFormProps> = (props) => {
   const {
     register,
     handleSubmit,
@@ -37,11 +37,12 @@ const RetrievalConversational: FunctionComponent = () => {
     resolver: zodResolver(schema),
   })
 
-  const mutation = useCreateBot(() => {
-    reset();
-  })
+  useEffect(() => {
+    if (!props.resetRef) return;
+    props.resetRef.current = reset;
+  }, [props.resetRef, reset])
 
-  const onSubmit: SubmitHandler<InputType> = (data) => mutation.mutate(getNewBot(data))
+  const onSubmit: SubmitHandler<InputType> = (data) => props.onSubmit(getNewBot(data))
 
   const isRLMCustomPrompt = watch('isRLMCustomPrompt');
   const isCLMCustomPrompt = watch('isCLMCustomPrompt');
