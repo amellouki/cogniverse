@@ -25,7 +25,11 @@ const COLOR_OPTIONS = [
   {label: 'Ruddy Pink', value: '#eb9191'},
 ];
 
-const RetrievalConversational: FunctionComponent<BotFormProps> = (props) => {
+type Props = BotFormProps & {
+  initValue?: InputType
+}
+
+const RetrievalConversational: FunctionComponent<Props> = (props) => {
   const {
     register,
     handleSubmit,
@@ -35,6 +39,7 @@ const RetrievalConversational: FunctionComponent<BotFormProps> = (props) => {
     watch,
   } = useForm<InputType>({
     resolver: zodResolver(schema),
+    defaultValues: props.initValue,
   })
 
   useEffect(() => {

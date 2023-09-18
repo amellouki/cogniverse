@@ -1,18 +1,19 @@
-import React, {FunctionComponent} from 'react';
+import React from 'react';
 import {useBots} from "@/hooks/use-bots.hook";
 import styles from './styles.module.scss';
 import Bots from "@/components/Bots";
-import clsx from "clsx";
+import {NextPageWithLayout} from "@/pages/_app";
+import {getLayout} from "@/components/Layouts/DefaultLayout/BotNestedLayout";
 
-const Index: FunctionComponent = (props) => {
+const BotsPage: NextPageWithLayout = () => {
   const { data, isLoading } = useBots();
+  if (isLoading) return (<div>Loading...</div>)
+  if (!data) return (<div>No bots</div>)
   return (
-    <div className={clsx(styles.BotsPage, 'panel')}>
-      { data && (
-        <Bots bots={data} />
-      )}
-    </div>
+    <Bots bots={data} />
   );
 }
 
-export default Index;
+BotsPage.getLayout = getLayout;
+
+export default BotsPage;

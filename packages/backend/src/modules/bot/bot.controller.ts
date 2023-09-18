@@ -1,6 +1,14 @@
-import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Request,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { BotService } from './bot.service';
-import { CreateBotDto } from '../../dto/bot-config/0.0.1.dto';
+import { BotDto, CreateBotDto } from '../../dto/bot-config/0.0.1.dto';
 import { SecureRequest } from '../../types/secure-request';
 
 @Controller('bot')
@@ -13,6 +21,16 @@ export class BotController {
   ) {
     const creatorId = request.authPayload.uid;
     return this.agentService.createBot(creatorId, body);
+  }
+
+  @Post('update')
+  async updateBot(@Body() body: BotDto, @Request() request: SecureRequest) {
+    const creatorId = request.authPayload.uid;
+    const bot = await this.agentService.getBotById(body.id);
+    if (bot.creatorId !== creatorId || body.creatorId !== creatorId) {
+      throw new UnauthorizedException();
+    }
+    return this.agentService.updateBot(body);
   }
 
   @Get('get-bot')

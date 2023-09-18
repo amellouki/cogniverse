@@ -136,3 +136,5 @@ export class ConversationalBotDto
 export type BotDto = RcBotDto | ConversationalBotDto;
 
 export type CreateBotDto = Omit<BotDto, 'id' | 'boundDocument' | 'creatorId'>;
+
+export type UpdateBotDto = Omit<BotDto, 'boundDocument' | 'creatorId'>;

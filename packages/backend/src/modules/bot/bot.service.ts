@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BotService as BotRepositoryService } from '../../repositories/bot/bot.service';
 import { Prisma } from '@prisma/client';
-import { NewBot } from '@my-monorepo/shared';
+import { Bot, NewBot } from '@my-monorepo/shared';
 
 @Injectable()
 export class BotService {
@@ -22,6 +22,20 @@ export class BotService {
       },
     };
     return this.botRepository.createBot(botData);
+  }
+
+  updateBot(bot: Bot) {
+    const botId = bot.id;
+    const copy = { ...bot };
+    delete copy.id;
+    delete copy.boundDocumentId;
+    const botData: Prisma.BotUpdateInput = {
+      ...copy,
+      boundDocument: bot.boundDocumentId
+        ? { connect: { id: bot.boundDocumentId } }
+        : undefined,
+    };
+    return this.botRepository.updateBot(botData, botId);
   }
 
   getBotById(id: number) {

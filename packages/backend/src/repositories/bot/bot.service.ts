@@ -10,6 +10,15 @@ export class BotService {
     return this.prisma.bot.create({ data });
   }
 
+  updateBot(bot: Prisma.BotUpdateInput, botId: number) {
+    return this.prisma.bot.update({
+      data: bot,
+      where: {
+        id: botId,
+      },
+    });
+  }
+
   async getBotById(id: number) {
     return this.prisma.bot.findUnique({
       where: {

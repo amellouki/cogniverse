@@ -17,7 +17,11 @@ import Checkbox from "@/components/BaseFormFields/Checkbox";
 import DiscordIcon from "@/components/icons/Discord.icon";
 import {BotFormProps} from "@/components/BotForms/BotFormProps";
 
-const RetrievalConversational: FunctionComponent<BotFormProps> = (props) => {
+type Props = BotFormProps & {
+  initValue?: InputType
+}
+
+const RetrievalConversational: FunctionComponent<Props> = (props) => {
   const {
     register,
     handleSubmit,
@@ -27,6 +31,7 @@ const RetrievalConversational: FunctionComponent<BotFormProps> = (props) => {
     watch,
   } = useForm<InputType>({
     resolver: zodResolver(schema),
+    defaultValues: props.initValue,
   })
 
   useEffect(() => {

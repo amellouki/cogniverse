@@ -26,7 +26,7 @@ const CreateBot: FunctionComponent = () => {
 
   return (
     <div className={styles.CreateBot}>
-      <h2 className={styles.formTitle}>Create a new agent</h2>
+      <h2 className={styles.formTitle}>Create a new bot</h2>
       <WrappedSelect
         options={BOTS_OPTIONS}
         label={'Select Bot Type'}
