@@ -42,6 +42,7 @@ const SelectView: FunctionComponent<Props> = (props) => {
           className={clsx(
             styles.SelectButton,
             buttonStyle.button,
+            buttonStyle.primary,
             isOpen && styles.open
           )}
         >

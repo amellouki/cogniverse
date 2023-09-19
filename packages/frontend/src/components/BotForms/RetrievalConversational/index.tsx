@@ -1,7 +1,7 @@
 import React, {FunctionComponent, MutableRefObject, useEffect} from 'react';
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import useCreateBot from "@/hooks/use-create-bot.hook";
+import useCreateBot from "@/hooks/bot-mangement/use-create-bot.hook";
 import ControlledToggleButton from "../../BaseFormFields/ControlledToggleButton";
 import FormFieldWrapper from "@/components/FormFieldWrapper";
 import TextInput from "@/components/BaseFormFields/TextInput";
@@ -70,12 +70,12 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
       />
       <FormFieldWrapper
         htmlFor={'agent-name'}
-        label={'Agent Name'}
+        label={'Bot Name'}
         fieldError={errors.name}
       >
         <TextInput
           id={'agent-name'}
-          placeholder={'Provide unique agent name'}
+          placeholder={'Provide unique bot name'}
           hasError={!!errors.name}
           {...register('name', {required: true})}
         />

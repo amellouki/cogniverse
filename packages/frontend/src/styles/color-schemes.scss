@@ -5,12 +5,18 @@
   --blue-violet: #8338EC;
   --rose: #FF006E;
   --black: rgb(43, 43, 75);
-  --color-1: rgb(43, 43, 75);
+  --white: rgb(255, 248, 233);
+
+  --color-1-rgb: 43, 43, 75;
+  --color-1: rgb(var(--color-1-rgb));
+  --color-1-light: rgba(var(--color-1-rgb), 0.5);
   --color-2-rgb: 248, 94, 70;
   --color-2: rgb(var(--color-2-rgb));
   --color-2-light: rgba(var(--color-2-rgb), 0.8);
   --color-3: var(--blue-violet);
   --color-4: rgb(249, 124, 174);
+  --danger-color-rgb: 255, 0, 110;
+  --danger-color: rgb(var(--danger-color-rgb));
 
   // blocks
   --primary-background: rgb(255, 248, 233);
@@ -27,7 +33,7 @@
 
   // text input
   --text-input-hint: var(--primary-border);
-  --input-error: rgb(255, 0, 110);
+  --input-error: var(--danger-color);
 
   // buttons
   --primary-button-background: var(--color-2);
@@ -61,7 +67,7 @@
 @mixin dark-theme {
   color-scheme: dark;
 
-  --color-1: rgb(254, 255, 249);
+  --color-1-rgb: 254, 255, 249;
   --color-2-rgb: 217, 255, 93;
   --color-3: rgb(0, 206, 235);
   --color-4: rgb(255, 82, 29);

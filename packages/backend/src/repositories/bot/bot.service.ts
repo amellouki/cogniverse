@@ -19,6 +19,14 @@ export class BotService {
     });
   }
 
+  deleteBot(botId: number) {
+    return this.prisma.bot.delete({
+      where: {
+        id: botId,
+      },
+    });
+  }
+
   async getBotById(id: number) {
     return this.prisma.bot.findUnique({
       where: {

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Query,
@@ -31,6 +32,16 @@ export class BotController {
       throw new UnauthorizedException();
     }
     return this.agentService.updateBot(body);
+  }
+
+  @Delete('delete')
+  async deleteBot(@Query('id') id: string, @Request() request: SecureRequest) {
+    const creatorId = request.authPayload.uid;
+    const bot = await this.agentService.getBotById(Number(id));
+    if (bot.creatorId !== creatorId) {
+      throw new UnauthorizedException();
+    }
+    return this.agentService.deleteBot(Number(id));
   }
 
   @Get('get-bot')

@@ -1,5 +1,5 @@
 import React from 'react';
-import {useBots} from "@/hooks/use-bots.hook";
+import {useBots} from "@/hooks/bot-mangement/use-bots.hook";
 import styles from './styles.module.scss';
 import Bots from "@/components/Bots";
 import {NextPageWithLayout} from "@/pages/_app";

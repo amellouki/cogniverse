@@ -11,7 +11,7 @@ type Props = {
 
 const LinkIconButton: React.FC<PropsWithChildren<Props>> = ({href, className, children}) => {
   return (
-    <Link href={href} className={clsx(buttonStyles.button, styles.button, className)}>
+    <Link href={href} className={clsx(buttonStyles.button, buttonStyles.primary, styles.button, className)}>
       {children}
     </Link>
   );

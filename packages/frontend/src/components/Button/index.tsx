@@ -7,6 +7,7 @@ type ButtonProps = {
   onClick?: () => void;
   type?: "submit" | "button";
   className?: string;
+  variant?: "primary" | "danger"
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   onClick,
@@ -18,13 +19,23 @@ const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   return (
     <button
       {...restProps}
-      className={clsx(styles.button, className)}
+      className={clsx(styles.button, getButtonStyle(), className)}
       onClick={onClick}
       type={type}
     >
       {children}
     </button>
   );
+
+  function getButtonStyle() {
+    if (restProps.variant === "primary") {
+      return styles.primary
+    } else if (restProps.variant === "danger") {
+      return styles.danger
+    } else {
+      return styles.primary
+    }
+  }
 };
 
 export default Button

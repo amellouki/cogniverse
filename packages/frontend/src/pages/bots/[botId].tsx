@@ -1,6 +1,6 @@
 import React, {FunctionComponent, useState} from 'react';
 import {useRouter} from "next/router";
-import {useBotDetails} from "@/hooks/use-bot-details";
+import {useBotDetails} from "@/hooks/bot-mangement/use-bot-details";
 import {Bot, BotAvatarType, BotType, ConversationalBot, NewBot, RcBot} from "@my-monorepo/shared";
 import RetrievalConversational from "@/components/BotForms/RetrievalConversational";
 import Conversational from "@/components/BotForms/Conversational";
@@ -8,7 +8,13 @@ import {InputType as ConversationalInputType} from "@/components/BotForms/Conver
 import {InputType as RCInputType} from "@/components/BotForms/RetrievalConversational/form.schema";
 import {NextPageWithLayout} from "@/pages/_app";
 import BotsPage from "@/pages/bots/index";
-import useUpdateBot from "@/hooks/use-update-bot.hook";
+import useUpdateBot from "@/hooks/bot-mangement/use-update-bot.hook";
+import useDeleteBot from "@/hooks/bot-mangement/use-delete-bot.hook";
+import Button from "@/components/Button";
+import {TrashIcon} from "@heroicons/react/24/outline";
+import {Planet} from "react-kawaii";
+import DetailsItem from "@/components/DetailsItem";
+import styles from './styles.module.scss'
 
 const BotDetails: NextPageWithLayout = () => {
   const router = useRouter()
@@ -16,31 +22,76 @@ const BotDetails: NextPageWithLayout = () => {
   const {data} = useBotDetails(botId)
   const [updating, setUpdating] = useState(false)
 
-  const mutation = useUpdateBot(() => {
-    console.log('updated successfully!')
+  const updateBot = useUpdateBot(() => {
+    console.log('Updated successfully!')
+  })
+  const deleteBot = useDeleteBot(() => {
+    console.log('Deleted successfully!')
+    router.push('/bots').then(() => {
+      console.log('Redirected successfully!')
+    })
   })
 
   if (!data) return (<div>Loading...</div>)
+  const avatar = data.configuration.avatar;
+  if (updating) {
+    return (
+      <div className={styles.BotDetailsPage}>
+        <h1>Update Bot</h1>
+        {
+          renderForm(data, (updatedValues) => {
+            updateBot.mutate({
+              id: data.id,
+              creatorId: data.creatorId,
+              ...updatedValues
+            })
+            console.log(data)
+            setUpdating(false)
+          })
+        }
+      </div>
+    )
+  }
   return (
-    <>
-      <button onClick={() => setUpdating(true)}>Update</button>
-      {!updating && (
-        <div>
-          {data?.name}
-          {data?.description}
-          {data?.configuration.type}
+    <div className={styles.BotDetailsPage}>
+      <section className={styles.upperSection}>
+        <h1>
+          Bot Details
+        </h1>
+        <div className={styles.actions}>
+          <Button onClick={() => setUpdating(true)}>Update</Button>
+          <Button onClick={() => deleteBot.mutate(data.id)} variant={'danger'} className={styles.deletionButton}>
+            <TrashIcon width={24} height={24} /><span>Delete</span>
+          </Button>
         </div>
-      )}
-      {updating && (renderForm(data, (updatedValues) => {
-        mutation.mutate({
-          id: data.id,
-          creatorId: data.creatorId,
-          ...updatedValues
-        })
-        console.log(data)
-        setUpdating(false)
-      }))}
-    </>
+      </section>
+      <section className={styles.detailsSection}>
+        <div className={styles.botInfo}>
+          <DetailsItem label={'name'} value={data.name} />
+          <DetailsItem label={'bot type'} value={data.type} />
+          {data.description && <DetailsItem label={'Description'} value={data.description}/>}
+          {data.configuration.type === BotType.CONVERSATIONAL && data.configuration.lm?.prompt && (
+            <DetailsItem
+            label={'custom prompt'}
+            value={data.configuration.lm.prompt}
+            />
+          )}
+          {data.configuration.type === BotType.RETRIEVAL_CONVERSATIONAL && data.configuration.retrievalLm?.prompt && (
+            <DetailsItem
+              label={'custom Retrieval Prompt'}
+              value={data.configuration.retrievalLm.prompt}
+            />
+          )}
+          {data.configuration.type === BotType.RETRIEVAL_CONVERSATIONAL && data.configuration.conversationalLm?.prompt && (
+            <DetailsItem
+              label={'custom conversational prompt'}
+              value={data.configuration.conversationalLm.prompt}
+            />
+          )}
+        </div>
+        {avatar.type === BotAvatarType.BOT_AVATAR_EMOTE && <Planet size={100} mood="happy" color={avatar.backgroundColor} />}
+      </section>
+    </div>
   );
 }
 

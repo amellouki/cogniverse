@@ -9,7 +9,7 @@ import {Select} from "@/components/BaseFormFields/Select";
 import SelectOption from "@/types/SelectOption";
 import styles from './styles.module.scss'
 import apiInstance from "@/helpers/api";
-import {useBots} from "@/hooks/use-bots.hook";
+import {useBots} from "@/hooks/bot-mangement/use-bots.hook";
 
 export type BotSelection = {
   botId: number;

@@ -5,7 +5,7 @@ import RetrievalConversational from "../BotForms/RetrievalConversational";
 import {BOTS_OPTIONS} from "@/constants";
 import Conversational from "../BotForms/Conversational";
 import styles from './styles.module.scss';
-import useCreateBot from "@/hooks/use-create-bot.hook";
+import useCreateBot from "@/hooks/bot-mangement/use-create-bot.hook";
 import {NewBot} from "@my-monorepo/shared";
 import {MutableResetRef, ResetFunction} from "@/types/MutableResetRef";
 

@@ -1,0 +1,15 @@
+.label,
+.value {
+  display: block;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: var(--color-1-light);
+  text-transform: lowercase;
+}
+
+.value {
+  margin-top: 0.25rem;
+}

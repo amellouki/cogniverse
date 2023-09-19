@@ -38,6 +38,10 @@ export class BotService {
     return this.botRepository.updateBot(botData, botId);
   }
 
+  deleteBot(botId: number) {
+    return this.botRepository.deleteBot(botId);
+  }
+
   getBotById(id: number) {
     return this.botRepository.getBotById(id);
   }

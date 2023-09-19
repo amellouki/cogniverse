@@ -1,7 +1,5 @@
 .button {
   padding: 0.625rem 1.25rem;
-  background-color: var(--primary-button-background);
-  color: var(--primary-button-foreground);
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 500;
@@ -11,9 +9,28 @@
   transition: box-shadow 0.2s ease-in;
 }
 
+.primary {
+  background-color: var(--primary-button-background);
+  color: var(--primary-button-foreground);
+}
+
+.danger {
+  color: var(--danger-color);
+  border: 2px solid var(--danger-color);
+}
+
 .button:hover {
-  background-color: var(--primary-button-hover-background);
   box-shadow: 0 0 0 3px var(--primary-button-focus-outline);
+}
+
+.primary:hover {
+  background-color: var(--primary-button-hover-background);
+}
+
+.danger:hover {
+  background-color: var(--danger-color);
+  color: var(--white);
+  border-color: var(--white);
 }
 
 .button:focus {
