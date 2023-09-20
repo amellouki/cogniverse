@@ -39,7 +39,9 @@ const BotDetails: NextPageWithLayout = () => {
       <div className={styles.BotDetailsPage}>
         <h1>Update Bot</h1>
         {
-          renderForm(data, (updatedValues) => {
+          renderForm(
+            data,
+            (updatedValues) => {
             updateBot.mutate({
               id: data.id,
               creatorId: data.creatorId,
@@ -47,7 +49,9 @@ const BotDetails: NextPageWithLayout = () => {
             })
             console.log(data)
             setUpdating(false)
-          })
+            },
+            () => setUpdating(false)
+          )
         }
       </div>
     )
@@ -69,22 +73,31 @@ const BotDetails: NextPageWithLayout = () => {
         <div className={styles.botInfo}>
           <DetailsItem label={'name'} value={data.name} />
           <DetailsItem label={'bot type'} value={data.type} />
-          {data.description && <DetailsItem label={'Description'} value={data.description}/>}
+          {data.description && (
+            <DetailsItem
+              label={'Description'}
+              valueClassName={styles.ellipsis}
+              value={data.description}
+            />
+          )}
           {data.configuration.type === BotType.CONVERSATIONAL && data.configuration.lm?.prompt && (
             <DetailsItem
             label={'custom prompt'}
+            valueClassName={styles.ellipsis}
             value={data.configuration.lm.prompt}
             />
           )}
           {data.configuration.type === BotType.RETRIEVAL_CONVERSATIONAL && data.configuration.retrievalLm?.prompt && (
             <DetailsItem
               label={'custom Retrieval Prompt'}
+              valueClassName={styles.ellipsis}
               value={data.configuration.retrievalLm.prompt}
             />
           )}
           {data.configuration.type === BotType.RETRIEVAL_CONVERSATIONAL && data.configuration.conversationalLm?.prompt && (
             <DetailsItem
               label={'custom conversational prompt'}
+              valueClassName={styles.ellipsis}
               value={data.configuration.conversationalLm.prompt}
             />
           )}
@@ -116,6 +129,7 @@ function getAllowedDiscordChannelId(data: Bot): string | undefined {
 function getRCFromValue(data: RcBot): RCInputType {
   return {
     name: data.name,
+    description: data.description ?? undefined,
     isRLMCustomPrompt: !!data.configuration.retrievalLm?.prompt,
     rlmPrompt: data.configuration.retrievalLm?.prompt,
     isCLMCustomPrompt: !!data.configuration.conversationalLm?.prompt,
@@ -132,6 +146,7 @@ function getRCFromValue(data: RcBot): RCInputType {
 function getConversationalFormValue(data: ConversationalBot): ConversationalInputType {
   return {
     name: data.name,
+    description: data.description ?? undefined,
     isCustomPrompt: !!data.configuration.lm?.prompt,
     prompt: data.configuration.lm?.prompt,
     color: getBotAvatarColor(data),
@@ -141,12 +156,12 @@ function getConversationalFormValue(data: ConversationalBot): ConversationalInpu
   }
 }
 
-function renderForm(data: Bot, onSubmit: (data: NewBot) => void) {
+function renderForm(data: Bot, onSubmit: (data: NewBot) => void, onCancel: () => void) {
   switch (data.type) {
     case BotType.RETRIEVAL_CONVERSATIONAL:
-      return <RetrievalConversational initValue={getRCFromValue(data)} onSubmit={onSubmit} />
+      return <RetrievalConversational initValue={getRCFromValue(data)} onSubmit={onSubmit} onCancel={onCancel} />
     case BotType.CONVERSATIONAL:
-      return <Conversational initValue={getConversationalFormValue(data)} onSubmit={onSubmit} />
+      return <Conversational initValue={getConversationalFormValue(data)} onSubmit={onSubmit} onCancel={onCancel} />
     default:
       return <div>Unknown</div>
   }

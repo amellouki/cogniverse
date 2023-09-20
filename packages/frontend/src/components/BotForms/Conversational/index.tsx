@@ -19,6 +19,7 @@ import {BotFormProps} from "@/components/BotForms/BotFormProps";
 
 type Props = BotFormProps & {
   initValue?: InputType
+  onCancel?: () => void
 }
 
 const RetrievalConversational: FunctionComponent<Props> = (props) => {
@@ -69,8 +70,20 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
           {...register('name', {required: true})}
         />
       </FormFieldWrapper>
+      <FormFieldWrapper
+        htmlFor={'description'}
+        label={'Description'}
+        fieldError={errors.description}
+      >
+        <TextInput
+          id={'description'}
+          placeholder={'Provide a description for your bot'}
+          hasError={!!errors.description}
+          {...register('description', {required: true})}
+        />
+      </FormFieldWrapper>
       <div className={styles.ToggleButtonRow}>
-        <span>Prompt</span>
+        <span>Customise the prompt or keep it default?</span>
         <Controller
           render={({ field: {onChange, value} }) => (
             <ControlledToggleButton
@@ -89,7 +102,7 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
       {isCustomPrompt && (
         <FormFieldWrapper
           htmlFor={'rlm-prompt'}
-          label={'Prompt'}
+          label={'Custom Prompt'}
           fieldError={errors.prompt}
         >
           <Prompt
@@ -127,7 +140,14 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
           />
         </FormFieldWrapper>
       )}
-      <Button type={'submit'} className={styles.SubmitButton}>Create</Button>
+      <section className={styles.actions}>
+        {props.initValue && (
+          <Button type={'button'} onClick={props.onCancel} variant={'outlined'}>Cancel</Button>
+        )}
+        <Button type={'submit'}>
+          {props.initValue ? 'Update' : 'Create'}
+        </Button>
+      </section>
     </form>
   );
 }

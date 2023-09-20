@@ -17,9 +17,11 @@
   margin-bottom: 1rem;
 }
 
-.SubmitButton {
-  display: block;
-  align-self: flex-end;
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
 }
 
 .avatarSelection {

@@ -2,12 +2,11 @@ import React, { PropsWithChildren } from 'react'
 import styles from './styles.module.scss'
 import clsx from "clsx";
 
-//TODO: ADD BUTTON PREDEFINED STYLES (primary, secondary, outlined, etc)
 type ButtonProps = {
   onClick?: () => void;
   type?: "submit" | "button";
   className?: string;
-  variant?: "primary" | "danger"
+  variant?: "primary" | "outlined" | "danger"
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   onClick,
@@ -32,6 +31,8 @@ const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
       return styles.primary
     } else if (restProps.variant === "danger") {
       return styles.danger
+    } else if (restProps.variant === 'outlined') {
+      return styles.outlined
     } else {
       return styles.primary
     }

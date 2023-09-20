@@ -2,6 +2,7 @@ import {z} from "zod";
 
 const schema = z.object({
   name: z.string().nonempty(),
+  description: z.string().optional(),
   prompt: z.string().optional(),
   isCustomPrompt: z.boolean(),
   color: z.string().nonempty({ message: "Pick a color" }),

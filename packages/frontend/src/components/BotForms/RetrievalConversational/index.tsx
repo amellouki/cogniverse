@@ -27,6 +27,7 @@ const COLOR_OPTIONS = [
 
 type Props = BotFormProps & {
   initValue?: InputType
+  onCancel?: () => void
 }
 
 const RetrievalConversational: FunctionComponent<Props> = (props) => {
@@ -69,15 +70,27 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
         defaultValue={''}
       />
       <FormFieldWrapper
-        htmlFor={'agent-name'}
+        htmlFor={'bot-name'}
         label={'Bot Name'}
         fieldError={errors.name}
       >
         <TextInput
-          id={'agent-name'}
+          id={'bot-name'}
           placeholder={'Provide unique bot name'}
           hasError={!!errors.name}
           {...register('name', {required: true})}
+        />
+      </FormFieldWrapper>
+      <FormFieldWrapper
+        htmlFor={'description'}
+        label={'Description'}
+        fieldError={errors.description}
+      >
+        <TextInput
+          id={'description'}
+          placeholder={'Provide a description for your bot'}
+          hasError={!!errors.description}
+          {...register('description', {required: true})}
         />
       </FormFieldWrapper>
       <div className={styles.ToggleButtonRow}>
@@ -191,7 +204,14 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
           />
         </FormFieldWrapper>
       )}
-      <Button type={'submit'} className={styles.SubmitButton}>Create</Button>
+      <section className={styles.actions}>
+        {props.initValue && (
+          <Button type={'button'} onClick={props.onCancel} variant={'outlined'}>Cancel</Button>
+        )}
+        <Button type={'submit'}>
+          {props.initValue ? 'Update' : 'Create'}
+        </Button>
+      </section>
     </form>
   );
 }

@@ -23,9 +23,15 @@
   border: 1px solid var(--primary-border);
 
   > section {
+    width: 100%;
     display: flex;
     gap: 0.5rem;
   }
+}
+
+.description {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .GridItem:hover {
@@ -33,6 +39,7 @@
 }
 
 .information {
+  overflow: hidden;
   > span {
     display: block;
     text-align: start;

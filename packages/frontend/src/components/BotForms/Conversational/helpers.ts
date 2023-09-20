@@ -4,14 +4,14 @@ import {BOT_CONFIG_VERSION_LATEST, NewBot, BotAvatarType, BotType} from "@my-mon
 export function getNewBot(data: InputType): NewBot {
   return {
     name: data.name,
-    description: "[TODO]",
+    description: data.description ?? null,
     type: BotType.CONVERSATIONAL,
     configVersion: BOT_CONFIG_VERSION_LATEST,
     configuration: {
       name: data.name,
       version: BOT_CONFIG_VERSION_LATEST,
       type: BotType.CONVERSATIONAL,
-      description: "[TODO]",
+      description: data.description ?? '',
       avatar: {
         type: BotAvatarType.BOT_AVATAR_EMOTE,
         backgroundColor: data.color,

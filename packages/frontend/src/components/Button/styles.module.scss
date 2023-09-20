@@ -14,6 +14,11 @@
   color: var(--primary-button-foreground);
 }
 
+.outlined {
+    color: var(--primary-button-background);
+    border: 2px solid var(--primary-button-background);
+}
+
 .danger {
   color: var(--danger-color);
   border: 2px solid var(--danger-color);
@@ -25,6 +30,11 @@
 
 .primary:hover {
   background-color: var(--primary-button-hover-background);
+}
+
+.outlined:hover {
+  background-color: var(--primary-button-background);
+  color: var(--primary-button-foreground);
 }
 
 .danger:hover {
