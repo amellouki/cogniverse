@@ -3,7 +3,7 @@ import {useQuery} from "react-query";
 import {ConversationItem as Conversation} from "@/types/ChatThread";
 import ConversationItem from "@/components/ConversationsList/ConversationItem";
 import styles from "@/components/ConversationsList/styles.module.scss";
-import CreateNewBot from "@/components/ConversationsList/ConversationItem/CreateNewBot";
+import NewConversation from "@/components/ConversationsList/ConversationItem/NewConversation";
 import apiInstance from "@/helpers/api";
 
 const ConversationsList: FunctionComponent = () => {
@@ -12,7 +12,7 @@ const ConversationsList: FunctionComponent = () => {
   });
   return (
     <div className={styles.ConversationList}>
-      <CreateNewBot />
+      <NewConversation />
       {data && data.map((conversation) => {
         return <ConversationItem key={conversation.id} conversation={conversation} />
       })}

@@ -5,17 +5,17 @@ import Link from "next/link";
 import {useRouter} from "next/router";
 import clsx from "clsx";
 
-const CreateNewBot: FunctionComponent = () => {
+const NewConversation: FunctionComponent = () => {
   const { pathname } = useRouter()
-  const isCreate = pathname === '/conversation/create'
+  const isCreate = pathname === '/conversations'
   return (
-    <Link className={clsx(styles.conversationItem, isCreate && styles.selected)} href={`/bots/create`}>
+    <Link className={clsx(styles.conversationItem, isCreate && styles.selected)} href={`/`}>
       <SparklesIcon width={24} height={24} />
       <span>
-        Create bot
+        New conversation
       </span>
     </Link>
   );
 }
 
-export default CreateNewBot;
+export default NewConversation;
