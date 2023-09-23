@@ -3,8 +3,8 @@ import SelectOption from "@/types/SelectOption";
 export const END_COMPLETION = '[DONE]';
 
 export const BOTS_OPTIONS: SelectOption[] = [
-  { value: 'rc', label: 'PDF Retrieval Conversational' },
   { value: 'conversational', label: 'Conversational Bot' },
+  { value: 'rc', label: 'PDF Retrieval Conversational' },
 ]
 
 export const COLOR_OPTIONS = [
