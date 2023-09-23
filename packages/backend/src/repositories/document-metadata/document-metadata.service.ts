@@ -14,8 +14,12 @@ export class DocumentMetadataService {
     });
   }
 
-  async getDocumentList() {
-    return this.prismaService.documentMetadata.findMany();
+  async getDocumentListByOwnerId(ownerId: string) {
+    return this.prismaService.documentMetadata.findMany({
+      where: {
+        ownerId,
+      },
+    });
   }
 
   async createDocumentMetadata(

@@ -80,16 +80,19 @@ model DocumentMetadata {
   embeddingStatus      String
   conversationDocument Conversation[] @relation("DocumentMetadata")
   bots                 Bot[]          @relation("boundDocument")
+  owner                Account        @relation("owner", fields: [ownerId], references: [id])
+  ownerId              String
 }
 
 model Account {
-  id             String         @id() @unique @default(uuid())
+  id             String             @id() @unique @default(uuid())
   OAuthProvider  OAuthProvider
   userId         String
   username       String
   profilePicture String?
-  createdBots    Bot[]          @relation("creator")
-  conversations  Conversation[] @relation("conversationCreator")
+  createdBots    Bot[]              @relation("creator")
+  conversations  Conversation[]     @relation("conversationCreator")
+  documents      DocumentMetadata[] @relation("owner")
 
   @@unique(fields: [OAuthProvider, userId])
 }

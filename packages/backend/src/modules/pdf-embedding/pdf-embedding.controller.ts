@@ -6,6 +6,7 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
+  Request,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PineconeStore } from 'langchain/vectorstores';
@@ -18,6 +19,7 @@ import { UploadedFileType } from '@my-monorepo/shared';
 import { PdfSplitterService } from '../../services/pdf-splitter/pdf-splitter.service';
 import { PdfEmbeddingService } from './pdf-embedding.service';
 import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
+import { SecureRequest } from '../../types/secure-request';
 
 @Controller('pdf-embedding')
 export class PdfEmbeddingController {
@@ -36,7 +38,10 @@ export class PdfEmbeddingController {
   async uploadPdf(
     @UploadedFile() file: UploadedFileType,
     @Body() splitParams: PdfUploadDto,
+    @Request() request: SecureRequest,
   ) {
+    const { uid: ownerId } = request.authPayload;
+
     const openAiApiKey = this.configService.get<string>(ENV.OPEN_AI_API_KEY);
 
     const pineconeIndex = await this.pineconeService.getIndex();
@@ -44,7 +49,7 @@ export class PdfEmbeddingController {
     const docs = await this.pdfSplitterService.split(file, splitParams);
 
     const documentMetadata =
-      await this.pdfEmbeddingService.saveDocumentMetadata(file);
+      await this.pdfEmbeddingService.saveDocumentMetadata(file, ownerId);
 
     await PineconeStore.fromDocuments(
       docs,
@@ -75,7 +80,8 @@ export class PdfEmbeddingController {
   }
 
   @Get('embedded-documents')
-  async getEmbeddedDocuments() {
-    return this.pdfEmbeddingService.getDocumentList();
+  async getEmbeddedDocuments(@Request() request: SecureRequest) {
+    const { uid: ownerId } = request.authPayload;
+    return this.pdfEmbeddingService.getDocumentListByOwnerId(ownerId);
   }
 }
