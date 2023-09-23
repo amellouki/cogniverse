@@ -18,7 +18,7 @@ const schema = z.object({
   boundDocumentId: z.number().optional(),
   isPublic: z.boolean().default(false),
   integrateWithDiscord: z.boolean(),
-  discordChannelId: z.string().optional(),
+  discordChannelIds: z.array(z.string()).optional(),
 }).refine((data) => {
   return !(data.isRLMCustomPrompt && !data.rlmPrompt);
 }, {
@@ -51,11 +51,11 @@ const schema = z.object({
 }, {
   message: "Document is required",
   path: ["boundDocumentId"],
-}).refine(({integrateWithDiscord, discordChannelId}) => {
-  return !(integrateWithDiscord && !discordChannelId);
+}).refine(({integrateWithDiscord, discordChannelIds}) => {
+  return !(integrateWithDiscord && !discordChannelIds?.length);
 }, {
-  message: "Discord channel is required",
-  path: ["discordChannelId"],
+  message: "At least one discord channel id is required",
+  path: ["discordChannelIds"],
 });
 
 export type InputType = z.infer<typeof schema>

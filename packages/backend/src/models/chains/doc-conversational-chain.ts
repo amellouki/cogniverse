@@ -74,6 +74,7 @@ export default class DocConversationalChain extends ConversationalRetrievalQACha
     if (newQuestion.length > 0 && newQuestion !== '[no-question]') {
       docs = await this.retriever.getRelevantDocuments(newQuestion);
     }
+    console.log('found docs', docs);
     const inputs = {
       question,
       input_documents: docs,

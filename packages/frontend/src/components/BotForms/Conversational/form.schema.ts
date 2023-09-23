@@ -8,7 +8,7 @@ const schema = z.object({
   color: z.string().nonempty({ message: "Pick a color" }),
   isPublic: z.boolean().default(false),
   integrateWithDiscord: z.boolean(),
-  discordChannelId: z.string().optional(),
+  discordChannelIds: z.array(z.string()).optional(),
 }).refine((data) => {
   return !(data.isCustomPrompt && !data.prompt);
 }, {
@@ -20,12 +20,11 @@ const schema = z.object({
 }, {
   message: "Should provide a comprehensive prompt",
   path: ["rlmPrompt"],
-}).refine(({integrateWithDiscord, discordChannelId}) => {
-  if (!integrateWithDiscord) return true;
-  return !!discordChannelId;
+}).refine(({integrateWithDiscord, discordChannelIds}) => {
+  return !(integrateWithDiscord && !discordChannelIds?.length);
 }, {
-  message: "Discord channel is required",
-  path: ["discordChannelId"],
+  message: "At least one discord channel id is required",
+  path: ["discordChannelIds"],
 });
 
 export type InputType = z.infer<typeof schema>

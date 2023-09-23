@@ -47,6 +47,6 @@ export class BotService {
   }
 
   getBotsByCreatorId(creatorId: string) {
-    return this.botRepository.getBotsByCreatorId(creatorId);
+    return this.botRepository.getPublicBotsAndBotsCreatedByUser(creatorId);
   }
 }

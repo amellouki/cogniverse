@@ -58,7 +58,7 @@ export class DiscordOAuthService {
   }
 
   async saveDiscordUser(githubUser: UserResponse) {
-    return this.accountService.registerGithubAccount({
+    return this.accountService.registerAccount({
       userId: githubUser.id + '',
       username: githubUser.username,
       profilePicture: githubUser.avatar,
@@ -73,7 +73,7 @@ export class DiscordOAuthService {
       accessTokenResponse.access_token,
     );
     let account = await this.accountService.getAccount(
-      OAuthProvider.GITHUB,
+      OAuthProvider.DISCORD,
       userResponse.id + '',
     );
     if (!account) {

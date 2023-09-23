@@ -1,0 +1,26 @@
+.error {
+  color: var(--input-error);
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.inputWrapper {
+  display: flex;
+  gap: 1rem;
+}
+
+.input {
+  flex-grow: 1;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 32px;
+  background-color: var(--primary-button-background);
+  color: var(--primary-button-foreground);
+  width: fit-content;
+  margin-top: 1rem;
+}

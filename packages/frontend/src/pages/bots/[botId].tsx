@@ -117,11 +117,11 @@ function getBotAvatarColor(data: Bot): string {
   throw new Error('Not implemented');
 }
 
-function getAllowedDiscordChannelId(data: Bot): string | undefined {
+function getAllowedDiscordChannelId(data: Bot): string[] | undefined {
   const discordIntegration = data.configuration.thirdPartyIntegration?.discord;
   if (!discordIntegration) return undefined;
-  if (discordIntegration.isPrivate && discordIntegration.allowedChannels.length > 0) {
-    return discordIntegration.allowedChannels[0]
+  if (discordIntegration.isPrivate && discordIntegration.allowedChannels) {
+    return discordIntegration.allowedChannels
   }
   throw new Error('Not implemented');
 }
@@ -139,7 +139,7 @@ function getRCFromValue(data: RcBot): RCInputType {
     boundDocumentId: data.boundDocumentId ?? undefined,
     isPublic: data.public,
     integrateWithDiscord: !!data.configuration?.thirdPartyIntegration?.discord,
-    discordChannelId: getAllowedDiscordChannelId(data),
+    discordChannelIds: getAllowedDiscordChannelId(data),
   }
 }
 
@@ -152,7 +152,7 @@ function getConversationalFormValue(data: ConversationalBot): ConversationalInpu
     color: getBotAvatarColor(data),
     isPublic: data.public,
     integrateWithDiscord: !!data.configuration?.thirdPartyIntegration?.discord,
-    discordChannelId: getAllowedDiscordChannelId(data),
+    discordChannelIds: getAllowedDiscordChannelId(data),
   }
 }
 

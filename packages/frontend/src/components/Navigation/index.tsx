@@ -1,22 +1,33 @@
 import React, {FunctionComponent, ReactElement, useMemo} from 'react';
 import Link from "next/link";
-import styles from './styles.module.scss';
 import BotIcon from "@/components/icons/Bot.icon";
-import {DocumentDuplicateIcon, ChatBubbleLeftRightIcon, UserCircleIcon} from "@heroicons/react/24/outline";
+import {
+  DocumentDuplicateIcon,
+  ChatBubbleLeftRightIcon,
+  UserCircleIcon,
+  ArrowRightOnRectangleIcon
+} from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import {useRouter} from "next/router";
+import styles from './styles.module.scss';
+import useLogout from "@/hooks/use-logout";
 
 type Props = {
   className?: string
 }
 
 const Navigation: FunctionComponent<Props> = ({ className }) => {
+  const logout = useLogout();
   return (
     <nav className={clsx(styles.Navigation, className)}>
       <NavItem href={'/conversations'} icon={<ChatBubbleLeftRightIcon width={36} height={36} />} title={'Conversations'} />
       <NavItem href={'/bots'} icon={<BotIcon width={"36px"} height={"36px"} />} title={'Bots'} />
       <NavItem href={'/documents'} icon={<DocumentDuplicateIcon width={36} height={36}/>} title={'Documents'} />
       <NavItem href={'/account'} icon={<UserCircleIcon width={36} height={36} />} title={'Account'} />
+      <button onClick={logout} className={styles.NavigationItem}>
+        <ArrowRightOnRectangleIcon width={36} height={36} />
+        <span>logout</span>
+      </button>
     </nav>
   );
 }

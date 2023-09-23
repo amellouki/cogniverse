@@ -6,8 +6,8 @@ import { GithubOAuthService } from '../services/github-o-auth.service';
 export class RegisterController {
   constructor(private readonly githubOAuthService: GithubOAuthService) {}
 
-  @Post('github')
-  githubLogin(@Body() oAuth: GithubOAuthDto) {
-    return this.githubOAuthService.registerWithGithub(oAuth.code);
-  }
+  // @Post('github')
+  // githubLogin(@Body() oAuth: GithubOAuthDto) {
+  //   return this.githubOAuthService.registerWithGithub(oAuth.code);
+  // }
 }

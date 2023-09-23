@@ -10,9 +10,7 @@ const Bots: FunctionComponent<Props> = ({
   bots
                                         }) => {
   return (
-    <div>
-      <BotsGrid bots={bots} />
-    </div>
+    <BotsGrid bots={bots} />
   );
 }
 

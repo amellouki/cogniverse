@@ -22,9 +22,9 @@ export function getNewBot(data: InputType): NewBot {
         apiKey: "[TODO]",
       },
       thirdPartyIntegration: {
-        discord: data.integrateWithDiscord && data.discordChannelId ? {
+        discord: data.integrateWithDiscord && data.discordChannelIds ? {
           isPrivate: true,
-          allowedChannels: [data.discordChannelId],
+          allowedChannels: data.discordChannelIds,
         } : undefined,
       }
     },

@@ -20,7 +20,7 @@ const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
       {...restProps}
       className={clsx(styles.button, getButtonStyle(), className)}
       onClick={onClick}
-      type={type}
+      type={type || "button"}
     >
       {children}
     </button>

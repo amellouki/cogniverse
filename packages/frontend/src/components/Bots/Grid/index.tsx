@@ -2,9 +2,9 @@ import React, {FunctionComponent} from 'react';
 import {Bot} from "@my-monorepo/shared";
 import GridItem from "@/components/Bots/Grid/GridItem";
 import Link from "next/link";
-import styles from './styles.module.scss';
 import {PlusIcon} from "@heroicons/react/24/outline";
 import clsx from "clsx";
+import styles from './styles.module.scss';
 
 type Props = {
   bots: Bot[]

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Account, OAuthProvider } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
-type GithubAccount = Pick<
+type NewAccount = Pick<
   Account,
   'userId' | 'username' | 'profilePicture' | 'OAuthProvider'
 >;
@@ -11,9 +11,9 @@ type GithubAccount = Pick<
 export class AccountService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async registerGithubAccount(githubAccount: GithubAccount) {
+  async registerAccount(newAccount: NewAccount) {
     return this.prismaService.account.create({
-      data: githubAccount,
+      data: newAccount,
     });
   }
 

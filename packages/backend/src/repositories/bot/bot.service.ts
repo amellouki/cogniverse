@@ -49,6 +49,24 @@ export class BotService {
     });
   }
 
+  getPublicBotsAndBotsCreatedByUser(userId: string) {
+    return this.prisma.bot.findMany({
+      where: {
+        OR: [
+          {
+            creatorId: userId,
+          },
+          {
+            public: true,
+          },
+        ],
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    });
+  }
+
   getBotByName(name: string): Prisma.PrismaPromise<Bot> {
     return this.prisma.bot.findUnique({
       where: {

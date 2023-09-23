@@ -16,6 +16,7 @@ import {COLOR_OPTIONS} from "@/constants";
 import Checkbox from "@/components/BaseFormFields/Checkbox";
 import DiscordIcon from "@/components/icons/Discord.icon";
 import {BotFormProps} from "@/components/BotForms/BotFormProps";
+import ChipsInput from "@/components/BaseFormFields/ChipsInput";
 
 type Props = BotFormProps & {
   initValue?: InputType
@@ -50,7 +51,7 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
       <Controller
         render={({ field: {onChange, value}}) => (
           <section className={styles.avatarSelection}>
-            <SimpleColorPicker onChange={onChange} options={COLOR_OPTIONS} selected={value} legend={'Pick color'} error={errors.color} />
+            <SimpleColorPicker onChange={onChange} options={COLOR_OPTIONS} selected={value} legend={'Pick the bot\'s look'} error={errors.color} />
             {value && <Planet size={100} mood="happy" color={value}/>}
           </section>
         )}
@@ -127,18 +128,20 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
         <span className="flex items-center gap-2"><DiscordIcon width={"24px"} height={"24px"} /><span>Integrate with Discord?</span></span>
       </Checkbox>
       {integrateWithDiscord && (
-        <FormFieldWrapper
-          htmlFor={'discord-channel-id'}
-          label={'Discord channel ID'}
-          fieldError={errors.discordChannelId}
-        >
-          <TextInput
-            id={'discord-channel-id'}
-            placeholder={'Provide your Discord channel ID'}
-            hasError={!!errors.discordChannelId}
-            {...register('discordChannelId', {required: true})}
-          />
-        </FormFieldWrapper>
+        <Controller
+          control={control}
+          name={'discordChannelIds'}
+          defaultValue={[]}
+          render={({field: {onChange, value}}) => {
+            return (
+              <ChipsInput
+                value={value || []}
+                onChange={onChange}
+                fieldError={errors.discordChannelIds}
+              />
+            )
+          }}
+        />
       )}
       <section className={styles.actions}>
         {props.initValue && (
