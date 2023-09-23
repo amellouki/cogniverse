@@ -202,6 +202,9 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
                 value={value || []}
                 onChange={onChange}
                 fieldError={errors.discordChannelIds}
+                label={'Allowed discord channel ids'}
+                id={'discord-channel-ids'}
+                placeholder={'Provide a discord channel id'}
               />
             )
           }}
