@@ -22,12 +22,12 @@ const Login: NextPageWithLayout = (props) => {
         >
           <GithubIcon /> <span>Login with GitHub</span>
         </LinkButton>
-        <LinkButton
-          href={`https://discord.com/api/oauth2/authorize?client_id=${DISCORD_OAUTH_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin%2Fcallback%2Fdiscord&response_type=code&scope=identify`}
+        <Button
           className={styles.button}
+          disabled={true}
         >
           <DiscordIcon width={"24px"} height={"24px"} /> <span>Login with Discord</span>
-        </LinkButton>
+        </Button>
       </div>
     </div>
   );
