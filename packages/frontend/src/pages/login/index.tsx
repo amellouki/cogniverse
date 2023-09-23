@@ -8,7 +8,7 @@ import styles from './styles.module.scss';
 import Logo from "@/components/Logo";
 
 const GITHUB_OAUTH_CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_OAUTH_CLIENT_ID;
-const DISCORD_OAUTH_CLIENT_ID = process.env.NEXT_PUBLIC_DISCORD_OAUTH_CLIENT_ID;
+const NEXT_PUBLIC_DISCORD_OAUTH_URL = process.env.NEXT_PUBLIC_DISCORD_OAUTH_URL;
 
 const Login: NextPageWithLayout = (props) => {
   return (
@@ -22,12 +22,12 @@ const Login: NextPageWithLayout = (props) => {
         >
           <GithubIcon /> <span>Login with GitHub</span>
         </LinkButton>
-        <Button
+        <LinkButton
+          href={NEXT_PUBLIC_DISCORD_OAUTH_URL ?? "#"}
           className={styles.button}
-          disabled={true}
         >
           <DiscordIcon width={"24px"} height={"24px"} /> <span>Login with Discord</span>
-        </Button>
+        </LinkButton>
       </div>
     </div>
   );

@@ -26,6 +26,7 @@ jobs:
           echo "NODE_ENV=production" >> ./packages/frontend/.env.local
           echo "NEXT_PUBLIC_BACKEND_API=${{ secrets.NEXT_PUBLIC_BACKEND_API }}" >> ./packages/frontend/.env.local
           echo "NEXT_PUBLIC_GITHUB_OAUTH_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GITHUB_OAUTH_CLIENT_ID }}" >> ./packages/frontend/.env.local
+          echo "NEXT_PUBLIC_DISCORD_OAUTH_URL=${{ secrets.NEXT_PUBLIC_DISCORD_OAUTH_URL }}" >> ./packages/frontend/.env.local
 
       - name: Docker Login
         uses: docker/login-action@v2
