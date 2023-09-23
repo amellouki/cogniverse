@@ -1,9 +1,10 @@
-import axios from 'axios'
 import { useQuery, useQueryClient } from 'react-query'
 import {DocumentMetadata} from "@my-monorepo/shared";
-
-const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/pdf-embedding/embedded-documents'
+import apiInstance from "@/helpers/api";
 
 export default function useEmbeddedDocumentsList() {
-  return useQuery<DocumentMetadata[]>('documentList', () => axios.get(PATH).then(res => res.data))
+  return useQuery<DocumentMetadata[]>(
+    'documentList',
+    () => apiInstance.get('/pdf-embedding/embedded-documents').then(res => res.data)
+  )
 }

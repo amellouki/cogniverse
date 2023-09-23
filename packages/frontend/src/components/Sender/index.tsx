@@ -22,8 +22,6 @@ const Sender: FunctionComponent<Props> = ({ sender, avatar }) => {
     }
   }, [avatar])
 
-  console.log('Sender', avatar, style)
-
   return (
     <div className={styles.Sender} style={style}>
       {senderIcon.get(sender)}

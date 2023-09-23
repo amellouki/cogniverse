@@ -2,6 +2,8 @@ import {useCallback, useState} from 'react'
 import {io} from "socket.io-client";
 import {Message} from "@/types/ChatThread";
 import {NewMessage, Conversation, NewTitelessConversation} from '@my-monorepo/shared';
+import {LOCAL_STORAGE} from "@/constants";
+import {useQueryClient} from "react-query";
 
 const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/conversational-retrieval-qa'
 
@@ -9,12 +11,16 @@ const useConversation = (
   onQuestionReceived: (message: Message) => void,
   onLatestResponseComplete: (message: Message) => void,
   setConversationId: (id: number) => void) => {
+  const queryClient = useQueryClient()
   const [response, setResponse] = useState<NewMessage>();
   const [resources, setResources] = useState<any>();
 
   const sendQuestion = useCallback((question: string, conversationId?: number, newConversation?: NewTitelessConversation ) => {
-    const socket = io(PATH)
-    console.log('sendQuestion')
+    const socket = io(PATH, {
+      query: {
+        token: localStorage.getItem(LOCAL_STORAGE.TOKEN)
+      }
+    })
     socket.emit('getCompletion', {
       conversationId,
       question,
@@ -25,6 +31,7 @@ const useConversation = (
       const tokenMessage = data.content as NewMessage
       if (data.type === 'conversationDetails') {
         const conversation = data.content as Conversation
+        queryClient.invalidateQueries('conversations')
         setConversationId(conversation.id)
       }
       console.log(tokenMessage)

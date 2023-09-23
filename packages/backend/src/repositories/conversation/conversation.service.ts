@@ -1,17 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { Conversation, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { NewConversation } from '@my-monorepo/shared';
+import { Conversation, NewConversation } from '@my-monorepo/shared';
 
 @Injectable()
 export class ConversationService {
   constructor(private prisma: PrismaService) {}
 
-  async conversations(): Promise<Conversation[]> {
-    return this.prisma.conversation.findMany();
+  async conversations(creatorId: string): Promise<Conversation[]> {
+    return this.prisma.conversation.findMany({
+      where: {
+        creatorId,
+      },
+    }) as unknown as Promise<Conversation[]>;
   }
 
-  async createConversation(data: NewConversation): Promise<Conversation> {
+  async createConversation(
+    creatorId: string,
+    data: NewConversation,
+  ): Promise<Conversation> {
     const conversationData: Prisma.ConversationCreateInput = {
       title: data.title,
       chatHistory: {
@@ -27,16 +34,25 @@ export class ConversationService {
           id: data.documentId,
         },
       },
+      creator: {
+        connect: {
+          id: creatorId,
+        },
+      },
     };
 
     return this.prisma.conversation.create({
       data: conversationData,
       include: {
         chatHistory: true,
-        bot: true,
+        bot: {
+          include: {
+            boundDocument: true,
+          },
+        },
         document: true,
       },
-    });
+    }) as unknown as Promise<Conversation>;
   }
   async conversationHistory(id: number) {
     return this.prisma.conversation.findUnique({
@@ -53,7 +69,7 @@ export class ConversationService {
     });
   }
 
-  async getConversationById(id: number) {
+  async getConversationById(id: number): Promise<Conversation> {
     return this.prisma.conversation.findUnique({
       where: {
         id,
@@ -64,9 +80,13 @@ export class ConversationService {
             id: 'asc',
           },
         },
-        bot: true,
+        bot: {
+          include: {
+            boundDocument: true,
+          },
+        },
         document: true,
       },
-    });
+    }) as unknown as Promise<Conversation>;
   }
 }

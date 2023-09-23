@@ -6,16 +6,13 @@
 }
 
 .Checkbox input {
-  position: absolute;
-  top: 0;
-  left: 0;
   height: 2rem;
   width: 2rem;
   opacity: 0;
 }
 
-.Checkbox span {
-  margin: .25rem 0 .25rem 2.5rem;
+.Checkbox > span {
+  margin: .25rem 0 .25rem 0.5rem;
   line-height: 1.5rem;
 }
 

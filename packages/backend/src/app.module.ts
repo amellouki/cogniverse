@@ -8,6 +8,11 @@ import { DocQuestionAnsweringModule } from './modules/doc-question-answering/doc
 import { RetrievalConversationalModule } from './modules/retrieval-conversational/retrieval-conversational.module';
 import { RepositoriesModule } from './repositories/repositories.module';
 import { BotModule } from './modules/bot/bot.module';
+import { DiscordModule } from './modules/discord/discord.module';
+import { LoginModule } from './modules/authentication/login/login.module';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './guards/auth/auth.guard';
 
 @Module({
   imports: [
@@ -15,14 +20,27 @@ import { BotModule } from './modules/bot/bot.module';
       envFilePath: ['.env.local'],
       isGlobal: true, // Makes the ConfigModule global, no need to import it in other modules
     }),
+    JwtModule.register({
+      global: true,
+      secret: 'SECRET HERE!',
+      signOptions: { expiresIn: '30d' },
+    }),
+    LoginModule,
     PdfEmbeddingModule,
     DocQuestionAnsweringModule,
     RetrievalConversationalModule,
     BotModule,
     ServicesModule,
     RepositoriesModule,
+    DiscordModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}

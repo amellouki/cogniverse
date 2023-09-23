@@ -2,14 +2,23 @@ import "@/styles/globals.scss";
 import type {AppProps} from "next/app";
 import {QueryClient, QueryClientProvider} from "react-query";
 import { Outfit } from "next/font/google";
-import Layout from "@/components/Layout";
-import styles from "@/pages/styles.module.scss";
+import {getGuardedLayout} from "@/components/Layouts/DefaultLayout";
+import {ReactElement, ReactNode} from "react";
+import {NextPage} from "next";
 
 const outfit = Outfit({ subsets: ['latin'] });
 
 const queryClient = new QueryClient();
 
-export default function App({Component, pageProps}: AppProps) {
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+
+export default function App({Component, pageProps}: AppPropsWithLayout) {
+  const getLayout = Component.getLayout || getGuardedLayout;
   return (
     <QueryClientProvider client={queryClient}>
       <>
@@ -18,12 +27,7 @@ export default function App({Component, pageProps}: AppProps) {
             font-family: ${outfit.style.fontFamily};
           }
         `}</style>
-        <Layout
-          className={styles.chat}
-          mainClassName={styles.main}
-        >
-          <Component {...pageProps} />
-        </Layout>
+        {getLayout(<Component {...pageProps} />)}
         <div id="select-overlay" />
       </>
     </QueryClientProvider>

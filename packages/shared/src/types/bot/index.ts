@@ -3,7 +3,8 @@ import {BotAvatarType} from "./bot-avatar-type";
 import BotType from "./bot-type";
 
 type Bot = ConversationalBot | RcBot
-type NewBot = Omit<Bot, 'id'>
+type NewBot = Omit<Bot, 'id' | 'boundDocument' | 'creatorId'>
+type UpdatedBot = Omit<Bot, 'boundDocument'>
 
 export {
   Bot,
@@ -13,4 +14,5 @@ export {
   BotType,
   BotAvatarType,
   BotAvatar,
+  UpdatedBot,
 }

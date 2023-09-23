@@ -1,0 +1,18 @@
+.Conversation {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  max-width: 1000px;
+  grid-template-columns: auto;
+  grid-template-rows: 68px auto 50px 30px;
+}
+
+.queryForm {
+  margin-top: auto;
+}
+
+.CreateConversation {
+  display: flex;
+  justify-content: center;
+}

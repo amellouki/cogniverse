@@ -8,9 +8,18 @@ import { EmbeddingsModule } from './embeddings/embeddings.module';
 import { DocumentNamespaceModule } from './document-namespace/document-namespace.module';
 import { PineconeModule } from './pinecone/pinecone.module';
 import { ChainsModule } from './chains/chains.module';
+import { ChatHistoryBuilderModule } from './chat-history-builder/chat-history-builder.module';
 
 @Module({
   providers: [PineconeService, PdfSplitterService, DocumentNamespaceService],
-  imports: [VectorStoreModule, LlmModule, EmbeddingsModule, DocumentNamespaceModule, PineconeModule, ChainsModule],
+  imports: [
+    VectorStoreModule,
+    LlmModule,
+    EmbeddingsModule,
+    DocumentNamespaceModule,
+    PineconeModule,
+    ChainsModule,
+    ChatHistoryBuilderModule,
+  ],
 })
 export class ServicesModule {}

@@ -8,3 +8,19 @@
   font-size: 0.8rem;
   margin-top: 0.5rem;
 }
+
+.option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.filename {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  word-wrap: break-word;
+}

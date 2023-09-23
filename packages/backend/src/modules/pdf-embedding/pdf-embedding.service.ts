@@ -6,16 +6,24 @@ import { DocumentMetadata } from '@prisma/client';
 @Injectable()
 export class PdfEmbeddingService {
   constructor(private documentMetadataService: DocumentMetadataService) {}
-  saveDocumentMetadata(file: UploadedFileType): Promise<DocumentMetadata> {
+  saveDocumentMetadata(
+    file: UploadedFileType,
+    ownerId: string,
+  ): Promise<DocumentMetadata> {
     return this.documentMetadataService.createDocumentMetadata({
       title: file.originalname,
       size: file.size,
       url: 'https://www.example.com',
       embeddingStatus: 'pending',
+      owner: {
+        connect: {
+          id: ownerId,
+        },
+      },
     });
   }
 
-  getDocumentList() {
-    return this.documentMetadataService.getDocumentList();
+  getDocumentListByOwnerId(ownerId: string) {
+    return this.documentMetadataService.getDocumentListByOwnerId(ownerId);
   }
 }

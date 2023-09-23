@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
 import { ConversationService } from './repositories/conversation/conversation.service';
 import { ChatHistoryService } from './repositories/chat-history/chat-history.service';
-import { Message, Prisma, Conversation } from '@prisma/client';
+import { Conversation, Message, Prisma } from '@prisma/client';
 import CreateConversationRequestDto from './dto/create-conversation-request.dto';
 import AppendMessageRequestDto from './dto/append-message-request.dto';
+import { SecureRequest } from './types/secure-request';
 
 @Controller('api')
 export class AppController {
@@ -14,20 +15,23 @@ export class AppController {
 
   @Post('/create_conversation')
   async createConversation(
-    @Body() request: CreateConversationRequestDto,
+    @Body() data: CreateConversationRequestDto,
+    @Request() request: SecureRequest,
   ): Promise<Conversation> {
-    return this.conversationService.createConversation(request);
+    const creatorId = request.authPayload.uid;
+    return this.conversationService.createConversation(creatorId, data);
   }
 
   @Get('conversations')
-  async getConversations(): Promise<Conversation[]> {
-    return this.conversationService.conversations();
+  async getConversations(
+    @Request() request: SecureRequest,
+  ): Promise<Conversation[]> {
+    const creatorId = request.authPayload.uid;
+    return await this.conversationService.conversations(creatorId);
   }
 
   @Get('conversation')
-  async getConversationHistory(
-    @Query('id') id: string,
-  ): Promise<Conversation> {
+  async getConversationHistory(@Query('id') id: string): Promise<Conversation> {
     return this.conversationService.getConversationById(Number(id));
   }
 

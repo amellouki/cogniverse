@@ -20,7 +20,7 @@ const ConversationItem: FunctionComponent<ConversationItemProps> = ({conversatio
         styles.conversationItem,
         +conversationId === conversation.id && styles.selected
       )}
-      href={`/conversation/${conversation.id}`}
+      href={`/conversations/${conversation.id}`}
     >
       <ChatBubbleBottomCenterTextIcon width={24} height={24}/>
       <span>

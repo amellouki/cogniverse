@@ -10,6 +10,7 @@ import { CallbackManagerForChainRun } from 'langchain/callbacks';
 import { Document } from 'langchain/docstore';
 import { BaseLanguageModel } from 'langchain/base_language';
 import { PromptTemplate } from 'langchain';
+import { ChatMessage } from '../chat-message';
 
 const initialization =
   'You are a query ai. Your output will be used to query a vector database that about a certain book so we can retrieve the correct segment to answer the human question.';
@@ -48,10 +49,9 @@ export default class DocConversationalChain extends ConversationalRetrievalQACha
       throw new Error(`Chat history key ${this.chatHistoryKey} not found.`);
     }
     const question: string = values[this.inputKey];
-    const chatHistory: string =
-      ConversationalRetrievalQAChain.getChatHistoryString(
-        values[this.chatHistoryKey],
-      );
+    const chatHistory: string = ChatMessage.getChatHistoryString(
+      values[this.chatHistoryKey],
+    );
     let newQuestion = question;
 
     const result1 = await this.questionGeneratorChain.call(
@@ -74,6 +74,7 @@ export default class DocConversationalChain extends ConversationalRetrievalQACha
     if (newQuestion.length > 0 && newQuestion !== '[no-question]') {
       docs = await this.retriever.getRelevantDocuments(newQuestion);
     }
+    console.log('found docs', docs);
     const inputs = {
       question,
       input_documents: docs,

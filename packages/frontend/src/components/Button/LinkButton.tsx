@@ -15,7 +15,7 @@ const LinkButton: React.FC<PropsWithChildren<ButtonProps>> = ({
   return (
     <Link
       href={href}
-      className={clsx(styles.button, className)}
+      className={clsx(styles.button, styles.primary, className)}
     >
       {children}
     </Link>

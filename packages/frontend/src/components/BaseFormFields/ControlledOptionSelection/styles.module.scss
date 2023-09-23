@@ -4,23 +4,10 @@
   grid-template-columns: repeat(3, calc(33.33% - calc(2rem / 3)));
 }
 
-.ColorOption {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.option {
   border: 1px solid var(--primary-border);
   border-radius: 0.5rem;
-  padding: 1rem;
   cursor: pointer;
-  justify-content: flex-start;
-  gap: 1rem;
-}
-
-.filename {
-  display: block;
-  width: 100%;
-  overflow: hidden;
-  word-wrap: break-word;
 }
 
 .selected {

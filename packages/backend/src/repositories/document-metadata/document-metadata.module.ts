@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DocumentMetadataService } from './document-metadata.service';
-import {PrismaModule} from "../prisma/prisma.module";
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [PrismaModule],
