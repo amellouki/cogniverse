@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Request,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConversationService } from './repositories/conversation/conversation.service';
 import { ChatHistoryService } from './repositories/chat-history/chat-history.service';
 import { Conversation, Message, Prisma } from '@prisma/client';
@@ -31,8 +39,19 @@ export class AppController {
   }
 
   @Get('conversation')
-  async getConversationHistory(@Query('id') id: string): Promise<Conversation> {
-    return this.conversationService.getConversationById(Number(id));
+  async getConversationHistory(
+    @Query('id') id: string,
+    @Request() request: SecureRequest,
+  ): Promise<Conversation> {
+    const creatorId = request.authPayload.uid;
+    const conversation = await this.conversationService.getConversationById(
+      Number(id),
+    );
+    if (conversation && conversation.creatorId !== creatorId) {
+      throw new UnauthorizedException();
+    }
+
+    return conversation;
   }
 
   @Post('append-to-history')

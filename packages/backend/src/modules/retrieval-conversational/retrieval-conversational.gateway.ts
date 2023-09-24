@@ -16,7 +16,7 @@ import { filter } from 'rxjs';
 import { END_COMPLETION } from '../../constants';
 import { ConversationalService } from './conversational.service';
 import { WsAuthGuard } from '../../guards/ws-auth/ws-auth.guard';
-import { UseGuards } from '@nestjs/common';
+import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Public } from '../../decorator/public';
 
 dotenv.config({ path: './.env.local' });
@@ -55,6 +55,16 @@ export class RetrievalConversationalGateway {
     }
   }
 
+  private unauthorisedAccess(
+    conversation: Conversation,
+    creatorId: string,
+  ): boolean {
+    return (
+      conversation.creatorId !== creatorId ||
+      (!conversation.bot.public && conversation.bot.creatorId !== creatorId)
+    );
+  }
+
   @SubscribeMessage('getCompletion')
   async getCompletion(
     @MessageBody() request: DocConversationRequestDto,
@@ -81,6 +91,13 @@ export class RetrievalConversationalGateway {
         conversationId,
       );
     }
+
+    if (this.unauthorisedAccess(conversation, authPayload.uid)) {
+      client.emit('error', 'Unauthorised access');
+      client.disconnect();
+      throw new UnauthorizedException();
+    }
+
     const sendToken = async (tokenMessage: NewMessage) => {
       client.emit('data', getData('token', tokenMessage));
     };
