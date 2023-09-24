@@ -45,8 +45,13 @@ export class BotController {
   }
 
   @Get('get-bot')
-  async getBot(@Query('id') id: string) {
-    return await this.agentService.getBotById(Number(id));
+  async getBot(@Query('id') id: string, @Request() request: SecureRequest) {
+    const creatorId = request.authPayload.uid;
+    const bot = await this.agentService.getBotById(Number(id));
+    if (bot && !bot.public && bot.creatorId !== creatorId) {
+      throw new UnauthorizedException();
+    }
+    return bot;
   }
 
   @Get('get-bots')
