@@ -48,7 +48,7 @@ export class GithubOAuthService {
   async saveGithubUser(githubUser: UserResponse) {
     return this.accountService.registerAccount({
       userId: githubUser.id + '',
-      username: githubUser.name,
+      username: githubUser.name || githubUser.login || '',
       profilePicture: githubUser.avatar_url,
       OAuthProvider: OAuthProvider.GITHUB,
     });
