@@ -13,6 +13,9 @@ import { LoginModule } from './modules/authentication/login/login.module';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth/auth.guard';
+import * as dotenv from 'dotenv';
+
+dotenv.config({ path: './.env.local' });
 
 @Module({
   imports: [
@@ -22,7 +25,7 @@ import { AuthGuard } from './guards/auth/auth.guard';
     }),
     JwtModule.register({
       global: true,
-      secret: 'SECRET HERE!',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '30d' },
     }),
     LoginModule,
