@@ -1,5 +1,6 @@
 import axios from "axios";
 import {LOCAL_STORAGE} from "@/constants";
+import {toast} from "react-toastify";
 
 const apiInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_API,
@@ -13,6 +14,18 @@ apiInstance.interceptors.request.use((config) => {
   }
   return config;
 }, (error) => {
+  return Promise.reject(error);
+});
+
+// handle error of type 401 (unauthorized)
+apiInstance.interceptors.response.use((response) => {
+  return response;
+}, (error) => {
+  if (error.response.status === 401) {
+    toast("Sorry! You don't have permission to perform this action!", {
+      type: "error",
+    })
+  }
   return Promise.reject(error);
 });
 

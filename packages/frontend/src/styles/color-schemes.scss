@@ -62,6 +62,10 @@
   --warning-button-foreground: var(--inverse-foregraound);
   --disabled-button-background: rgb(199, 199, 199);
   --disabled-button-foreground: var(--inverse-foregraound);
+
+  // toast
+  --toastify-color-light: var(--primary-background);
+  --toastify-text-color-light: var(--primary-foreground);
 }
 
 @mixin dark-theme {
@@ -86,6 +90,10 @@
   --primary-border: rgb(126, 126, 126);
 
   --text-input-hint: var(--primary-border);
+
+  //// toast
+  //--toastify-color-dark: var(--primary-background);
+  //--toastify-text-color-dark: var(--primary-foreground);
 }
 
 :root {

@@ -1,3 +1,4 @@
+import 'react-toastify/dist/ReactToastify.css';
 import "@/styles/globals.scss";
 import type {AppProps} from "next/app";
 import {QueryClient, QueryClientProvider} from "react-query";
@@ -5,6 +6,7 @@ import { Outfit } from "next/font/google";
 import {getGuardedLayout} from "@/components/Layouts/DefaultLayout";
 import {ReactElement, ReactNode} from "react";
 import {NextPage} from "next";
+import {ToastContainer} from "react-toastify";
 
 const outfit = Outfit({ subsets: ['latin'] });
 
@@ -29,6 +31,7 @@ export default function App({Component, pageProps}: AppPropsWithLayout) {
         `}</style>
         {getLayout(<Component {...pageProps} />)}
         <div id="select-overlay" />
+        <ToastContainer />
       </>
     </QueryClientProvider>
   );

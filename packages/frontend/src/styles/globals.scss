@@ -46,3 +46,8 @@ a {
   border-radius: 2rem;
   @include background-pattern-1(var(--secondary-background), var(--primary-background));
 }
+
+.Toastify__close-button.Toastify__close-button--light {
+  color: var(--primary-foreground);
+  opacity: 1;
+}
