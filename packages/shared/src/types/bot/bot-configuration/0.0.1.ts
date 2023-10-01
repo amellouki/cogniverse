@@ -61,6 +61,7 @@ export interface RcBot extends Bot {
   configVersion: typeof BOT_CONFIG_VERSION_V0_0_1,
   configuration: Prisma.JsonObject & RcBotConfiguration
   boundDocument: DocumentMetadata | null
+  boundDocumentId: number | null
 }
 
 export interface ConversationalBot extends Bot {
@@ -68,5 +69,6 @@ export interface ConversationalBot extends Bot {
   configVersion: typeof BOT_CONFIG_VERSION_V0_0_1,
   configuration: Prisma.JsonObject & ConversationalBotConfiguration
   boundDocument: null
+  boundDocumentId: null
 }
 

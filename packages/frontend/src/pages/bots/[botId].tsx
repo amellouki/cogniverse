@@ -22,7 +22,7 @@ const BotDetails: NextPageWithLayout = () => {
   const {data} = useBotDetails(botId)
   const [updating, setUpdating] = useState(false)
 
-  const updateBot = useUpdateBot(() => {
+  const updateBot = useUpdateBot(botId,() => {
     console.log('Updated successfully!')
   })
   const deleteBot = useDeleteBot(() => {

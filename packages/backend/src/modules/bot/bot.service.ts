@@ -24,8 +24,7 @@ export class BotService {
     return this.botRepository.createBot(botData);
   }
 
-  updateBot(bot: Bot) {
-    const botId = bot.id;
+  updateBot(botId: number, bot: Bot) {
     const copy = { ...bot };
     delete copy.id;
     delete copy.boundDocumentId;
@@ -35,7 +34,7 @@ export class BotService {
         ? { connect: { id: bot.boundDocumentId } }
         : undefined,
     };
-    return this.botRepository.updateBot(botData, botId);
+    return this.botRepository.updateBot(botId, botData);
   }
 
   deleteBot(botId: number) {

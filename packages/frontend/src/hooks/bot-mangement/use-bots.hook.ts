@@ -4,6 +4,6 @@ import apiInstance from "@/helpers/api";
 
 export function useBots() {
   return useQuery<Bot[]>('bots', () => {
-    return apiInstance.get('/bot/get-bots').then((res) => res.data)
+    return apiInstance.get('/bots').then((res) => res.data)
   });
 }

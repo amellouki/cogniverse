@@ -10,7 +10,7 @@ export class BotService {
     return this.prisma.bot.create({ data });
   }
 
-  updateBot(bot: Prisma.BotUpdateInput, botId: number) {
+  updateBot(botId: number, bot: Prisma.BotUpdateInput) {
     return this.prisma.bot.update({
       data: bot,
       where: {

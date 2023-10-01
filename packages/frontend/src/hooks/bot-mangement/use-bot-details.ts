@@ -4,11 +4,7 @@ import apiInstance from "@/helpers/api";
 
 export function useBotDetails(id?: Bot['id']) {
   return useQuery<Bot>('bot', () => {
-    return apiInstance.get('/bot/get-bot', {
-      params: {
-        id,
-      }
-    }).then((res) => res.data)
+    return apiInstance.get(`/bots/${id}`).then((res) => res.data)
   }, {
     enabled: !!id,
   });
