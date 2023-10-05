@@ -16,7 +16,7 @@ import { ChatHistoryBuilderService } from '../../services/chat-history-builder/c
 import { LLMResult } from 'langchain/schema';
 
 const DISCORD_MESSAGE_REQUEST_REGEX =
-  /<@([a-zA-Z0-9]{1,20})> -bot ([a-zA-Z0-9]{1,20}) (.*)/;
+  /<@([a-zA-Z0-9]{1,20})> -bot ([a-zA-Z0-9-_]{1,20}) (.*)/;
 
 @Injectable()
 export class DiscordService implements OnModuleInit {

@@ -86,6 +86,7 @@ const SelectBot: FunctionComponent<Props> = ({ botSelectionRef }) => {
           />
         )}
         name={'botId'}
+        defaultValue={1}
         control={control}
       />
       {selectedBot?.type === BotType.RETRIEVAL_CONVERSATIONAL &&
