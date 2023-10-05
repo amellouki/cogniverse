@@ -11,7 +11,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
     origin: process.env.ALLOWED_DOMAINS?.split(','), // Allow these origins
-    methods: ['GET', 'HEAD', 'PUT', 'POST', 'DELETE'], // Allow these HTTP methods
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'], // Allow these HTTP methods
     allowedHeaders: ['Content-Type', 'Accept', 'Authorization'], // Allow these headers
     credentials: true, // Allow cookies and credentials to be sent with requests
   });

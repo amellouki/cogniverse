@@ -6,7 +6,7 @@ import {BOTS_OPTIONS} from "@/constants";
 import Conversational from "../BotForms/Conversational";
 import styles from './styles.module.scss';
 import useCreateBot from "@/hooks/bot-mangement/use-create-bot.hook";
-import {NewBot} from "@my-monorepo/shared";
+import {BotType, NewBot} from "@my-monorepo/shared";
 import {MutableResetRef, ResetFunction} from "@/types/MutableResetRef";
 
 const CreateBot: FunctionComponent = () => {
@@ -16,13 +16,11 @@ const CreateBot: FunctionComponent = () => {
   ] = React.useState<SelectOption | undefined | null>(null);
   const resetRef = useRef<ResetFunction>();
 
-  const mutation = useCreateBot(() => {
+  const botCreation = useCreateBot(() => {
     resetRef.current?.();
   })
 
-  const onSubmit = (data: NewBot) => {
-    mutation.mutate(data);
-  }
+  const onSubmit = botCreation.mutate
 
   return (
     <div className={styles.CreateBot}>
@@ -42,9 +40,9 @@ const CreateBot: FunctionComponent = () => {
 
 function renderForm(formType: string, ref: MutableResetRef, onSubmit: (data: NewBot) => void) {
   switch (formType) {
-    case 'rc':
+    case BotType.RETRIEVAL_CONVERSATIONAL:
       return <RetrievalConversational resetRef={ref} onSubmit={onSubmit} />
-    case 'conversational':
+    case BotType.CONVERSATIONAL:
       return <Conversational resetRef={ref} onSubmit={onSubmit} />
     default:
       return <div>Unknown</div>

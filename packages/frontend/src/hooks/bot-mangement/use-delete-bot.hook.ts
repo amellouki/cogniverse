@@ -1,6 +1,6 @@
 import {useMutation, useQueryClient} from "react-query";
 import apiInstance from "@/helpers/api";
-import {Bot, UpdatedBot} from "@my-monorepo/shared";
+import {Bot} from "@my-monorepo/shared";
 
 export default function useDeleteBot(onSuccess?: () => void) {
   const queryClient = useQueryClient()

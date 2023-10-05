@@ -5,6 +5,8 @@ import { Public } from '../../../decorator/public';
 import { LoginService } from '../services/login.service';
 import { DiscordOAuthService } from '../services/discord-o-auth.service';
 import { DiscordOAuthDto } from '../../../dto/discord-o-auth.dto';
+import { ZodValidationPipe } from '../../../pipes/zod-validation/zod-validation.pipe';
+import { discordLoginSchema, githubLoginSchema } from './validation.schema';
 
 @Controller('login')
 export class LoginController {
@@ -16,13 +18,17 @@ export class LoginController {
 
   @Public()
   @Post('github')
-  githubLogin(@Body() oAuth: GithubOAuthDto) {
+  githubLogin(
+    @Body(new ZodValidationPipe(githubLoginSchema)) oAuth: GithubOAuthDto,
+  ) {
     return this.githubOauthService.loginWithGithub(oAuth.code);
   }
 
   @Public()
   @Post('discord')
-  discordLogin(@Body() oAuth: DiscordOAuthDto) {
+  discordLogin(
+    @Body(new ZodValidationPipe(discordLoginSchema)) oAuth: DiscordOAuthDto,
+  ) {
     return this.discordOauthService.loginWithDiscord(oAuth.code);
   }
 
