@@ -23,7 +23,7 @@ apiInstance.interceptors.response.use((response) => {
 }, (error) => {
   if (!error?.response) {
     if (error) {
-      toast('An Error happened', {
+      toast('An Error occurred', {
         type: "error",
       });
       return Promise.reject(error);
@@ -44,6 +44,14 @@ apiInstance.interceptors.response.use((response) => {
       toast("Sorry! You don't have permission to perform this action!", {
         type: "error",
       }); break;
+    case HttpStatus.NOT_FOUND:
+      toast("Resource not found!", {
+        type: "error",
+      }); break;
+    default:
+      toast("An error occurred!", {
+        type: "error",
+      });
   }
   return Promise.reject(error);
 });
