@@ -9,6 +9,7 @@
   transition: box-shadow 0.2s ease-in;
 }
 
+.button.primary,
 .primary {
   background-color: var(--primary-button-background);
   color: var(--primary-button-foreground);

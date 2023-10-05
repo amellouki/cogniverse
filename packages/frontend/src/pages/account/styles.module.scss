@@ -1,0 +1,14 @@
+.Account {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  img {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+  }
+}

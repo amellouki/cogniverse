@@ -1,10 +1,11 @@
 import SelectOption from "@/types/SelectOption";
+import {BotType} from "@my-monorepo/shared";
 
 export const END_COMPLETION = '[DONE]';
 
 export const BOTS_OPTIONS: SelectOption[] = [
-  { value: 'conversational', label: 'Conversational Bot' },
-  { value: 'rc', label: 'PDF Retrieval Conversational' },
+  { value: BotType.CONVERSATIONAL, label: 'Conversational Bot' },
+  { value: BotType.RETRIEVAL_CONVERSATIONAL, label: 'PDF Retrieval Conversational' },
 ]
 
 export const COLOR_OPTIONS = [

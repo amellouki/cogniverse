@@ -7,6 +7,8 @@ import {
   UploadedFile,
   UseInterceptors,
   Request,
+  ParseFilePipeBuilder,
+  HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PineconeStore } from 'langchain/vectorstores';
@@ -20,6 +22,8 @@ import { PdfSplitterService } from '../../services/pdf-splitter/pdf-splitter.ser
 import { PdfEmbeddingService } from './pdf-embedding.service';
 import { DocumentNamespaceService } from '../../services/document-namespace/document-namespace.service';
 import { SecureRequest } from '../../types/secure-request';
+import { ZodValidationPipe } from '../../pipes/zod-validation/zod-validation.pipe';
+import { embeddingSettingsValidation } from './validation.schema';
 
 @Controller('pdf-embedding')
 export class PdfEmbeddingController {
@@ -36,8 +40,20 @@ export class PdfEmbeddingController {
   @Post('embed')
   @UseInterceptors(FileInterceptor('file'))
   async uploadPdf(
-    @UploadedFile() file: UploadedFileType,
-    @Body() splitParams: PdfUploadDto,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addMaxSizeValidator({
+          maxSize: 1000 * 1000,
+          message: 'Max allowed size exceeded',
+        })
+        .addFileTypeValidator({ fileType: 'application/pdf' })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    file: UploadedFileType,
+    @Body(new ZodValidationPipe(embeddingSettingsValidation))
+    splitParams: PdfUploadDto,
     @Request() request: SecureRequest,
   ) {
     const { uid: ownerId } = request.authPayload;

@@ -22,8 +22,9 @@ const BotDetails: NextPageWithLayout = () => {
   const {data} = useBotDetails(botId)
   const [updating, setUpdating] = useState(false)
 
-  const updateBot = useUpdateBot(() => {
+  const updateBot = useUpdateBot(botId,() => {
     console.log('Updated successfully!')
+    setUpdating(false)
   })
   const deleteBot = useDeleteBot(() => {
     console.log('Deleted successfully!')
@@ -42,13 +43,10 @@ const BotDetails: NextPageWithLayout = () => {
           renderForm(
             data,
             (updatedValues) => {
-            updateBot.mutate({
-              id: data.id,
-              creatorId: data.creatorId,
-              ...updatedValues
-            })
-            console.log(data)
-            setUpdating(false)
+              updateBot.mutate({
+                id: data.id,
+                ...updatedValues
+              })
             },
             () => setUpdating(false)
           )

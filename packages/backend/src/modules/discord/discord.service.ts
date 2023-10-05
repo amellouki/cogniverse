@@ -16,7 +16,7 @@ import { ChatHistoryBuilderService } from '../../services/chat-history-builder/c
 import { LLMResult } from 'langchain/schema';
 
 const DISCORD_MESSAGE_REQUEST_REGEX =
-  /<@([a-zA-Z0-9]{1,20})> -bot ([a-zA-Z0-9]{1,20}) (.*)/;
+  /<@([a-zA-Z0-9]{1,20})> -bot ([a-zA-Z0-9-_]{1,20}) (.*)/;
 
 @Injectable()
 export class DiscordService implements OnModuleInit {
@@ -66,7 +66,7 @@ export class DiscordService implements OnModuleInit {
     if (!bot) {
       this.logger.error(`Bot ${parsedMessage.bot} does not exist`);
       message.channel.send(
-        `Bot ${parsedMessage.bot} is not available, please check the bot name and try again!`,
+        `Bot ${parsedMessage.bot} is not available, please check the bot name and try again! 1`,
       );
       return;
     }
@@ -74,7 +74,7 @@ export class DiscordService implements OnModuleInit {
     if (!discordIntegration) {
       this.logger.error(`Bot ${parsedMessage.bot} is not integrated`);
       message.channel.send(
-        `Bot ${parsedMessage.bot} is not available, please check the bot name and try again!`,
+        `Bot ${parsedMessage.bot} is not available, please check the bot name and try again! 2`,
       );
       return;
     }
@@ -86,7 +86,7 @@ export class DiscordService implements OnModuleInit {
         `Bot ${parsedMessage.bot} is not available for this channel`,
       );
       message.channel.send(
-        `Bot ${parsedMessage.bot} is not available, please check the bot name and try again!`,
+        `Bot ${parsedMessage.bot} is not available, please check the bot name and try again! 3`,
       );
       return;
     }

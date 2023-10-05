@@ -9,3 +9,4 @@ export { UploadedFileType } from './types/uploaded-file';
 
 export * from './constants';
 export * from './types/discord';
+export * from './types/account';
