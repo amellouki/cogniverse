@@ -1,0 +1,48 @@
+.DocsGrid {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.addDoc {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  span {
+    display: inline-block;
+    font-size: 1.25rem;
+  }
+}
+
+.GridItem {
+  background-color: var(--primary-background);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  width: 350px;
+  border: 1px solid var(--primary-border);
+
+  > section {
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+.description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.GridItem:hover {
+  background-color: var(--secondary-background);
+}
+
+.information {
+  overflow: hidden;
+  > span {
+    display: block;
+    text-align: start;
+  }
+}

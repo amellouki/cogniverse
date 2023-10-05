@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
 import { GithubOAuthDto } from '../../../dto/github-o-auth.dto';
 import { GithubOAuthService } from '../services/github-o-auth.service';
 import { Public } from '../../../decorator/public';
@@ -7,12 +7,15 @@ import { DiscordOAuthService } from '../services/discord-o-auth.service';
 import { DiscordOAuthDto } from '../../../dto/discord-o-auth.dto';
 import { ZodValidationPipe } from '../../../pipes/zod-validation/zod-validation.pipe';
 import { discordLoginSchema, githubLoginSchema } from './validation.schema';
+import { SecureRequest } from '../../../types/secure-request';
+import { AccountService } from '../../../repositories/account/account.service';
 
 @Controller('login')
 export class LoginController {
   constructor(
     private readonly githubOauthService: GithubOAuthService,
     private readonly discordOauthService: DiscordOAuthService,
+    private readonly accountRepository: AccountService,
     private readonly loginService: LoginService,
   ) {}
 
@@ -36,5 +39,11 @@ export class LoginController {
   @Get('validate')
   validate(@Query('access_token') access_token: string) {
     return this.loginService.validate(access_token);
+  }
+
+  @Get('account-info')
+  getAccountInfo(@Request() request: SecureRequest) {
+    const { uid } = request.authPayload;
+    return this.accountRepository.getAccountById(uid);
   }
 }
