@@ -5,12 +5,13 @@ import {
   loadQAChain,
   QAChainParams,
 } from 'langchain/chains';
-import { BaseRetriever, ChainValues } from 'langchain/schema';
+import { ChainValues } from 'langchain/schema';
+import { BaseRetriever } from 'langchain/schema/retriever';
 import { CallbackManagerForChainRun } from 'langchain/callbacks';
-import { Document } from 'langchain/docstore';
+import { Document } from 'langchain/document';
 import { BaseLanguageModel } from 'langchain/base_language';
-import { PromptTemplate } from 'langchain';
 import { ChatMessage } from '../chat-message';
+import { PromptTemplate } from 'langchain/prompts';
 
 const initialization =
   'You are a query ai. Your output will be used to query a vector database that about a certain book so we can retrieve the correct segment to answer the human question.';

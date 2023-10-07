@@ -1,12 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PineconeStore } from 'langchain/vectorstores';
-import { OpenAIEmbeddings } from 'langchain/embeddings';
+
 import { ENV, QUERY_EMBEDDING_MODEL } from '../../constants';
-import { OpenAI } from 'langchain/llms';
+
 import { CallbackManager } from 'langchain/callbacks';
 import { VectorDBQAChain } from 'langchain/chains';
 import { ConfigService } from '@nestjs/config';
 import { PineconeService } from '../../services/pinecone/pinecone.service';
+import { PineconeStore } from 'langchain/vectorstores/pinecone';
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { OpenAI } from 'langchain/llms/openai';
 
 @Injectable()
 export class DocQuestionAnsweringService {
