@@ -103,7 +103,7 @@ export class RetrievalConversationalChainService {
 
     const document = bot.boundDocument;
     if (!document) {
-      throw new Error('Bot has no bound document');
+      throw new Error('Retrieval bot has no bound document');
     }
     const vectorStore = await this.vectorStoreService.createVectorStore({
       type: 'Pinecone',
