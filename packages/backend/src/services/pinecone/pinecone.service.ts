@@ -1,20 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PineconeClient } from '@pinecone-database/pinecone';
 import { ENV } from '../../constants';
-import { VectorOperationsApi } from '@pinecone-database/pinecone/dist/pinecone-generated-ts-fetch';
+import { Pinecone, Index as PineconeIndex } from '@pinecone-database/pinecone';
 
 @Injectable()
 export class PineconeService {
-  private client: PineconeClient = null;
-  private index: VectorOperationsApi = null;
+  private client: Pinecone = null;
+  private index: PineconeIndex = null;
 
   constructor(private configService: ConfigService) {}
 
-  async getClient() {
+  getClient() {
     if (this.client === null) {
-      const client = new PineconeClient();
-      await client.init({
+      const client = new Pinecone({
         apiKey: this.configService.get<string>(ENV.PINECONE_API_KEY),
         environment: this.configService.get<string>(ENV.PINECONE_ENVIRONMENT),
       });
@@ -25,7 +23,7 @@ export class PineconeService {
 
   async getIndex() {
     if (this.index === null) {
-      const client = await this.getClient();
+      const client = this.getClient();
       this.index = client.Index(
         this.configService.get<string>(ENV.PINECONE_INDEX),
       );

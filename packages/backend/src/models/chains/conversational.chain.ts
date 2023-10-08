@@ -1,8 +1,8 @@
 import { LLMChain, LLMChainInput } from 'langchain/chains';
 import { ChainValues } from 'langchain/schema';
 import { CallbackManagerForChainRun } from 'langchain/callbacks';
-import { PromptTemplate } from 'langchain';
 import { ChatMessage } from '../chat-message';
+import { PromptTemplate } from 'langchain/prompts';
 
 const DEFAULT_PROMPT = `The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.`;
 const INSTRUCTIONS = `use the chat history and answer the following question.

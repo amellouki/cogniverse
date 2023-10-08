@@ -47,7 +47,10 @@ export class DiscordService implements OnModuleInit {
     });
 
     this.client.on('messageCreate', (message: Message) =>
-      this.onMessageCreate(message),
+      this.onMessageCreate(message).catch((error) => {
+        this.logger.error(error);
+        message.channel.send('Something went wrong! ' + error.message);
+      }),
     );
 
     this.client.login(this.configService.get('DISCORD_BOT_TOKEN'));

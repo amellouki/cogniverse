@@ -1,13 +1,12 @@
-import { BaseChatMessage, MessageType } from 'langchain/schema';
+import { BaseMessage, MessageType } from 'langchain/schema';
 
-export class ChatMessage extends BaseChatMessage {
+export class ChatMessage extends BaseMessage {
   private constructor(
     text: string,
     name: string | undefined,
     readonly type: MessageType,
   ) {
     super(text);
-    this.text = text;
     this.name = name;
   }
   _getType(): MessageType {

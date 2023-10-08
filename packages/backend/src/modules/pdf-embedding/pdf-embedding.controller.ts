@@ -11,8 +11,6 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { PineconeStore } from 'langchain/vectorstores';
-import { OpenAIEmbeddings } from 'langchain/embeddings';
 import { ConfigService } from '@nestjs/config';
 import { DOC_EMBEDDING_MODEL, ENV } from '../../constants';
 import { PineconeService } from '../../services/pinecone/pinecone.service';
@@ -24,6 +22,8 @@ import { DocumentNamespaceService } from '../../services/document-namespace/docu
 import { SecureRequest } from '../../types/secure-request';
 import { ZodValidationPipe } from '../../pipes/zod-validation/zod-validation.pipe';
 import { embeddingSettingsValidation } from './validation.schema';
+import { PineconeStore } from 'langchain/vectorstores/pinecone';
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 
 @Controller('pdf-embedding')
 export class PdfEmbeddingController {

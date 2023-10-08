@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { PineconeStore, VectorStore } from 'langchain/vectorstores';
 import {
   EmbeddingsConfig,
   EmbeddingsService,
@@ -7,6 +6,8 @@ import {
 import { DocumentNamespaceService } from '../document-namespace/document-namespace.service';
 import { PineconeService } from '../pinecone/pinecone.service';
 import { DocumentMetadata } from '@my-monorepo/shared';
+import { VectorStore } from 'langchain/vectorstores/base';
+import { PineconeStore } from 'langchain/vectorstores/pinecone';
 
 export type VectorStoreConfig = {
   embeddingsConfig: EmbeddingsConfig;

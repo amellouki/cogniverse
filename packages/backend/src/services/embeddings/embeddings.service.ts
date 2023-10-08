@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Embeddings, OpenAIEmbeddings } from 'langchain/embeddings';
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { Embeddings } from 'langchain/embeddings/base';
 
 export type EmbeddingsConfig = {
   type: 'text-search-babbage-query-001' | 'text-search-babbage-doc-001';
