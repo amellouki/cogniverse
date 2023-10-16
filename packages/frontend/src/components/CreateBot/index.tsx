@@ -1,19 +1,18 @@
 import React, {FunctionComponent, useRef} from 'react';
-import WrappedSelect from "@/components/BaseFormFields/Select/WrappedSelect";
-import SelectOption from "@/types/SelectOption";
 import RetrievalConversational from "../BotForms/RetrievalConversational";
-import {BOTS_OPTIONS} from "@/constants";
-import Conversational from "../BotForms/Conversational";
-import styles from './styles.module.scss';
 import useCreateBot from "@/hooks/bot-mangement/use-create-bot.hook";
 import {BotType, NewBot} from "@my-monorepo/shared";
 import {MutableResetRef, ResetFunction} from "@/types/MutableResetRef";
+import ConversationalSteps from "@/components/BotForms/ConversationalSteps";
+import styles from './styles.module.scss';
 
-const CreateBot: FunctionComponent = () => {
-  const [
-    selectedOption,
-    setSelectedOption
-  ] = React.useState<SelectOption | undefined | null>(null);
+type Props = {
+  botType: BotType
+}
+
+const CreateBot: FunctionComponent<Props> = ({
+  botType
+}) => {
   const resetRef = useRef<ResetFunction>();
 
   const botCreation = useCreateBot(() => {
@@ -24,16 +23,7 @@ const CreateBot: FunctionComponent = () => {
 
   return (
     <div className={styles.CreateBot}>
-      <h2 className={styles.formTitle}>Create a new bot</h2>
-      <WrappedSelect
-        options={BOTS_OPTIONS}
-        label={'Select Bot Type'}
-        placeholder={'Select...'}
-        selected={selectedOption}
-        onChange={setSelectedOption}
-        id={'agent-type'}
-      />
-      {selectedOption && renderForm(selectedOption.value, resetRef, onSubmit)}
+      {renderForm(botType, resetRef, onSubmit)}
     </div>
   );
 }
@@ -43,7 +33,7 @@ function renderForm(formType: string, ref: MutableResetRef, onSubmit: (data: New
     case BotType.RETRIEVAL_CONVERSATIONAL:
       return <RetrievalConversational resetRef={ref} onSubmit={onSubmit} />
     case BotType.CONVERSATIONAL:
-      return <Conversational resetRef={ref} onSubmit={onSubmit} />
+      return <ConversationalSteps onSubmit={onSubmit} />
     default:
       return <div>Unknown</div>
   }

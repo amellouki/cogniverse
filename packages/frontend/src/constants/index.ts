@@ -8,6 +8,11 @@ export const BOTS_OPTIONS: SelectOption[] = [
   { value: BotType.RETRIEVAL_CONVERSATIONAL, label: 'PDF Retrieval Conversational' },
 ]
 
+export const LLM_OPTIONS: SelectOption[] = [
+  { value: 'gpt3.5', label: 'GPT3.5' },
+  { value: 'gpt4', label: 'GPT4' },
+];
+
 export const COLOR_OPTIONS = [
   {label: 'Weldon Blue', value: '#749da1'},
   {label: 'Sage', value: '#b4be89'},

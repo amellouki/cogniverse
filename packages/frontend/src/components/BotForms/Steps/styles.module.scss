@@ -1,0 +1,45 @@
+.Steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: var(--primary-background);
+  max-width: 30rem;
+}
+
+.insight {
+  margin-bottom: 1rem;
+}
+
+.step {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.right {
+  h3 {
+    font-size: 1.15rem;
+    font-weight: bold;
+  }
+}
+
+.stepNumber {
+  width: 1.75rem;
+  height: 1.75rem;
+  text-align: center;
+  line-height: 1.75rem;
+  border-radius: 50%;
+  border: 1px solid var(--primary-foreground);
+}
+
+.current .stepNumber {
+  background-color: var(--color-2);
+  color: var(--inverse-foregraound);
+  border: none;
+}
+
+.current h3 {
+  color: var(--color-2);
+}
+
