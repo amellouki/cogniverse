@@ -6,25 +6,27 @@ import {InputType as BotInfoType} from "@/components/BotForms/BotInfo/form.schem
 import {InputType as ConfigType} from "@/components/BotForms/ConversationalConfig/form.schema";
 import {InputType as IntegrationType} from "@/components/BotForms/Integration/form.schema";
 import schema from "./form.schema";
-import {getNewBot} from "@/components/BotForms/ConversationalSteps/helpers";
+import {getNewBot} from "@/components/BotForms/form-wizards/ConversationalSteps/helpers";
 import {NewBot} from "@my-monorepo/shared";
 import {useRouter} from "next/router";
 import Steps from "@/components/BotForms/Steps";
 import Portal from "@/components/Portal";
-import {STEPS, INSIGHT} from "@/components/BotForms/ConversationalSteps/constants";
+import {STEPS, INSIGHT} from "@/components/BotForms/form-wizards/ConversationalSteps/constants";
 import styles from "./styles.module.scss";
+import {InputType} from "@/components/BotForms/form-wizards/ConversationalSteps/form.schema";
 
 type Props = {
   onSubmit: (data: NewBot) => void
+  input?: InputType
 }
 
 const ConversationalSteps: FunctionComponent<Props> = (props) => {
   const router = useRouter();
 
   const [step, setStep] = React.useState(0);
-  const [botInfo, setBotInfo] = React.useState<BotInfoType>();
-  const [botConfig, setBotConfig] = React.useState<ConfigType>();
-  const [integration, setIntegration] = React.useState<IntegrationType>();
+  const [botInfo, setBotInfo] = React.useState<BotInfoType | undefined>(props.input?.botInfo);
+  const [botConfig, setBotConfig] = React.useState<ConfigType | undefined>(props.input?.botConfig);
+  const [integration, setIntegration] = React.useState<IntegrationType | undefined>(props.input?.integration);
 
 
   const form = () => {

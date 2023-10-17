@@ -8,11 +8,13 @@ const schema = z.object({
   // RLM: Retrieval Language Model
   isRLMCustomPrompt: z.boolean(),
   rlmPrompt: z.string().optional(),
+  rLlm: z.string().nonempty(),
+  rApiKey: z.string().nonempty(),
   // CLM: Conversational Language Model
   isCLMCustomPrompt: z.boolean(),
   clmPrompt: z.string().optional(),
-  isBoundToDocument: z.boolean().default(false),
-  boundDocumentId: z.number().optional(),
+  cLlm: z.string().nonempty(),
+  cApiKey: z.string().nonempty(),
 }).refine((data) => {
   return !(data.isRLMCustomPrompt && !data.rlmPrompt);
 }, {
@@ -39,12 +41,6 @@ const schema = z.object({
 }, {
   message: "Conversational Language Model prompt is missing required placeholders",
   path: ["clmPrompt"],
-}).refine(({isBoundToDocument, boundDocumentId}) => {
-  if (!isBoundToDocument) return true;
-  return !!boundDocumentId;
-}, {
-  message: "Document is required",
-  path: ["boundDocumentId"],
 });
 
 export type InputType = z.infer<typeof schema>

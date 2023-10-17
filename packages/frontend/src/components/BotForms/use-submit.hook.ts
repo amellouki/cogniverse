@@ -8,7 +8,6 @@ export default function useSubmit<T extends FieldValues>(props: {
   return (data: T, event) => {
     props.onSubmit(data)
     const target = (event?.nativeEvent as SubmitEvent)?.submitter;
-    console.log(event)
     if (target?.id === 'next') {
       props.next();
     } else if (target?.id === 'back') {

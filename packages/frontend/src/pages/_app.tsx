@@ -4,7 +4,7 @@ import type {AppProps} from "next/app";
 import {QueryClient, QueryClientProvider} from "react-query";
 import { Outfit } from "next/font/google";
 import {getGuardedLayout} from "@/components/Layouts/DefaultLayout";
-import {ReactElement, ReactNode} from "react";
+import {ReactElement, ReactNode, useState} from "react";
 import {NextPage} from "next";
 import {ToastContainer} from "react-toastify";
 

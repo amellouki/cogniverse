@@ -1,13 +1,11 @@
-import React, {FunctionComponent, useState} from 'react';
+import React, {useState} from 'react';
 import {useRouter} from "next/router";
 import {useBotDetails} from "@/hooks/bot-mangement/use-bot-details";
 import {Bot, BotAvatarType, BotType, ConversationalBot, NewBot, RcBot} from "@my-monorepo/shared";
-import RetrievalConversational from "@/components/BotForms/RetrievalConversational";
-import Conversational from "@/components/BotForms/Conversational";
-import {InputType as ConversationalInputType} from "@/components/BotForms/Conversational/form.schema";
-import {InputType as RCInputType} from "@/components/BotForms/RetrievalConversational/form.schema";
+import {InputType as ConversationalInputType} from "@/components/BotForms/form-wizards/ConversationalSteps/form.schema";
+import {InputType as RCInputType} from "@/components/BotForms/form-wizards/RCSteps/form.schema";
 import {NextPageWithLayout} from "@/pages/_app";
-import BotsPage from "@/pages/bots/index";
+import {getLayout} from "@/components/Layouts/DefaultLayout/CreateBotNestedLayout";
 import useUpdateBot from "@/hooks/bot-mangement/use-update-bot.hook";
 import useDeleteBot from "@/hooks/bot-mangement/use-delete-bot.hook";
 import Button from "@/components/Button";
@@ -15,6 +13,8 @@ import {TrashIcon} from "@heroicons/react/24/outline";
 import {Planet} from "react-kawaii";
 import DetailsItem from "@/components/DetailsItem";
 import styles from './styles.module.scss'
+import ConversationalSteps from "@/components/BotForms/form-wizards/ConversationalSteps";
+import RCSteps from "@/components/BotForms/form-wizards/RCSteps";
 
 const BotDetails: NextPageWithLayout = () => {
   const router = useRouter()
@@ -47,8 +47,7 @@ const BotDetails: NextPageWithLayout = () => {
                 id: data.id,
                 ...updatedValues
               })
-            },
-            () => setUpdating(false)
+            }
           )
         }
       </div>
@@ -126,45 +125,63 @@ function getAllowedDiscordChannelId(data: Bot): string[] | undefined {
 
 function getRCFromValue(data: RcBot): RCInputType {
   return {
-    name: data.name,
-    description: data.description ?? undefined,
-    isRLMCustomPrompt: !!data.configuration.retrievalLm?.prompt,
-    rlmPrompt: data.configuration.retrievalLm?.prompt,
-    isCLMCustomPrompt: !!data.configuration.conversationalLm?.prompt,
-    clmPrompt: data.configuration.conversationalLm?.prompt,
-    color: getBotAvatarColor(data),
-    isBoundToDocument: !!data.boundDocument,
-    boundDocumentId: data.boundDocumentId ?? undefined,
-    isPublic: data.public,
-    integrateWithDiscord: !!data.configuration?.thirdPartyIntegration?.discord,
-    discordChannelIds: getAllowedDiscordChannelId(data),
+    botInfo: {
+      color: getBotAvatarColor(data),
+      name: data.name,
+      description: data.description ?? undefined,
+      isPublic: data.public,
+      isBoundToDocument: !!data.boundDocument,
+      boundDocumentId: data.boundDocumentId ?? undefined,
+    },
+    botConfig: {
+      isRLMCustomPrompt: !!data.configuration.retrievalLm?.prompt,
+      rlmPrompt: data.configuration.retrievalLm?.prompt,
+      rLlm: data.configuration.retrievalLm?.modelName!,
+      rApiKey: data.configuration.retrievalLm?.apiKey!,
+      isCLMCustomPrompt: !!data.configuration.conversationalLm?.prompt,
+      clmPrompt: data.configuration.conversationalLm?.prompt,
+      cLlm: data.configuration.conversationalLm?.modelName!,
+      cApiKey: data.configuration.conversationalLm?.apiKey!,
+    },
+    integration: {
+      integrateWithDiscord: !!data.configuration?.thirdPartyIntegration?.discord,
+      discordChannelIds: getAllowedDiscordChannelId(data),
+    }
   }
 }
 
 function getConversationalFormValue(data: ConversationalBot): ConversationalInputType {
   return {
-    name: data.name,
-    description: data.description ?? undefined,
-    isCustomPrompt: !!data.configuration.lm?.prompt,
-    prompt: data.configuration.lm?.prompt,
-    color: getBotAvatarColor(data),
-    isPublic: data.public,
-    integrateWithDiscord: !!data.configuration?.thirdPartyIntegration?.discord,
-    discordChannelIds: getAllowedDiscordChannelId(data),
+    botInfo: {
+      color: getBotAvatarColor(data),
+      name: data.name,
+      description: data.description ?? undefined,
+      isPublic: data.public,
+    },
+    botConfig: {
+      isCustomPrompt: !!data.configuration.lm?.prompt,
+      prompt: data.configuration.lm?.prompt,
+      apiKey: data.configuration.lm?.apiKey!,
+      llm: data.configuration.lm?.modelName!,
+    },
+    integration: {
+      integrateWithDiscord: !!data.configuration?.thirdPartyIntegration?.discord,
+      discordChannelIds: getAllowedDiscordChannelId(data),
+    }
   }
 }
 
-function renderForm(data: Bot, onSubmit: (data: NewBot) => void, onCancel: () => void) {
+function renderForm(data: Bot, onSubmit: (data: NewBot) => void) {
   switch (data.type) {
     case BotType.RETRIEVAL_CONVERSATIONAL:
-      return <RetrievalConversational initValue={getRCFromValue(data)} onSubmit={onSubmit} onCancel={onCancel} />
+      return <RCSteps input={getRCFromValue(data)} onSubmit={onSubmit} />
     case BotType.CONVERSATIONAL:
-      return <Conversational initValue={getConversationalFormValue(data)} onSubmit={onSubmit} onCancel={onCancel} />
+      return <ConversationalSteps input={getConversationalFormValue(data)} onSubmit={onSubmit} />
     default:
       return <div>Unknown</div>
   }
 }
 
-BotDetails.getLayout = BotsPage.getLayout;
+BotDetails.getLayout = getLayout
 
 export default BotDetails;

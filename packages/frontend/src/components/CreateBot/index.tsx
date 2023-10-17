@@ -1,10 +1,10 @@
 import React, {FunctionComponent, useRef} from 'react';
-import RetrievalConversational from "../BotForms/RetrievalConversational";
 import useCreateBot from "@/hooks/bot-mangement/use-create-bot.hook";
 import {BotType, NewBot} from "@my-monorepo/shared";
 import {MutableResetRef, ResetFunction} from "@/types/MutableResetRef";
-import ConversationalSteps from "@/components/BotForms/ConversationalSteps";
+import ConversationalSteps from "../BotForms/form-wizards/ConversationalSteps";
 import styles from './styles.module.scss';
+import RCSteps from "@/components/BotForms/form-wizards/RCSteps";
 
 type Props = {
   botType: BotType
@@ -31,7 +31,7 @@ const CreateBot: FunctionComponent<Props> = ({
 function renderForm(formType: string, ref: MutableResetRef, onSubmit: (data: NewBot) => void) {
   switch (formType) {
     case BotType.RETRIEVAL_CONVERSATIONAL:
-      return <RetrievalConversational resetRef={ref} onSubmit={onSubmit} />
+      return <RCSteps onSubmit={onSubmit} />
     case BotType.CONVERSATIONAL:
       return <ConversationalSteps onSubmit={onSubmit} />
     default:
