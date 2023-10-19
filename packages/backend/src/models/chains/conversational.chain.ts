@@ -40,7 +40,6 @@ class ConversationalChain extends LLMChain {
   static instantiate(
     input: Omit<LLMChainInput, 'prompt'> & { template: string },
   ) {
-    // TODO: debugging
     const { template, ...rest } = input;
     const chain = new ConversationalChain({
       ...rest,
