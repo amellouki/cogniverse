@@ -2,13 +2,13 @@ import React, {FunctionComponent} from 'react';
 import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import schema, {InputType} from "./form.schema";
-import styles from '../RetrievalConversational/styles.module.scss';
 import Checkbox from "@/components/BaseFormFields/Checkbox";
 import DiscordIcon from "@/components/icons/Discord.icon";
 import ChipsInput from "@/components/BaseFormFields/ChipsInput";
 import FormCTAs from "@/components/BotForms/FormCTAs";
 import useSubmit from "@/components/BotForms/use-submit.hook";
 import {BotFormProps2} from "@/components/BotForms/BotFormProps";
+import styles from '../RCConfig/styles.module.scss';
 
 type Props = BotFormProps2<InputType>
 

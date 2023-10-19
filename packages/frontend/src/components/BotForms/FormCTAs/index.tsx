@@ -1,6 +1,6 @@
 import React, {FunctionComponent} from 'react';
-import styles from "@/components/BotForms/RetrievalConversational/styles.module.scss";
 import Button from "@/components/Button";
+import styles from "@/components/BotForms/RCConfig/styles.module.scss";
 
 const FormCTAs: FunctionComponent = (props) => {
   return (

@@ -7,12 +7,12 @@ import Button from "@/components/Button";
 import schema, {InputType} from "./form.schema";
 import SimpleColorPicker from "@/components/BaseFormFields/SimpleColorPicker";
 import {Planet} from "react-kawaii";
-import styles from '../RetrievalConversational/styles.module.scss';
 import {COLOR_OPTIONS} from "@/constants";
 import Checkbox from "@/components/BaseFormFields/Checkbox";
 import useSubmit from "@/components/BotForms/use-submit.hook";
 import {BotFormProps2} from "@/components/BotForms/BotFormProps";
 import EmbeddedDocumentsSelector from "@/components/EmbeddedDocumentsSelector";
+import styles from '../RCConfig/styles.module.scss';
 
 type Props = BotFormProps2<InputType>
 

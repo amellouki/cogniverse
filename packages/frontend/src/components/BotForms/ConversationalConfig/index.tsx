@@ -5,13 +5,13 @@ import ControlledToggleButton from "../../BaseFormFields/ControlledToggleButton"
 import FormFieldWrapper from "@/components/FormFieldWrapper";
 import Prompt from "@/components/BaseFormFields/Prompt";
 import schema, {InputType} from "./form.schema";
-import styles from '../RetrievalConversational/styles.module.scss';
 import TextInput from "@/components/BaseFormFields/TextInput";
 import {LLM_OPTIONS} from "@/constants";
 import WrappedSelect from "../../BaseFormFields/Select/WrappedSelect";
 import FormCTAs from "@/components/BotForms/FormCTAs";
 import {BotFormProps2} from "@/components/BotForms/BotFormProps";
 import useSubmit from "@/components/BotForms/use-submit.hook";
+import styles from '../RCConfig/styles.module.scss';
 
 type Props =  BotFormProps2<InputType>
 

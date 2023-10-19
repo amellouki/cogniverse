@@ -1,6 +1,5 @@
 import React, {FC, PropsWithChildren, ReactElement, ReactNode} from 'react'
 import clsx from "clsx";
-import UploadPDF from "../../EmbedDocumentLink";
 import ThemeChanger from "@/components/ThemeChanger";
 import GithubIcon from "@/components/icons/Github.icon";
 import LinkIconButton from "@/components/Button/IconButton/LinkIconButton";
@@ -25,7 +24,6 @@ const DefaultLayout: FC<PropsWithChildren<Props>> = ({
           <GithubIcon/>
         </LinkIconButton>
         <div className={styles.spacer}/>
-        <UploadPDF/>
         <ThemeChanger/>
       </header>
       <div className={styles.body}>
