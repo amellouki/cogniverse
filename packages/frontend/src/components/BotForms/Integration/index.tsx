@@ -53,7 +53,7 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
           )}
         />
       )}
-      <FormCTAs />
+      <FormCTAs onBack={props.back} />
     </form>
   );
 }

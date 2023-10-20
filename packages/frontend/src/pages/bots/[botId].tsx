@@ -38,7 +38,6 @@ const BotDetails: NextPageWithLayout = () => {
   if (updating) {
     return (
       <div className={styles.BotDetailsPage}>
-        <h1>Update Bot</h1>
         {
           renderForm(
             data,
@@ -174,9 +173,9 @@ function getConversationalFormValue(data: ConversationalBot): ConversationalInpu
 function renderForm(data: Bot, onSubmit: (data: NewBot) => void) {
   switch (data.type) {
     case BotType.RETRIEVAL_CONVERSATIONAL:
-      return <RCSteps input={getRCFromValue(data)} onSubmit={onSubmit} />
+      return <RCSteps update={true} input={getRCFromValue(data)} onSubmit={onSubmit} />
     case BotType.CONVERSATIONAL:
-      return <ConversationalSteps input={getConversationalFormValue(data)} onSubmit={onSubmit} />
+      return <ConversationalSteps update={true} input={getConversationalFormValue(data)} onSubmit={onSubmit} />
     default:
       return <div>Unknown</div>
   }

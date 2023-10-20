@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useMemo} from 'react';
+import React, {FunctionComponent} from 'react';
 import BotInfo from "@/components/BotForms/BotInfo";
 import ConversationalConfig from "@/components/BotForms/ConversationalConfig";
 import Integration from "@/components/BotForms/Integration";
@@ -14,10 +14,13 @@ import Portal from "@/components/Portal";
 import {STEPS, INSIGHT} from "@/components/BotForms/form-wizards/ConversationalSteps/constants";
 import styles from "./styles.module.scss";
 import {InputType} from "@/components/BotForms/form-wizards/ConversationalSteps/form.schema";
+import ReviewBotDetails from "@/components/BotForms/ReviewBotDetails";
+import {UPDATE_INSIGHT, UPDATE_STEPS} from "@/components/BotForms/form-wizards/RCSteps/constants";
 
 type Props = {
   onSubmit: (data: NewBot) => void
   input?: InputType
+  update?: boolean
 }
 
 const ConversationalSteps: FunctionComponent<Props> = (props) => {
@@ -30,7 +33,7 @@ const ConversationalSteps: FunctionComponent<Props> = (props) => {
 
 
   const form = () => {
-    const onSubmit = () => {
+    const getData = () => {
       const parsed = schema.safeParse({
         botInfo,
         botConfig,
@@ -38,11 +41,13 @@ const ConversationalSteps: FunctionComponent<Props> = (props) => {
       })
 
       if (parsed.success) {
-        props.onSubmit(getNewBot(parsed.data))
+        return getNewBot(parsed.data)
       } else {
-        console.log('Failed to parse')
-        console.log(parsed.error)
+        throw new Error('Failed to parse')
       }
+    }
+    const onSubmit = () => {
+      props.onSubmit(getData())
     }
     switch (step) {
       case 0:
@@ -52,7 +57,7 @@ const ConversationalSteps: FunctionComponent<Props> = (props) => {
           }}
           initValue={botInfo}
           next={() => setStep(1)}
-          back={() => router.push('/bots')}
+          back={() => router.back()}
         />
       case 1:
         return <ConversationalConfig
@@ -73,25 +78,33 @@ const ConversationalSteps: FunctionComponent<Props> = (props) => {
           back={() => setStep(1)}
         />
       case 3:
-        return <div>Result <button onClick={onSubmit}>Submit</button></div>
+        return (
+          <div>
+            <ReviewBotDetails
+              data={getData()}
+              onNext={onSubmit}
+              onBack={() => setStep(2)}
+            />
+          </div>
+        )
       default:
         throw new Error('Unknown step');
     }
   }
 
   return (
-    <>
+    <div className={styles.formWrapper}>
       <Portal target={'create-bot-right-sidebar'}>
         <Steps
           currentStep={step}
-          steps={STEPS}
-          insight={INSIGHT}
+          steps={props.update ? UPDATE_STEPS : STEPS}
+          insight={props.update ? UPDATE_INSIGHT : INSIGHT}
         />
       </Portal>
-      <h2 className={styles.formTitle}>{STEPS[step]?.title}</h2>
-      <span className={styles.description}>{STEPS[step]?.description}</span>
+      <h2 className={styles.formTitle}>{(props.update ? UPDATE_STEPS : STEPS)[step]?.title}</h2>
+      <span className={styles.description}>{(props.update ? UPDATE_STEPS : STEPS)[step]?.description}</span>
       {form()}
-    </>
+    </div>
   )
 }
 

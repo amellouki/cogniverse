@@ -3,8 +3,8 @@ import useCreateBot from "@/hooks/bot-mangement/use-create-bot.hook";
 import {BotType, NewBot} from "@my-monorepo/shared";
 import {MutableResetRef, ResetFunction} from "@/types/MutableResetRef";
 import ConversationalSteps from "../BotForms/form-wizards/ConversationalSteps";
-import styles from './styles.module.scss';
 import RCSteps from "@/components/BotForms/form-wizards/RCSteps";
+import styles from './styles.module.scss';
 
 type Props = {
   botType: BotType
@@ -21,11 +21,7 @@ const CreateBot: FunctionComponent<Props> = ({
 
   const onSubmit = botCreation.mutate
 
-  return (
-    <div className={styles.CreateBot}>
-      {renderForm(botType, resetRef, onSubmit)}
-    </div>
-  );
+  return renderForm(botType, resetRef, onSubmit);
 }
 
 function renderForm(formType: string, ref: MutableResetRef, onSubmit: (data: NewBot) => void) {

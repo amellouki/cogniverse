@@ -87,7 +87,7 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
           />
         </FormFieldWrapper>
       )}
-      <FormCTAs />
+      <FormCTAs onBack={props.back} />
     </form>
   );
 }

@@ -12,6 +12,7 @@ import Checkbox from "@/components/BaseFormFields/Checkbox";
 import useSubmit from "@/components/BotForms/use-submit.hook";
 import {BotFormProps2} from "@/components/BotForms/BotFormProps";
 import styles from '../RCConfig/styles.module.scss';
+import FormCTAs from "@/components/BotForms/FormCTAs";
 
 type Props = BotFormProps2<InputType>
 
@@ -71,14 +72,7 @@ const BotInfo: FunctionComponent<Props> = (props) => {
       >
         Should this bot be public?
       </Checkbox>
-      <section className={styles.actions}>
-        <Button onClick={props.back} variant={'outlined'} id={'back'}>
-          Back
-        </Button>
-        <Button type={'submit'} id={'next'}>
-          Next
-        </Button>
-      </section>
+      <FormCTAs onBack={props.back} />
     </form>
   );
 }

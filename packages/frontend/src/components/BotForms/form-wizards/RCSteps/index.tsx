@@ -10,14 +10,15 @@ import {NewBot} from "@my-monorepo/shared";
 import {useRouter} from "next/router";
 import Steps from "@/components/BotForms/Steps";
 import Portal from "@/components/Portal";
-import {STEPS, INSIGHT} from "@/components/BotForms/form-wizards/RCSteps/constants";
-import styles from "./styles.module.scss";
-import Button from "@/components/Button";
+import {STEPS, INSIGHT, UPDATE_STEPS, UPDATE_INSIGHT} from "@/components/BotForms/form-wizards/RCSteps/constants";
+import styles from "../ConversationalSteps/styles.module.scss";
 import RCBotInfo from "@/components/BotForms/RCBotInfo";
+import ReviewBotDetails from "@/components/BotForms/ReviewBotDetails";
 
 type Props = {
   onSubmit: (data: NewBot) => void
   input?: InputType
+  update?: boolean
 }
 
 const ConversationalSteps: FunctionComponent<Props> = (props) => {
@@ -30,7 +31,7 @@ const ConversationalSteps: FunctionComponent<Props> = (props) => {
 
 
   const form = () => {
-    const onSubmit = () => {
+    const getData = () => {
       const parsed = schema.safeParse({
         botInfo,
         botConfig,
@@ -38,11 +39,13 @@ const ConversationalSteps: FunctionComponent<Props> = (props) => {
       })
 
       if (parsed.success) {
-        props.onSubmit(getNewBot(parsed.data))
+        return getNewBot(parsed.data)
       } else {
-        console.log('Failed to parse')
-        console.log(parsed.error)
+        throw new Error('Failed to parse')
       }
+    }
+    const onSubmit = () => {
+      props.onSubmit(getData())
     }
     switch (step) {
       case 0:
@@ -52,7 +55,7 @@ const ConversationalSteps: FunctionComponent<Props> = (props) => {
           }}
           initValue={botInfo}
           next={() => setStep(1)}
-          back={() => router.push('/bots')}
+          back={() => router.back()}
         />
       case 1:
         return <RetrievalConversationalConfig
@@ -73,25 +76,31 @@ const ConversationalSteps: FunctionComponent<Props> = (props) => {
           back={() => setStep(1)}
         />
       case 3:
-        return <div>Result <Button type={'submit'} onClick={onSubmit}>Submit</Button></div>
+        return (
+          <ReviewBotDetails
+            data={getData()}
+            onNext={onSubmit}
+            onBack={() => setStep(2)}
+          />
+        )
       default:
         throw new Error('Unknown step');
     }
   }
 
   return (
-    <>
+    <div className={styles.formWrapper}>
       <Portal target={'create-bot-right-sidebar'}>
         <Steps
           currentStep={step}
-          steps={STEPS}
-          insight={INSIGHT}
+          steps={props.update ? UPDATE_STEPS : STEPS}
+          insight={props.update ? UPDATE_INSIGHT : INSIGHT}
         />
       </Portal>
-      <h2 className={styles.formTitle}>{STEPS[step]?.title}</h2>
-      <span className={styles.description}>{STEPS[step]?.description}</span>
+      <h2 className={styles.formTitle}>{(props.update ? UPDATE_STEPS : STEPS)[step]?.title}</h2>
+      <span className={styles.description}>{(props.update ? UPDATE_STEPS : STEPS)[step]?.description}</span>
       {form()}
-    </>
+    </div>
   )
 }
 
