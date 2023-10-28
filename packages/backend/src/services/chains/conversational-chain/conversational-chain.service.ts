@@ -29,15 +29,15 @@ export class ConversationalChainService {
       throw Error('Bot is not a conversational');
     }
 
-    const openAiApiKey = this.configService.get<string>(ENV.OPEN_AI_API_KEY);
+    const openAiApiKey = conversation.creator.openAiApiKey;
     if (!openAiApiKey) {
       throw new Error(
-        'Some environment variables are not set. Please check your .env.local file.',
+        'Please set your OpenAI API key in your account settings.',
       );
     }
 
     const llm = createLlm({
-      type: 'gpt-3.5-turbo',
+      type: (botConfig.lm?.modelName as any) || 'gpt-3.5-turbo',
       apiKey: openAiApiKey,
       callbackManager,
     });

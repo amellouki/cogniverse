@@ -3,7 +3,6 @@ import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import FormFieldWrapper from "@/components/FormFieldWrapper";
 import TextInput from "@/components/BaseFormFields/TextInput";
-import Button from "@/components/Button";
 import schema, {InputType} from "./form.schema";
 import SimpleColorPicker from "@/components/BaseFormFields/SimpleColorPicker";
 import {Planet} from "react-kawaii";

@@ -9,8 +9,8 @@ export const BOTS_OPTIONS: SelectOption[] = [
 ]
 
 export const LLM_OPTIONS: SelectOption[] = [
-  { value: 'gpt3.5', label: 'GPT3.5' },
-  { value: 'gpt4', label: 'GPT4' },
+  { value: 'gpt-3.5-turbo', label: 'GPT3.5 turbo' },
+  { value: 'gpt-4', label: 'GPT4' },
 ];
 
 export const COLOR_OPTIONS = [

@@ -44,6 +44,7 @@ export class ConversationService {
     return this.prisma.conversation.create({
       data: conversationData,
       include: {
+        creator: true,
         chatHistory: true,
         bot: {
           include: {
@@ -75,6 +76,7 @@ export class ConversationService {
         id,
       },
       include: {
+        creator: true,
         chatHistory: {
           orderBy: {
             id: 'asc',

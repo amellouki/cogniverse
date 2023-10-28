@@ -29,15 +29,15 @@ export class RetrievalConversationalChainService {
     retrievalCallbackManager: CallbackManager,
     conversationalCallbackManager: CallbackManager,
   ): Promise<BaseChain> {
-    const bot = conversation.bot;
-    if (bot.type !== BotType.RETRIEVAL_CONVERSATIONAL) {
+    const botConfig = conversation.bot.configuration;
+    if (botConfig.type !== BotType.RETRIEVAL_CONVERSATIONAL) {
       throw Error('Bot is not a retrieval conversational');
     }
 
-    const openAiApiKey = this.configService.get<string>(ENV.OPEN_AI_API_KEY);
+    const openAiApiKey = conversation.creator.openAiApiKey;
     if (!openAiApiKey) {
       throw new Error(
-        'Some environment variables are not set. Please check your .env.local file.',
+        'Please set your OpenAI API key in your account settings.',
       );
     }
 
@@ -51,12 +51,12 @@ export class RetrievalConversationalChainService {
       document,
     });
     const retrievalModel = createLlm({
-      type: 'gpt-3.5-turbo',
+      type: (botConfig.retrievalLm?.modelName as any) || 'gpt-3.5-turbo', // TODO: be more specific
       apiKey: openAiApiKey,
       callbackManager: retrievalCallbackManager,
     });
     const conversationModel = createLlm({
-      type: 'gpt-3.5-turbo',
+      type: (botConfig.conversationalLm?.modelName as any) || 'gpt-3.5-turbo', // TODO: be more specific
       apiKey: openAiApiKey,
       callbackManager: conversationalCallbackManager,
     });
@@ -76,9 +76,9 @@ export class RetrievalConversationalChainService {
         }),
         questionGeneratorChainOptions: {
           llm: retrievalModel,
-          template: bot.configuration.retrievalLm?.prompt,
+          template: botConfig.retrievalLm?.prompt,
         },
-        conversationTemplate: bot.configuration.conversationalLm?.prompt,
+        conversationTemplate: botConfig.conversationalLm?.prompt,
       },
     );
   }

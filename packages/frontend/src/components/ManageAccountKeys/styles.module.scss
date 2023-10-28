@@ -1,0 +1,9 @@
+.ManageAccountKeys {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+
+  > :first-child {
+    flex: 1;
+  }
+}

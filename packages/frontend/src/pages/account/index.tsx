@@ -1,9 +1,11 @@
 import React from 'react';
 import {NextPageWithLayout} from "@/pages/_app";
 import { getLayout } from "@/components/Layouts/DefaultLayout/BotNestedLayout";
-import {useAccountHook} from "@/hooks/use-account.hook";
+import {useAccountHook} from "@/hooks/account/use-account.hook";
 import DetailsItem from "@/components/DetailsItem";
 import styles from './styles.module.scss'
+import ManageAccountKeys from "../../components/ManageAccountKeys";
+import Image from "next/image";
 
 const Account: NextPageWithLayout = () => {
   const { data, isLoading } = useAccountHook()
@@ -14,9 +16,10 @@ const Account: NextPageWithLayout = () => {
       <h1>
         Account details
       </h1>
-      {data.profilePicture && <img alt={'profile picture'} src={data.profilePicture}/>}
+      {data.profilePicture && <Image alt={'profile picture'} src={data.profilePicture} width={64} height={64}/>}
       <DetailsItem label={'User name'} value={data.username} />
       <DetailsItem label={'authentication provider'} value={data.OAuthProvider} />
+      <ManageAccountKeys account={data} />
     </section>
   );
 }

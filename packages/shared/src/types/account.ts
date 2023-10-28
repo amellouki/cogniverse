@@ -4,3 +4,5 @@ export type Account = PrismaAccount
 export const OAuthProvider = PrismaOAuthProvider
 
 type NewGithubAccount = Pick<Account, 'userId' | 'username' | 'profilePicture' | 'OAuthProvider'> & { OAuthProvider: typeof OAuthProvider.GITHUB }
+
+export type UpdateAccountKeys = Partial<Pick<Account, 'openAiApiKey'>>

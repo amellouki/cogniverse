@@ -1,5 +1,5 @@
 import React, {FunctionComponent} from 'react';
-import {Controller, SubmitHandler, useForm} from "react-hook-form";
+import {Controller, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import ControlledToggleButton from "../../BaseFormFields/ControlledToggleButton";
 import FormFieldWrapper from "@/components/FormFieldWrapper";
