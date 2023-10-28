@@ -14,7 +14,7 @@ import { ChatMessage } from '../chat-message';
 import { PromptTemplate } from 'langchain/prompts';
 
 const initialization =
-  'You are a query ai. Your output will be used to query a vector database that about a certain book so we can retrieve the correct segment to answer the human question.';
+  'You are a query ai. Your output will be used to query a vector database about a certain document so we can retrieve the correct segment to answer the human question.';
 
 const question_generator_template =
   initialization +
@@ -25,7 +25,7 @@ Chat History:
 {chat_history}
 
 Follow Up Human Input: {question}
-Standalone question, if it doesn't make sense to query the book in the database for such human input then respond with nothing:`;
+Standalone question, if it doesn't make sense to query the vector database for such human input then respond with nothing:`;
 
 const qaTemplate = `Given the following conversation, use the following pieces of context to best respond to the follow up human input. If you don't know an answer to a question, just say that you don't know, don't try to make up an answer.
 Chat History:
@@ -75,7 +75,6 @@ export default class DocConversationalChain extends ConversationalRetrievalQACha
     if (newQuestion.length > 0 && newQuestion !== '[no-question]') {
       docs = await this.retriever.getRelevantDocuments(newQuestion);
     }
-    console.log('found docs', docs);
     const inputs = {
       question,
       input_documents: docs,

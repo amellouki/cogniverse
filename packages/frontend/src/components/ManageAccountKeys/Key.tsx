@@ -21,11 +21,11 @@ type Props = {
 }
 
 const Key: FunctionComponent<Props> = ({
-                                         id,
-                                         value,
-                                         label,
-                                         placeholder,
-                                         uid,
+  id,
+  value,
+  label,
+  placeholder,
+  uid,
                                        }) => {
 
   const mutation = useUpdateAccountKeys(uid);

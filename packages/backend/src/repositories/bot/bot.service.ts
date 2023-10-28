@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { Bot } from '@my-monorepo/shared';
+import { FullBot } from '@my-monorepo/shared';
 
 @Injectable()
 export class BotService {
   constructor(private prisma: PrismaService) {}
+
   createBot(data: Prisma.BotCreateInput) {
     return this.prisma.bot.create({ data });
   }
@@ -67,14 +68,15 @@ export class BotService {
     });
   }
 
-  getBotByName(name: string): Prisma.PrismaPromise<Bot> {
+  getBotByName(name: string): Prisma.PrismaPromise<FullBot> {
     return this.prisma.bot.findUnique({
       where: {
         name,
       },
       include: {
+        creator: true,
         boundDocument: true,
       },
-    }) as unknown as Prisma.PrismaPromise<Bot>;
+    }) as unknown as Prisma.PrismaPromise<FullBot>;
   }
 }

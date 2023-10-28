@@ -9,6 +9,7 @@ import {
   BotType,
   DiscordConversation,
   DiscordMessage,
+  FullBot,
 } from '@my-monorepo/shared';
 import { CallbackManager } from 'langchain/callbacks';
 import { BotService } from '../../repositories/bot/bot.service';
@@ -111,7 +112,7 @@ export class DiscordService implements OnModuleInit {
 
   private async getChain(
     conversation: DiscordConversation,
-    bot: Bot,
+    bot: FullBot,
     message: Message,
   ) {
     switch (bot.type) {
@@ -130,7 +131,7 @@ export class DiscordService implements OnModuleInit {
 
   private getConversationalChain(
     conversation: DiscordConversation,
-    bot: Bot,
+    bot: FullBot,
     message: Message,
   ) {
     return this.conversationalChainService.fromDiscordConversation(
@@ -144,7 +145,7 @@ export class DiscordService implements OnModuleInit {
 
   private getRetrievalConversationalChain(
     conversation: DiscordConversation,
-    bot: Bot,
+    bot: FullBot,
     message: Message,
   ) {
     return this.retrievalConversationalChainService.fromDiscordConversation(

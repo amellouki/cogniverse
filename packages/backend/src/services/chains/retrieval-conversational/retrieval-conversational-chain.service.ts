@@ -5,6 +5,7 @@ import {
   BotType,
   Conversation,
   DiscordConversation,
+  FullBot,
 } from '@my-monorepo/shared';
 import { ENV, QUERY_EMBEDDING_MODEL } from '../../../constants';
 import createLlm from '../../llm/create-llm';
@@ -85,23 +86,23 @@ export class RetrievalConversationalChainService {
 
   async fromDiscordConversation(
     conversation: DiscordConversation,
-    targetBot: Bot,
+    targetBot: FullBot,
     retrievalCallbackManager: CallbackManager,
     conversationalCallbackManager: CallbackManager,
   ) {
-    const bot = targetBot;
-    if (bot.type !== BotType.RETRIEVAL_CONVERSATIONAL) {
+    const botConfig = targetBot.configuration;
+    if (botConfig.type !== BotType.RETRIEVAL_CONVERSATIONAL) {
       throw Error('Bot is not a retrieval conversational');
     }
 
-    const openAiApiKey = this.configService.get<string>(ENV.OPEN_AI_API_KEY);
+    const openAiApiKey = targetBot.creator.openAiApiKey;
     if (!openAiApiKey) {
       throw new Error(
-        'Some environment variables are not set. Please check your .env.local file.',
+        'Please set your OpenAI API key in your account settings.',
       );
     }
 
-    const document = bot.boundDocument;
+    const document = targetBot.boundDocument;
     if (!document) {
       throw new Error('Retrieval bot has no bound document');
     }
@@ -114,12 +115,12 @@ export class RetrievalConversationalChainService {
       document,
     });
     const retrievalModel = createLlm({
-      type: 'gpt-3.5-turbo',
+      type: (botConfig.retrievalLm?.modelName as any) || 'gpt-3.5-turbo', // TODO: be more specific
       apiKey: openAiApiKey,
       callbackManager: retrievalCallbackManager,
     });
     const conversationModel = createLlm({
-      type: 'gpt-3.5-turbo',
+      type: (botConfig.conversationalLm?.modelName as any) || 'gpt-3.5-turbo', // TODO: be more specific
       apiKey: openAiApiKey,
       callbackManager: conversationalCallbackManager,
     });
@@ -139,9 +140,9 @@ export class RetrievalConversationalChainService {
         }),
         questionGeneratorChainOptions: {
           llm: retrievalModel,
-          template: bot.configuration.retrievalLm?.prompt,
+          template: botConfig.retrievalLm?.prompt,
         },
-        conversationTemplate: bot.configuration.conversationalLm?.prompt,
+        conversationTemplate: botConfig.conversationalLm?.prompt,
       },
     );
   }
