@@ -5,7 +5,6 @@ import ControlledToggleButton from "../../BaseFormFields/ControlledToggleButton"
 import FormFieldWrapper from "@/components/FormFieldWrapper";
 import Prompt from "@/components/BaseFormFields/Prompt";
 import schema, {InputType} from "./form.schema";
-import TextInput from "@/components/BaseFormFields/TextInput";
 import {LLM_OPTIONS} from "@/constants";
 import WrappedSelect from "../../BaseFormFields/Select/WrappedSelect";
 import FormCTAs from "@/components/BotForms/FormCTAs";
@@ -42,19 +41,7 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
           onChange={(option) => onChange(option?.value)}
           id={'llm'}
         />
-      )} name={'llm'} control={control} defaultValue={'gpt3.5'} />
-      <FormFieldWrapper
-        htmlFor={'api-key'}
-        label={'Api key'}
-        fieldError={errors.apiKey}
-      >
-        <TextInput
-          id={'api-key'}
-          placeholder={'Provide your api key'}
-          hasError={!!errors.apiKey}
-          {...register('apiKey', {required: true})}
-        />
-      </FormFieldWrapper>
+      )} name={'llm'} control={control} defaultValue={'gpt-3.5-turbo'} />
       <div className={styles.ToggleButtonRow}>
         <span>Customise the prompt or keep it default?</span>
         <Controller

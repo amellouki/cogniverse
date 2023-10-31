@@ -9,6 +9,7 @@ type Props = {
   data: NewBot
   onBack: () => void
   onNext: () => void
+  loading?: boolean
 }
 
 const ReviewBotDetails: FunctionComponent<Props> = ({
@@ -20,6 +21,7 @@ const ReviewBotDetails: FunctionComponent<Props> = ({
       <BotDetails data={data} />
       <FormCTAs
         {...ctas}
+        forwardLabel={'Submit'}
       />
     </div>
   );

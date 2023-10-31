@@ -1,9 +1,8 @@
 import {z} from "zod";
-import {VALID_BOT_NAME_REGEX} from "@my-monorepo/shared";
 
 const schema = z.object({
   llm: z.string().nonempty(),
-  apiKey: z.string().nonempty(),
+  apiKey: z.string().optional(),
   prompt: z.string().optional(),
   isCustomPrompt: z.boolean(),
 }).refine((data) => {

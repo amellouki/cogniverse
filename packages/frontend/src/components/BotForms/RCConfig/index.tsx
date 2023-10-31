@@ -47,19 +47,7 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
           onChange={(option) => onChange(option?.value)}
           id={'rLlm'}
         />
-      )} name={'rLlm'} control={control} defaultValue={'gpt3.5'} />
-      <FormFieldWrapper
-        htmlFor={'api-key'}
-        label={'Api key'}
-        fieldError={errors.rApiKey}
-      >
-        <TextInput
-          id={'api-key'}
-          placeholder={'Provide an api key for the retrieval model'}
-          hasError={!!errors.rApiKey}
-          {...register('rApiKey', {required: true})}
-        />
-      </FormFieldWrapper>
+      )} name={'rLlm'} control={control} defaultValue={'gpt-3.5-turbo'} />
       <div className={styles.ToggleButtonRow}>
         <span>Retrieval model prompt</span>
         <Controller
@@ -102,19 +90,7 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
           onChange={(option) => onChange(option?.value)}
           id={'cLlm'}
         />
-      )} name={'cLlm'} control={control} defaultValue={'gpt3.5'} />
-      <FormFieldWrapper
-        htmlFor={'c-api-key'}
-        label={'Conversational model api key'}
-        fieldError={errors.rApiKey}
-      >
-        <TextInput
-          id={'c-api-key'}
-          placeholder={'Provide an api key'}
-          hasError={!!errors.rApiKey}
-          {...register('cApiKey', {required: true})}
-        />
-      </FormFieldWrapper>
+      )} name={'cLlm'} control={control} defaultValue={'gpt-3.5-turbo'} />
       <div className={styles.ToggleButtonRow}>
         <span>Conversational model prompt</span>
         <Controller

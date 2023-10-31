@@ -7,6 +7,7 @@ type Props = {
   onBack?: () => void
   forwardLabel?: string
   backLabel?: string
+  loading?: boolean
 }
 
 const FormCTAs: FunctionComponent<Props> = ({
@@ -14,13 +15,14 @@ const FormCTAs: FunctionComponent<Props> = ({
   onBack,
   forwardLabel,
   backLabel,
+  loading
                                             }) => {
   return (
     <section className={styles.actions}>
       <Button onClick={onBack} type={onBack ? 'button' : 'submit'} variant={'outlined'} id={'back'}>
         {backLabel || 'Back'}
       </Button>
-      <Button onClick={onNext} type={onNext ? 'button' : 'submit'} id={'next'}>
+      <Button disabled={loading} onClick={onNext} type={onNext ? 'button' : 'submit'} id={'next'}>
         {forwardLabel || 'Next'}
       </Button>
     </section>

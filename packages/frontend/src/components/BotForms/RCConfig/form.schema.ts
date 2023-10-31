@@ -9,12 +9,12 @@ const schema = z.object({
   isRLMCustomPrompt: z.boolean(),
   rlmPrompt: z.string().optional(),
   rLlm: z.string().nonempty(),
-  rApiKey: z.string().nonempty(),
+  rApiKey: z.string().optional(),
   // CLM: Conversational Language Model
   isCLMCustomPrompt: z.boolean(),
   clmPrompt: z.string().optional(),
   cLlm: z.string().nonempty(),
-  cApiKey: z.string().nonempty(),
+  cApiKey: z.string().optional(),
 }).refine((data) => {
   return !(data.isRLMCustomPrompt && !data.rlmPrompt);
 }, {

@@ -15,6 +15,8 @@ import DetailsItem from "@/components/DetailsItem";
 import styles from './styles.module.scss'
 import ConversationalSteps from "@/components/BotForms/form-wizards/ConversationalSteps";
 import RCSteps from "@/components/BotForms/form-wizards/RCSteps";
+import {Simulate} from "react-dom/test-utils";
+import load = Simulate.load;
 
 const BotDetails: NextPageWithLayout = () => {
   const router = useRouter()
@@ -41,6 +43,7 @@ const BotDetails: NextPageWithLayout = () => {
         {
           renderForm(
             data,
+            updateBot.status === 'loading',
             (updatedValues) => {
               updateBot.mutate({
                 id: data.id,
@@ -170,12 +173,22 @@ function getConversationalFormValue(data: ConversationalBot): ConversationalInpu
   }
 }
 
-function renderForm(data: Bot, onSubmit: (data: NewBot) => void) {
+function renderForm(data: Bot, loading: boolean, onSubmit: (data: NewBot) => void) {
   switch (data.type) {
     case BotType.RETRIEVAL_CONVERSATIONAL:
-      return <RCSteps update={true} input={getRCFromValue(data)} onSubmit={onSubmit} />
+      return <RCSteps
+        update={true}
+        loading={loading}
+        input={getRCFromValue(data)}
+        onSubmit={onSubmit}
+      />
     case BotType.CONVERSATIONAL:
-      return <ConversationalSteps update={true} input={getConversationalFormValue(data)} onSubmit={onSubmit} />
+      return <ConversationalSteps
+        update={true}
+        loading={loading}
+        input={getConversationalFormValue(data)}
+        onSubmit={onSubmit}
+      />
     default:
       return <div>Unknown</div>
   }

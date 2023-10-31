@@ -5,6 +5,7 @@ import {MutableResetRef, ResetFunction} from "@/types/MutableResetRef";
 import ConversationalSteps from "../BotForms/form-wizards/ConversationalSteps";
 import RCSteps from "@/components/BotForms/form-wizards/RCSteps";
 import styles from './styles.module.scss';
+import {useRouter} from "next/router";
 
 type Props = {
   botType: BotType
@@ -13,18 +14,20 @@ type Props = {
 const CreateBot: FunctionComponent<Props> = ({
   botType
 }) => {
-  const resetRef = useRef<ResetFunction>();
+  const router = useRouter();
 
   const botCreation = useCreateBot(() => {
-    resetRef.current?.();
+    router.push('/bots').then(() => {
+      console.log('successfully redirected to bots page')
+    })
   })
 
-  const onSubmit = botCreation.mutate
+  const onSubmit = botCreation.mutate;
 
-  return renderForm(botType, resetRef, onSubmit);
+  return renderForm(botType, botCreation.status === 'loading', onSubmit);
 }
 
-function renderForm(formType: string, ref: MutableResetRef, onSubmit: (data: NewBot) => void) {
+function renderForm(formType: string, loading: boolean, onSubmit: (data: NewBot) => void) {
   switch (formType) {
     case BotType.RETRIEVAL_CONVERSATIONAL:
       return <RCSteps onSubmit={onSubmit} />

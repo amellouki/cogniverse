@@ -19,6 +19,7 @@ type Props = {
   onSubmit: (data: NewBot) => void
   input?: InputType
   update?: boolean
+  loading?: boolean
 }
 
 const ConversationalSteps: FunctionComponent<Props> = (props) => {
@@ -81,6 +82,7 @@ const ConversationalSteps: FunctionComponent<Props> = (props) => {
             data={getData()}
             onNext={onSubmit}
             onBack={() => setStep(2)}
+            loading={props.loading}
           />
         )
       default:
