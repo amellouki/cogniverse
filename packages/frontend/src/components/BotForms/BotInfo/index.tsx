@@ -63,6 +63,7 @@ const BotInfo: FunctionComponent<Props> = (props) => {
           id={'description'}
           placeholder={'Provide a description for your bot'}
           hasError={!!errors.description}
+          autoComplete={'off'}
           {...register('description', {required: true})}
         />
       </FormFieldWrapper>
