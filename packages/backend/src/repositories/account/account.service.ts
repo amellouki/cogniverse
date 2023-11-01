@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Account, OAuthProvider } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { UpdateAccountKeys } from '@my-monorepo/shared';
 
 type NewAccount = Pick<
   Account,
@@ -33,6 +34,15 @@ export class AccountService {
       where: {
         id: accountId,
       },
+    });
+  }
+
+  async updateKeys(accountId: string, data: UpdateAccountKeys) {
+    return this.prismaService.account.update({
+      where: {
+        id: accountId,
+      },
+      data,
     });
   }
 }

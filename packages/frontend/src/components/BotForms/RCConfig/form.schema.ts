@@ -5,20 +5,16 @@ import {
 } from "./contants";
 
 const schema = z.object({
-  name: z.string().nonempty().regex(/^[a-zA-Z0-9_-]+$/i, {message: "Name must be alphanumeric, underscores and dashes are allowed"}),
-  description: z.string().optional(),
   // RLM: Retrieval Language Model
   isRLMCustomPrompt: z.boolean(),
   rlmPrompt: z.string().optional(),
+  rLlm: z.string().nonempty(),
+  rApiKey: z.string().optional(),
   // CLM: Conversational Language Model
   isCLMCustomPrompt: z.boolean(),
   clmPrompt: z.string().optional(),
-  color: z.string().nonempty({ message: "Pick a color" }),
-  isBoundToDocument: z.boolean().default(false),
-  boundDocumentId: z.number().optional(),
-  isPublic: z.boolean().default(false),
-  integrateWithDiscord: z.boolean(),
-  discordChannelIds: z.array(z.string()).optional(),
+  cLlm: z.string().nonempty(),
+  cApiKey: z.string().optional(),
 }).refine((data) => {
   return !(data.isRLMCustomPrompt && !data.rlmPrompt);
 }, {
@@ -45,17 +41,6 @@ const schema = z.object({
 }, {
   message: "Conversational Language Model prompt is missing required placeholders",
   path: ["clmPrompt"],
-}).refine(({isBoundToDocument, boundDocumentId}) => {
-  if (!isBoundToDocument) return true;
-  return !!boundDocumentId;
-}, {
-  message: "Document is required",
-  path: ["boundDocumentId"],
-}).refine(({integrateWithDiscord, discordChannelIds}) => {
-  return !(integrateWithDiscord && !discordChannelIds?.length);
-}, {
-  message: "At least one discord channel id is required",
-  path: ["discordChannelIds"],
 });
 
 export type InputType = z.infer<typeof schema>

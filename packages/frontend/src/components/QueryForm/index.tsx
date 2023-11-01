@@ -23,7 +23,7 @@ const QueryForm: FC<QueryFormProps> = ({ onSubmit, className }) => {
         form.reset();
       }}
     >
-      <TextInput id={"query-field"} placeholder={'Send message...'} className={styles.fillRest} />
+      <TextInput id={"query-field"} placeholder={'Send message...'} className={styles.fillRest} autoSave={'off'} autoComplete={'off'} />
       <Button type="submit">Send</Button>
     </form>
   )

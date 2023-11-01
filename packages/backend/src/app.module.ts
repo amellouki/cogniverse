@@ -14,6 +14,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth/auth.guard';
 import * as dotenv from 'dotenv';
+import { AccountModule } from './modules/account/account.module';
 
 dotenv.config({ path: './.env.local' });
 
@@ -36,6 +37,7 @@ dotenv.config({ path: './.env.local' });
     ServicesModule,
     RepositoriesModule,
     DiscordModule,
+    AccountModule,
   ],
   controllers: [AppController],
   providers: [

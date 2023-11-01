@@ -69,7 +69,7 @@ const baseBotConfigValidation = z.object({
 const lmConfigValidation = z.object({
   modelName: z.string().nonempty(),
   prompt: z.string().optional(),
-  apiKey: z.string().nonempty(),
+  apiKey: z.string().optional(),
 });
 
 const rcConfigBotValidation = baseBotConfigValidation.extend({

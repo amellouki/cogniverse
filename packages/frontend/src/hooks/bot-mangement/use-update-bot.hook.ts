@@ -8,7 +8,7 @@ export default function useUpdateBot(botId?: Bot['id'], onSuccess?: () => void) 
     onSuccess: () => {
       Promise.all([
         queryClient.invalidateQueries(['bots']),
-        queryClient.invalidateQueries(['bot']),
+        queryClient.invalidateQueries(['bot', botId]),
       ]).then(() => {
         onSuccess?.();
       })

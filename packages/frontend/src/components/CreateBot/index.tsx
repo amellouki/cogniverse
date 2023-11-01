@@ -1,49 +1,38 @@
 import React, {FunctionComponent, useRef} from 'react';
-import WrappedSelect from "@/components/BaseFormFields/Select/WrappedSelect";
-import SelectOption from "@/types/SelectOption";
-import RetrievalConversational from "../BotForms/RetrievalConversational";
-import {BOTS_OPTIONS} from "@/constants";
-import Conversational from "../BotForms/Conversational";
-import styles from './styles.module.scss';
 import useCreateBot from "@/hooks/bot-mangement/use-create-bot.hook";
 import {BotType, NewBot} from "@my-monorepo/shared";
 import {MutableResetRef, ResetFunction} from "@/types/MutableResetRef";
+import ConversationalSteps from "../BotForms/form-wizards/ConversationalSteps";
+import RCSteps from "@/components/BotForms/form-wizards/RCSteps";
+import styles from './styles.module.scss';
+import {useRouter} from "next/router";
 
-const CreateBot: FunctionComponent = () => {
-  const [
-    selectedOption,
-    setSelectedOption
-  ] = React.useState<SelectOption | undefined | null>(null);
-  const resetRef = useRef<ResetFunction>();
-
-  const botCreation = useCreateBot(() => {
-    resetRef.current?.();
-  })
-
-  const onSubmit = botCreation.mutate
-
-  return (
-    <div className={styles.CreateBot}>
-      <h2 className={styles.formTitle}>Create a new bot</h2>
-      <WrappedSelect
-        options={BOTS_OPTIONS}
-        label={'Select Bot Type'}
-        placeholder={'Select...'}
-        selected={selectedOption}
-        onChange={setSelectedOption}
-        id={'agent-type'}
-      />
-      {selectedOption && renderForm(selectedOption.value, resetRef, onSubmit)}
-    </div>
-  );
+type Props = {
+  botType: BotType
 }
 
-function renderForm(formType: string, ref: MutableResetRef, onSubmit: (data: NewBot) => void) {
+const CreateBot: FunctionComponent<Props> = ({
+  botType
+}) => {
+  const router = useRouter();
+
+  const botCreation = useCreateBot(() => {
+    router.push('/bots').then(() => {
+      console.log('successfully redirected to bots page')
+    })
+  })
+
+  const onSubmit = botCreation.mutate;
+
+  return renderForm(botType, botCreation.status === 'loading', onSubmit);
+}
+
+function renderForm(formType: string, loading: boolean, onSubmit: (data: NewBot) => void) {
   switch (formType) {
     case BotType.RETRIEVAL_CONVERSATIONAL:
-      return <RetrievalConversational resetRef={ref} onSubmit={onSubmit} />
+      return <RCSteps onSubmit={onSubmit} />
     case BotType.CONVERSATIONAL:
-      return <Conversational resetRef={ref} onSubmit={onSubmit} />
+      return <ConversationalSteps onSubmit={onSubmit} />
     default:
       return <div>Unknown</div>
   }

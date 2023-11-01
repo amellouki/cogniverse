@@ -45,6 +45,7 @@ const SelectView: FunctionComponent<Props> = (props) => {
             buttonStyle.primary,
             isOpen && styles.open
           )}
+          type={'button'}
         >
         <span>
           {

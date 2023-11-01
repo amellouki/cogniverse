@@ -1,0 +1,20 @@
+.content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem;
+  padding: 2rem;
+}
+
+.sideElement {
+  flex-basis: 20%;
+  flex-grow: 1;
+}
+
+.mainElement {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: auto;
+}

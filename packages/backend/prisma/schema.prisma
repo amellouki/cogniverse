@@ -93,6 +93,7 @@ model Account {
   createdBots    Bot[]              @relation("creator")
   conversations  Conversation[]     @relation("conversationCreator")
   documents      DocumentMetadata[] @relation("owner")
+  openAiApiKey   String?
 
   @@unique(fields: [OAuthProvider, userId])
 }
