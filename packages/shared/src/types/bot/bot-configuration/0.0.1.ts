@@ -42,7 +42,7 @@ export interface BotConfiguration {
 export type LmConfig = {
   modelName: string,
   prompt?: string,
-  apiKey: string,
+  apiKey?: string,
 }
 
 export interface ConversationalBotConfiguration extends BotConfiguration {
