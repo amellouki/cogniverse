@@ -55,6 +55,7 @@ const BotInfo: FunctionComponent<Props> = (props) => {
           id={'bot-name'}
           placeholder={'Provide unique bot name'}
           hasError={!!errors.name}
+          autoComplete={'off'}
           {...register('name', {required: true})}
         />
       </FormFieldWrapper>
@@ -67,6 +68,7 @@ const BotInfo: FunctionComponent<Props> = (props) => {
           id={'description'}
           placeholder={'Provide a description for your bot'}
           hasError={!!errors.description}
+          autoComplete={'off'}
           {...register('description', {required: true})}
         />
       </FormFieldWrapper>
