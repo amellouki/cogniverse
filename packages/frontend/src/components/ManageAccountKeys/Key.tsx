@@ -5,7 +5,7 @@ import TextInput from "@/components/BaseFormFields/TextInput";
 import Button from "@/components/Button";
 import {useForm} from "react-hook-form";
 import {useUpdateAccountKeys} from "@/hooks/account/use-update-account-keys.hook";
-import {UpdateAccountKeys} from "@my-monorepo/shared";
+import {AccountKeys} from "@my-monorepo/shared";
 
 type InputType = {
   field: string
@@ -13,7 +13,7 @@ type InputType = {
 
 
 type Props = {
-  id: keyof UpdateAccountKeys
+  id: keyof AccountKeys
   label: string
   value?: string
   placeholder?: string

@@ -17,7 +17,6 @@ import { END_COMPLETION } from '../../constants';
 import { ConversationalService } from './conversational.service';
 import { WsAuthGuard } from '../../guards/ws-auth/ws-auth.guard';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
-import { Public } from '../../decorator/public';
 
 dotenv.config({ path: './.env.local' });
 
