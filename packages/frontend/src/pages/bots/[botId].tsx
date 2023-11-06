@@ -148,6 +148,8 @@ function getRCFromValue(data: RcBot): RCInputType {
     integration: {
       integrateWithDiscord: !!data.configuration?.thirdPartyIntegration?.discord,
       discordChannelIds: getAllowedDiscordChannelId(data),
+      integrateWithSlack: !!data.configuration?.thirdPartyIntegration?.slack,
+      slackChannelIds: data.configuration?.thirdPartyIntegration?.slack?.allowedChannels ?? undefined,
     }
   }
 }
@@ -169,6 +171,8 @@ function getConversationalFormValue(data: ConversationalBot): ConversationalInpu
     integration: {
       integrateWithDiscord: !!data.configuration?.thirdPartyIntegration?.discord,
       discordChannelIds: getAllowedDiscordChannelId(data),
+      integrateWithSlack: !!data.configuration?.thirdPartyIntegration?.slack,
+      slackChannelIds: data.configuration?.thirdPartyIntegration?.slack?.allowedChannels ?? undefined
     }
   }
 }

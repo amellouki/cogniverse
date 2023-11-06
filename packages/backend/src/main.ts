@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { SlackService } from './modules/slack/slack.service';
 
 dotenv.config({ path: './.env.local' });
 
@@ -15,6 +16,13 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Accept', 'Authorization'], // Allow these headers
     credentials: true, // Allow cookies and credentials to be sent with requests
   });
+
+  // Get SlackService
+  const slackService = app.get(SlackService);
+  // Access the underlying Express instance
+  const expressApp = app.getHttpAdapter().getInstance();
+  // Attach the Slack Bolt App to the Express app
+  slackService.attachToExpress(expressApp);
 
   const config = new DocumentBuilder()
     .setTitle('Cogniverse API')

@@ -26,8 +26,13 @@ export interface PublicDiscordIntegration {
   isPrivate: false
 }
 
+export interface SlackIntegration {
+  allowedChannels: string[] // Allowed Slack channel IDs
+}
+
 export interface ThirdPartyIntegration {
   discord?: PrivateDiscordIntegration | PublicDiscordIntegration
+  slack?: SlackIntegration
 }
 
 export interface BotConfiguration {

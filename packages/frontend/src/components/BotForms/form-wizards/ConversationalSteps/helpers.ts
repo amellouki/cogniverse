@@ -27,6 +27,9 @@ export function getNewBot(data: InputType): NewBot {
           isPrivate: true,
           allowedChannels: integration.discordChannelIds,
         } : undefined,
+        slack: integration.integrateWithSlack && integration.slackChannelIds ? {
+          allowedChannels: integration.slackChannelIds,
+        } : undefined,
       }
     },
     boundDocumentId: null,
