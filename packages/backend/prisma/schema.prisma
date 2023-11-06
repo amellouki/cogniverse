@@ -30,6 +30,7 @@ model Bot {
   configVersion   String            @default("0.0.1")
   configuration   Json
   discordMessages DiscordMessage[]
+  slackMessages   SlackMessage[]
   boundDocument   DocumentMetadata? @relation("boundDocument", fields: [boundDocumentId], references: [id])
   boundDocumentId Int?
   public          Boolean           @default(false)
@@ -69,6 +70,28 @@ model DiscordMessage {
   bot                   Bot?                 @relation(fields: [botId], references: [id])
 
   @@index(fields: [id, discordConversationId])
+}
+
+model SlackConversation {
+  id          String         @id
+  chatHistory SlackMessage[]
+
+  @@index(fields: [id])
+}
+
+model SlackMessage {
+  id                  String             @id
+  createdAt           DateTime
+  content             String
+  slackConversationId String?
+  isBot               Boolean            @default(false)
+  authorId            String
+  username            String
+  botId               Int?
+  conversation        SlackConversation? @relation(fields: [slackConversationId], references: [id])
+  bot                 Bot?               @relation(fields: [botId], references: [id])
+
+  @@index(fields: [id, slackConversationId])
 }
 
 model DocumentMetadata {

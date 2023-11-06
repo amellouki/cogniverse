@@ -6,6 +6,7 @@ import {
   Conversation,
   DiscordConversation,
   FullBot,
+  SlackConversation,
 } from '@my-monorepo/shared';
 import { QUERY_EMBEDDING_MODEL } from '../../../constants';
 import createLlm from '../../llm/create-llm';
@@ -62,7 +63,7 @@ export class RetrievalConversationalChainService {
     });
     return DocConversationalChain.fromLLM(
       conversationModel,
-      vectorStore.asRetriever(1),
+      vectorStore.asRetriever(4),
       {
         returnSourceDocuments: true,
         memory: new BufferMemory({
@@ -123,6 +124,30 @@ export class RetrievalConversationalChainService {
       retrievalCallbackManager,
       conversationalCallbackManager,
       this.chatHistoryBuilderService.buildFromDiscord(conversation.chatHistory),
+    );
+  }
+
+  async fromSlackConversation(
+    conversation: SlackConversation,
+    targetBot: FullBot,
+    retrievalCallbackManager: CallbackManager,
+    conversationalCallbackManager: CallbackManager,
+  ) {
+    const botConfig = targetBot.configuration;
+    if (botConfig.type !== BotType.RETRIEVAL_CONVERSATIONAL) {
+      throw Error('Bot is not a retrieval conversational');
+    }
+    const document = targetBot.boundDocument;
+    if (!document) {
+      throw new Error('Retrieval bot has no bound document');
+    }
+    return this.createChain(
+      botConfig,
+      targetBot.creator,
+      document,
+      retrievalCallbackManager,
+      conversationalCallbackManager,
+      this.chatHistoryBuilderService.buildFromSlack(conversation.chatHistory),
     );
   }
 }

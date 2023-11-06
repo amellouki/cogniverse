@@ -15,6 +15,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth/auth.guard';
 import * as dotenv from 'dotenv';
 import { AccountModule } from './modules/account/account.module';
+import { SlackModule } from './modules/slack/slack.module';
 
 dotenv.config({ path: './.env.local' });
 
@@ -36,8 +37,9 @@ dotenv.config({ path: './.env.local' });
     BotModule,
     ServicesModule,
     RepositoriesModule,
-    DiscordModule,
     AccountModule,
+    DiscordModule,
+    SlackModule,
   ],
   controllers: [AppController],
   providers: [

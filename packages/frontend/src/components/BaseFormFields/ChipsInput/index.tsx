@@ -43,7 +43,6 @@ const ChipsInput: FunctionComponent<Props> = ({
       <FormFieldWrapper label={label} htmlFor={id}>
         <div className={styles.inputWrapper}>
           <TextInput
-            type={'number'}
             id={id}
             className={styles.input}
             ref={textInputRef}
