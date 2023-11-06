@@ -1,11 +1,6 @@
 # [Cogniverse.ai](https://www.cogniverse.ai)
 A web app that leverages LLMs through Langchain.\
-_Aims at enabling fine-tuned prompting and UI to interact with the created agents._
-
-Deployed at https://www.cogniverse.ai
-
-**Currently supported LLMs:** GPT-3.5 (default) \
-**Currently supported vector stores:** Pinecone (default)
+_Pre prompt your bots and integrate them with messaging platforms such us Discord and Slack._
 
 ## Pre-requisites
 Node `v18.16.0` \
@@ -24,17 +19,41 @@ Create a `.env` file in /packages/backend/prisma with the following variables:
 ### Backend variables
 Create a `.env.local` file in /packages/backend with the following variables:
 
+#### Security
+* `PORT` The port on which the backend server will run
+* `ALLOWED_DOMAINS` The allowed domains for CORS
+* `JWT_SECRET` The secret used to sign JWT tokens
+
+#### OpenAI
 * `OPEN_AI_API_KEY` Your organization's openAI api key
+
+#### Pinecone
 * `PINECONE_API_KEY` Your Pinecone api key
 * `PINECONE_INDEX` Your Pinecone index name
 * `PINECONE_ENVIRONMENT` Your Pinecone environment name
-* `PORT` The port on which the backend server will run
-* `ALLOWED_DOMAINS` The allowed domains for CORS 
+
+#### Authentication
+* `GITHUB_OAUTH_CLIENT_SECRET` Github oauth client secret
+* `GITHUB_OAUTH_CLIENT_ID` Github oauth client id
+
+* `DISCORD_OAUTH_CLIENT_SECRET` The client secret for discord oauth
+* `DISCORD_OAUTH_CLIENT_ID` The client id for discord oauth
+* `DISCORD_OAUTH_REDIRECT_URI` The redirect uri for discord oauth
+
+#### Bot Integration
+* `DISCORD_BOT_TOKEN` Your discord bot token
+
+* `SLACK_BOT_TOKEN` Your slack bot token
+* `SLACK_SIGNING_SECRET` Your slack signing secret
+
 
 ### Frontend variables
 Create a `.env.local` file in /packages/frontend with the following variables:
 
 * `NEXT_PUBLIC_BACKEND_API` The backend api url (Port included if applicable)
+* `NEXT_PUBLIC_GITHUB_OAUTH_CLIENT_ID` GITHUB OAUTH CLIENT ID
+* `NEXT_PUBLIC_DISCORD_OAUTH_CLIENT_ID` DISCORD OAUTH CLIENT ID
+* `NEXT_PUBLIC_DISCORD_OAUTH_URL` DISCORD OAUTH URL
 
 ## How to run the app
 
