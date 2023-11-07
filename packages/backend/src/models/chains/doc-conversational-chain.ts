@@ -12,31 +12,10 @@ import { Document } from 'langchain/document';
 import { BaseLanguageModel } from 'langchain/base_language';
 import { ChatMessage } from '../chat-message';
 import { PromptTemplate } from 'langchain/prompts';
-
-const initialization =
-  'You are a query ai. Your output will be used to query a vector database about a certain document so we can retrieve the correct segment to answer the human question.';
-
-const question_generator_template =
-  initialization +
-  ' ' +
-  `Given the following Chat History and a follow up human input, attempt to rephrase the follow up input to be a standalone question to query the database.
-
-Chat History:
-{chat_history}
-
-Follow Up Human Input: {question}
-Standalone question, if it doesn't make sense to query the vector database for such human input then respond with nothing:`;
-
-const qaTemplate = `Given the following conversation, use the following pieces of context to best respond to the follow up human input. If you don't know an answer to a question, just say that you don't know, don't try to make up an answer.
-Chat History:
-{chat_history}
-
-Context:
-{context}
-
-Additional Human Input: {question}
-Helpful Answer:
-`;
+import {
+  RC_QA_TEMPLATE,
+  RC_QUESTION_GENERATION_TEMPLATE,
+} from '@my-monorepo/shared';
 
 export default class DocConversationalChain extends ConversationalRetrievalQAChain {
   async _call(
@@ -119,7 +98,7 @@ export default class DocConversationalChain extends ConversationalRetrievalQACha
 
     const qaChainOptions: QAChainParams = {
       prompt: new PromptTemplate({
-        template: conversationTemplate || qaTemplate,
+        template: conversationTemplate || RC_QA_TEMPLATE,
         inputVariables: ['chat_history', 'context', 'question'],
       }),
       type: 'stuff',
@@ -128,7 +107,8 @@ export default class DocConversationalChain extends ConversationalRetrievalQACha
     const qaChain = loadQAChain(llm, qaChainOptions);
 
     const questionGeneratorChainPrompt = PromptTemplate.fromTemplate(
-      questionGeneratorChainOptions?.template || question_generator_template,
+      questionGeneratorChainOptions?.template ||
+        RC_QUESTION_GENERATION_TEMPLATE,
     );
     const questionGeneratorChain = new LLMChain({
       prompt: questionGeneratorChainPrompt,

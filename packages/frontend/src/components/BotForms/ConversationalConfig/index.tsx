@@ -10,6 +10,7 @@ import WrappedSelect from "../../BaseFormFields/Select/WrappedSelect";
 import FormCTAs from "@/components/BotForms/FormCTAs";
 import {BotFormProps2} from "@/components/BotForms/BotFormProps";
 import useSubmit from "@/components/BotForms/use-submit.hook";
+import {CONVERSATIONAL_PROMPT} from "@my-monorepo/shared";
 import styles from '../RCConfig/styles.module.scss';
 
 type Props =  BotFormProps2<InputType>
@@ -23,7 +24,10 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
     watch,
   } = useForm<InputType>({
     resolver: zodResolver(schema),
-    defaultValues: props.initValue,
+    defaultValues: {
+      prompt: CONVERSATIONAL_PROMPT,
+      ...props.initValue
+    },
   })
 
   const onSubmit = useSubmit(props)
