@@ -19,14 +19,18 @@ import { ChatHistoryBuilderService } from '../../chat-history-builder/chat-histo
 import { RcBotConfiguration } from '@my-monorepo/shared/dist/types/bot/bot-configuration/0.0.1';
 import { DocumentMetadata } from '@prisma/client';
 import { BaseChatMessageHistory } from 'langchain/schema';
+import { VectorStore } from 'langchain/vectorstores/base';
+import { RCChainBuilder } from '../../../models/chain-builder';
 
 @Injectable()
-export class RetrievalConversationalChainService {
+export class RetrievalConversationalChainService extends RCChainBuilder {
   constructor(
     private configService: ConfigService,
     private vectorStoreService: VectorStoreService,
     private chatHistoryBuilderService: ChatHistoryBuilderService,
-  ) {}
+  ) {
+    super();
+  }
 
   private async createChain(
     botConfig: RcBotConfiguration,
@@ -43,14 +47,15 @@ export class RetrievalConversationalChainService {
       );
     }
 
-    const vectorStore = await this.vectorStoreService.createVectorStore({
-      type: 'Pinecone',
-      embeddingsConfig: {
-        apiKey: openAiApiKey,
-        type: QUERY_EMBEDDING_MODEL,
-      },
-      document,
-    });
+    const vectorStore: VectorStore =
+      await this.vectorStoreService.createVectorStore({
+        type: 'Pinecone',
+        embeddingsConfig: {
+          apiKey: openAiApiKey,
+          type: QUERY_EMBEDDING_MODEL,
+        },
+        document,
+      });
     const retrievalModel = createLlm({
       type: (botConfig.retrievalLm?.modelName as any) || 'gpt-3.5-turbo', // TODO: be more specific
       apiKey: openAiApiKey,

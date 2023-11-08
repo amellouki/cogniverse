@@ -21,6 +21,7 @@ import { RetrievalConversationalChainService } from '../../services/chains/retri
 import { ConversationalChainService } from '../../services/chains/conversational-chain/conversational-chain.service';
 import { BotService } from '../../repositories/bot/bot.service';
 import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
+import { BaseChainBuilder } from '../../models/chain-builder';
 
 const SLACK_MESSAGE_REQUEST_REGEX =
   /[ \t]*<@([a-zA-Z0-9]{1,20})>[ \t]*bot[ \t]+([a-zA-Z0-9-_]{1,20})[ \t]+(.*)/;
@@ -123,6 +124,17 @@ export class SlackService {
         conversation.chatHistory,
       ),
     });
+  }
+
+  private getChain2(type: BotType): BaseChainBuilder {
+    switch (type) {
+      case BotType.CONVERSATIONAL:
+        return this.conversationalChainService;
+      case BotType.RETRIEVAL_CONVERSATIONAL:
+        return this.retrievalConversationalChainService;
+      default:
+        throw new Error('Bot type not supported');
+    }
   }
 
   private async getChain(
