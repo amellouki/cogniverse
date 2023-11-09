@@ -1,18 +1,19 @@
 import { Module } from '@nestjs/common';
-import { DiscordService } from './discord.service';
-import { DiscordConversationModule } from '../../repositories/discord/discord-conversation/discord-conversation.module';
+import { SlackAppService } from './slack-app.service';
+import { SlackModule as SlackRepoModule } from '../../repositories/slack/slack.module';
 import { ChainsModule } from '../../services/chains/chains.module';
 import { BotModule } from '../../repositories/bot/bot.module';
 import { ChatHistoryBuilderModule } from '../../services/chat-history-builder/chat-history-builder.module';
+import { VectorStoreModule } from '../../services/vector-store/vector-store.module';
 
 @Module({
   imports: [
-    DiscordConversationModule,
+    SlackRepoModule,
     ChainsModule,
     BotModule,
     ChatHistoryBuilderModule,
+    VectorStoreModule,
   ],
-  providers: [DiscordService],
-  exports: [DiscordService],
+  providers: [SlackAppService],
 })
-export class DiscordModule {}
+export class SlackAppModule {}

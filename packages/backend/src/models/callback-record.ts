@@ -1,4 +1,4 @@
 import { LlmKeyType } from './llm-key-type';
-import { Callbacks } from 'langchain/callbacks';
+import { CallbackManager } from 'langchain/callbacks';
 
-export type CallBackRecord = Record<LlmKeyType, Callbacks>;
+export type CallBackRecord = Partial<Record<LlmKeyType, CallbackManager>>;
