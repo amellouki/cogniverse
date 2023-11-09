@@ -42,9 +42,3 @@ export class ConversationalChainBuilder extends BaseChainBuilder {
     });
   }
 }
-
-// createLlm({
-//   type: (botConfig.lm?.modelName as any) || 'gpt-3.5-turbo',
-//   apiKey: openAiApiKey,
-//   callbackManager,
-// });

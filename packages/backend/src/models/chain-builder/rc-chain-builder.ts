@@ -50,14 +50,3 @@ export class RCChainBuilder extends BaseChainBuilder {
     );
   }
 }
-
-// const retrievalModel = createLlm({
-//   type: (botConfig.retrievalLm?.modelName as any) || 'gpt-3.5-turbo', // TODO: be more specific
-//   apiKey: openAiApiKey,
-//   callbackManager: retrievalCallbackManager,
-// });
-// const conversationModel = createLlm({
-//   type: (botConfig.conversationalLm?.modelName as any) || 'gpt-3.5-turbo', // TODO: be more specific
-//   apiKey: openAiApiKey,
-//   callbackManager: conversationalCallbackManager,
-// });
