@@ -4,12 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { DiscordConversationService } from '../../repositories/discord/discord-conversation/discord-conversation.service';
 import { ConversationalChainService } from '../../services/chains/conversational-chain/conversational-chain.service';
 import { RetrievalConversationalChainService } from '../../services/chains/retrieval-conversational/retrieval-conversational-chain.service';
-import {
-  Bot,
-  DiscordConversation,
-  DiscordMessage,
-  FullBot,
-} from '@my-monorepo/shared';
+import { Bot, DiscordMessage } from '@my-monorepo/shared';
 import { CallbackManager } from 'langchain/callbacks';
 import { BotService } from '../../repositories/bot/bot.service';
 import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';

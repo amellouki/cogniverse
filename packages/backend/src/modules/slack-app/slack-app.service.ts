@@ -7,13 +7,7 @@ import {
 } from '@slack/bolt';
 import { Express } from 'express';
 import { ConfigService } from '@nestjs/config';
-import {
-  AccountKeys,
-  Bot,
-  BotType,
-  FullBot,
-  SlackMessage,
-} from '@my-monorepo/shared';
+import { Bot, SlackMessage } from '@my-monorepo/shared';
 import { LLMResult } from 'langchain/schema';
 import { SlackService as SlackRepository } from '../../repositories/slack/slack.service';
 import { CallbackManager } from 'langchain/callbacks';
@@ -21,13 +15,8 @@ import { RetrievalConversationalChainService } from '../../services/chains/retri
 import { ConversationalChainService } from '../../services/chains/conversational-chain/conversational-chain.service';
 import { BotService } from '../../repositories/bot/bot.service';
 import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
-import { BaseChainBuilder } from '../../models/chain-builder';
 import { CallBackRecord } from '../../models/callback-record';
-import { LLMRecord } from '../../models/llm-record';
-import { LlmBuilder } from '../../models/llm-builder';
-import { LmConfig } from '@my-monorepo/shared/dist/types/bot/bot-configuration/0.0.1';
 import { VectorStore } from 'langchain/vectorstores/base';
-import { QUERY_EMBEDDING_MODEL } from '../../constants';
 import { VectorStoreService } from '../../services/vector-store/vector-store.service';
 import { SlackChatHistoryBuilder } from '../../models/chat-history-builder';
 import { BaseThirdPartyApp } from '../../models/base-third-party-app';
