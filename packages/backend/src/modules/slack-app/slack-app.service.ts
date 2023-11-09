@@ -158,7 +158,6 @@ export class SlackAppService extends BaseThirdPartyApp {
       chatHistory,
     });
 
-    // const chain = await this.getChain(conversation, bot, args);
     await chain.call({
       question: parsedMessage.question,
       chat_history: this.chatHistoryBuilder.buildFromSlack(

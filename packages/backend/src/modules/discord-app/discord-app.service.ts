@@ -6,7 +6,6 @@ import { ConversationalChainService } from '../../services/chains/conversational
 import { RetrievalConversationalChainService } from '../../services/chains/retrieval-conversational/retrieval-conversational-chain.service';
 import {
   Bot,
-  BotType,
   DiscordConversation,
   DiscordMessage,
   FullBot,
@@ -15,23 +14,36 @@ import { CallbackManager } from 'langchain/callbacks';
 import { BotService } from '../../repositories/bot/bot.service';
 import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
 import { LLMResult } from 'langchain/schema';
+import { BaseThirdPartyApp } from '../../models/base-third-party-app';
+import { VectorStore } from 'langchain/vectorstores/base';
+import { DiscordChatHistoryBuilder } from '../../models/chat-history-builder';
+import { CallBackRecord } from '../../models/callback-record';
 
 const DISCORD_MESSAGE_REQUEST_REGEX =
   /[ \t]*<@([a-zA-Z0-9]{1,20})>[ \t]+bot[ \t]+([a-zA-Z0-9-_]{1,20})[ \t]+(.*)/;
 
 @Injectable()
-export class DiscordService implements OnModuleInit {
-  private readonly logger = new Logger(DiscordService.name);
+export class DiscordAppService
+  extends BaseThirdPartyApp
+  implements OnModuleInit
+{
+  private readonly logger = new Logger(DiscordAppService.name);
   private client: Client;
 
   constructor(
     private readonly configService: ConfigService,
     private discordConversationService: DiscordConversationService,
-    private conversationalChainService: ConversationalChainService,
-    private retrievalConversationalChainService: RetrievalConversationalChainService,
+    protected conversationalChainService: ConversationalChainService,
+    protected retrievalConversationalChainService: RetrievalConversationalChainService,
     private botService: BotService,
     private chatHistoryBuilder: ChatHistoryBuilderService,
-  ) {}
+  ) {
+    super(
+      conversationalChainService,
+      retrievalConversationalChainService,
+      null,
+    );
+  }
 
   onModuleInit() {
     this.client = new Client({
@@ -97,65 +109,40 @@ export class DiscordService implements OnModuleInit {
     await this.discordConversationService.saveMessage(
       this.mapHumanMessage(message),
     );
+    const postMessage = await message.channel.send('Thinking...');
     const conversation =
       await this.discordConversationService.getConversationById(
         message.channel.id,
       );
-    const chain = await this.getChain(conversation, bot, message);
+    const callbacks: CallBackRecord = {
+      lm: CallbackManager.fromHandlers({
+        handleLLMEnd: this.handleLLMEnd(bot, postMessage),
+      }),
+      retrievalLm: CallbackManager.fromHandlers({}),
+      conversationalLm: CallbackManager.fromHandlers({
+        handleLLMEnd: this.handleLLMEnd(bot, postMessage),
+      }),
+    };
+
+    const vectorStore: VectorStore = await this.getVectorStore(bot);
+    const llms = this.getLLMRecord(callbacks, bot.configuration, bot.creator);
+    const chatHistory = this.getHistory(
+      new DiscordChatHistoryBuilder(),
+      conversation.chatHistory,
+    );
+    const chain = this.getChain(bot.type).build({
+      llms,
+      botConfig: bot.configuration,
+      keys: bot.creator,
+      vectorStore,
+      chatHistory,
+    });
     await chain.call({
       question: parsedMessage.question,
       chat_history: this.chatHistoryBuilder.buildFromDiscord(
         conversation.chatHistory,
       ),
     });
-  }
-
-  private async getChain(
-    conversation: DiscordConversation,
-    bot: FullBot,
-    message: Message,
-  ) {
-    switch (bot.type) {
-      case BotType.CONVERSATIONAL:
-        return this.getConversationalChain(conversation, bot, message);
-      case BotType.RETRIEVAL_CONVERSATIONAL:
-        return await this.getRetrievalConversationalChain(
-          conversation,
-          bot,
-          message,
-        );
-      default:
-        throw new Error('Bot type not supported');
-    }
-  }
-
-  private getConversationalChain(
-    conversation: DiscordConversation,
-    bot: FullBot,
-    message: Message,
-  ) {
-    return this.conversationalChainService.fromDiscordConversation(
-      conversation,
-      bot,
-      CallbackManager.fromHandlers({
-        handleLLMEnd: this.handleLLMEnd(bot, message),
-      }),
-    );
-  }
-
-  private getRetrievalConversationalChain(
-    conversation: DiscordConversation,
-    bot: FullBot,
-    message: Message,
-  ) {
-    return this.retrievalConversationalChainService.fromDiscordConversation(
-      conversation,
-      bot,
-      CallbackManager.fromHandlers({}),
-      CallbackManager.fromHandlers({
-        handleLLMEnd: this.handleLLMEnd(bot, message),
-      }),
-    );
   }
 
   private handleLLMEnd(
@@ -165,20 +152,18 @@ export class DiscordService implements OnModuleInit {
     const parsedMessage = this.parseMessage(message.content);
     return async (result: LLMResult) => {
       if (result.generations[0][0]?.text) {
-        message.channel
-          .send(result.generations[0][0]?.text)
-          .then(async (message) => {
-            await this.discordConversationService.saveMessage({
-              content: result.generations[0][0]?.text,
-              discordConversationId: message.channel.id,
-              botId: bot.id,
-              isBot: true,
-              authorId: message.author.id,
-              username: parsedMessage.bot,
-              createdAt: message.createdAt,
-              id: message.id,
-            });
+        message.edit(result.generations[0][0]?.text).then(async (message) => {
+          await this.discordConversationService.saveMessage({
+            content: result.generations[0][0]?.text,
+            discordConversationId: message.channel.id,
+            botId: bot.id,
+            isBot: true,
+            authorId: message.author.id,
+            username: parsedMessage.bot,
+            createdAt: message.createdAt,
+            id: message.id,
           });
+        });
       }
     };
   }
