@@ -17,7 +17,7 @@ export class ResetHistoryService implements ICommand {
       interaction.deferReply(),
     ]);
     await interaction.editReply(
-      `Chat history for for conversation ${interaction.channel.id} has been reset! - <@${interaction.user.id}>`,
+      `Chat history for channel <#${interaction.channel.id}> has been reset! - <@${interaction.user.id}>`,
     );
   }
 }
