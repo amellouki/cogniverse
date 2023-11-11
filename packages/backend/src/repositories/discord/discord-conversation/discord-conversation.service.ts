@@ -50,4 +50,12 @@ export class DiscordConversationService {
       },
     }) as unknown as DiscordConversation;
   }
+
+  async resetHistory(channelId: string) {
+    return await this.prisma.discordMessage.deleteMany({
+      where: {
+        discordConversationId: channelId,
+      },
+    });
+  }
 }
