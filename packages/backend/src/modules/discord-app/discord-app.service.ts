@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import {
   Client,
   GatewayIntentBits,
@@ -21,7 +21,7 @@ export class DiscordAppService
   extends BaseThirdPartyApp
   implements OnModuleInit
 {
-  private readonly logger = console;
+  private readonly logger = new Logger(DiscordAppService.name);
 
   private client: Client;
   private commandMap: Map<string, ICommand>;
@@ -80,7 +80,7 @@ export class DiscordAppService
     this.client
       .login(this.configService.get('DISCORD_BOT_TOKEN'))
       .then(this.logger.log)
-      .catch(this.logger.error);
+      .catch((e) => this.logger.error(e.message));
 
     this.registerCommands();
   }
@@ -100,6 +100,6 @@ export class DiscordAppService
         },
       )
       .then(this.logger.log)
-      .catch(this.logger.error);
+      .catch((e) => this.logger.error(e.message));
   }
 }
