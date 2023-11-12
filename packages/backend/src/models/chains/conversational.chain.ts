@@ -29,7 +29,6 @@ class ConversationalChain extends LLMChain {
     const chatHistory: string = ChatMessage.getChatHistoryString(
       values[this.chatHistoryKey],
     );
-    console.log('chatHistory', chatHistory);
     return super._call(
       {
         question,

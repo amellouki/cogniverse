@@ -8,19 +8,12 @@ import {
   Events,
 } from 'discord.js';
 import { ConfigService } from '@nestjs/config';
-import { ConversationalChainService } from 'src/services/chains/conversational-chain/conversational-chain.service';
-import { RetrievalConversationalChainService } from 'src/services/chains/retrieval-conversational/retrieval-conversational-chain.service';
-import { BaseThirdPartyApp } from 'src/models/base-third-party-app';
-import { VectorStoreService } from 'src/services/vector-store/vector-store.service';
 import { CvService } from 'src/modules/discord-app/discord-commands/cv/cv.service';
 import { ICommand } from 'src/models/command';
 import { ResetHistoryService } from 'src/modules/discord-app/discord-commands/reset-history/reset-history.service';
 
 @Injectable()
-export class DiscordAppService
-  extends BaseThirdPartyApp
-  implements OnModuleInit
-{
+export class DiscordAppService implements OnModuleInit {
   private readonly logger = new Logger(DiscordAppService.name);
 
   private client: Client;
@@ -29,18 +22,10 @@ export class DiscordAppService
 
   constructor(
     private readonly configService: ConfigService,
-    protected conversationalChainService: ConversationalChainService,
-    protected retrievalConversationalChainService: RetrievalConversationalChainService,
-    protected vectorStoreService: VectorStoreService,
     // commands
     private cvService: CvService,
     private resetHistoryService: ResetHistoryService,
   ) {
-    super(
-      conversationalChainService,
-      retrievalConversationalChainService,
-      vectorStoreService,
-    );
     const list = [this.cvService, this.resetHistoryService];
     this.commandMap = new Map<string, ICommand>(
       list.map((command) => [command.data.name, command]),
