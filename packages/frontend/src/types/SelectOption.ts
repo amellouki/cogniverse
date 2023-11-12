@@ -3,4 +3,9 @@ type SelectOption = {
   value: string;
 }
 
+export type JSXOption = {
+  label: string | JSX.Element;
+  value: string;
+}
+
 export default SelectOption;

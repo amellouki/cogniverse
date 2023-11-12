@@ -2,7 +2,6 @@ import React, {CSSProperties, FunctionComponent} from 'react';
 import {Controller, UseFormReturn} from "react-hook-form";
 import {InputType} from "@/components/BotForms/Integration/form.schema";
 import Checkbox from "@/components/BaseFormFields/Checkbox";
-import DiscordIcon from "@/components/icons/Discord.icon";
 import ChipsInput from "@/components/BaseFormFields/ChipsInput";
 import styles from "@/components/BotForms/Integration/styles.module.scss";
 import AppLink from "@/components/AppLink";
@@ -32,7 +31,7 @@ const Discord: FunctionComponent<Props> = ({
         id={'integrate-with-discord'}
         {...register('integrateWithDiscord', {required: true})}
       >
-        <span className="flex items-center gap-2"><DiscordIcon width={"24px"} height={"24px"}/><span>Integrate with Discord?</span></span>
+        <span>Integrate with Discord?</span>
       </Checkbox>
       {integrateWithDiscord && (
         <Controller
