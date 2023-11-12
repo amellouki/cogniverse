@@ -8,14 +8,14 @@ import { DocQuestionAnsweringModule } from './modules/doc-question-answering/doc
 import { RetrievalConversationalModule } from './modules/retrieval-conversational/retrieval-conversational.module';
 import { RepositoriesModule } from './repositories/repositories.module';
 import { BotModule } from './modules/bot/bot.module';
-import { DiscordModule } from './modules/discord/discord.module';
+import { DiscordAppModule } from './modules/discord-app/discord-app.module';
 import { LoginModule } from './modules/authentication/login/login.module';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth/auth.guard';
 import * as dotenv from 'dotenv';
 import { AccountModule } from './modules/account/account.module';
-import { SlackModule } from './modules/slack/slack.module';
+import { SlackAppModule } from './modules/slack-app/slack-app.module';
 
 dotenv.config({ path: './.env.local' });
 
@@ -38,8 +38,8 @@ dotenv.config({ path: './.env.local' });
     ServicesModule,
     RepositoriesModule,
     AccountModule,
-    DiscordModule,
-    SlackModule,
+    DiscordAppModule,
+    SlackAppModule,
   ],
   controllers: [AppController],
   providers: [

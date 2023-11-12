@@ -1,9 +1,10 @@
 import React, {FunctionComponent} from 'react';
 import styles from './styles.module.scss';
 import Button from "@/components/Button";
+import {JSXOption} from "@/types/SelectOption";
 
 type Props = {
-  options: string[];
+  options: JSXOption[];
   selected: string | undefined | null;
   onChange: (value: string) => void;
 }
@@ -13,13 +14,14 @@ const ToggleButtonGroup: FunctionComponent<Props> = (props) => {
     <div className={styles.ToggleButtonGroup}>
       {
         props.options
-          .map((option) => (
+          .map(({ label, value }) => (
             <Button
-              key={option}
-              onClick={() => props.onChange(option)}
-              variant={props.selected === option ? 'outlined' : 'primary'}
+              key={value}
+              onClick={() => props.onChange(value)}
+              variant={props.selected === value ? 'outlined' : 'primary'}
+              className={styles.button}
             >
-              {option}
+              {label}
             </Button>
           ))
       }

@@ -7,13 +7,7 @@ import {
 } from '@slack/bolt';
 import { Express } from 'express';
 import { ConfigService } from '@nestjs/config';
-import {
-  Bot,
-  BotType,
-  FullBot,
-  SlackConversation,
-  SlackMessage,
-} from '@my-monorepo/shared';
+import { Bot, SlackMessage } from '@my-monorepo/shared';
 import { LLMResult } from 'langchain/schema';
 import { SlackService as SlackRepository } from '../../repositories/slack/slack.service';
 import { CallbackManager } from 'langchain/callbacks';
@@ -21,24 +15,35 @@ import { RetrievalConversationalChainService } from '../../services/chains/retri
 import { ConversationalChainService } from '../../services/chains/conversational-chain/conversational-chain.service';
 import { BotService } from '../../repositories/bot/bot.service';
 import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
+import { CallBackRecord } from '../../models/callback-record';
+import { VectorStore } from 'langchain/vectorstores/base';
+import { VectorStoreService } from '../../services/vector-store/vector-store.service';
+import { SlackChatHistoryBuilder } from '../../models/chat-history-builder';
+import { BaseThirdPartyApp } from '../../models/base-third-party-app';
 
 const SLACK_MESSAGE_REQUEST_REGEX =
   /[ \t]*<@([a-zA-Z0-9]{1,20})>[ \t]*bot[ \t]+([a-zA-Z0-9-_]{1,20})[ \t]+(.*)/;
 @Injectable()
-export class SlackService {
-  private logger = new Logger(SlackService.name);
+export class SlackAppService extends BaseThirdPartyApp {
+  private logger = new Logger(SlackAppService.name);
 
   readonly app: App;
   readonly receiver: ExpressReceiver;
 
   constructor(
     private readonly configService: ConfigService,
+    protected conversationalChainService: ConversationalChainService,
+    protected retrievalConversationalChainService: RetrievalConversationalChainService,
+    protected vectorStoreService: VectorStoreService,
     private slackRepository: SlackRepository,
-    private conversationalChainService: ConversationalChainService,
-    private retrievalConversationalChainService: RetrievalConversationalChainService,
     private botService: BotService,
     private chatHistoryBuilder: ChatHistoryBuilderService,
   ) {
+    super(
+      conversationalChainService,
+      retrievalConversationalChainService,
+      vectorStoreService,
+    );
     try {
       this.receiver = new ExpressReceiver({
         signingSecret: this.configService.get('SLACK_SIGNING_SECRET'),
@@ -112,11 +117,36 @@ export class SlackService {
       );
       return;
     }
+    const { ts } = await say('Generating...');
+
     await this.slackRepository.saveMessage(await this.mapHumanMessage(args));
     const conversation = await this.slackRepository.getConversationById(
       message.channel,
     );
-    const chain = await this.getChain(conversation, bot, args);
+    const callbacks: CallBackRecord = {
+      lm: CallbackManager.fromHandlers({
+        handleLLMEnd: this.handleLLMEnd(bot, ts, args),
+      }),
+      retrievalLm: CallbackManager.fromHandlers({}),
+      conversationalLm: CallbackManager.fromHandlers({
+        handleLLMEnd: this.handleLLMEnd(bot, ts, args),
+      }),
+    };
+
+    const vectorStore: VectorStore = await this.getVectorStore(bot);
+    const llms = this.getLLMRecord(callbacks, bot.configuration, bot.creator);
+    const chatHistory = this.getHistory(
+      new SlackChatHistoryBuilder(),
+      conversation.chatHistory,
+    );
+    const chain = this.getChain(bot.type).build({
+      llms,
+      botConfig: bot.configuration,
+      keys: bot.creator,
+      vectorStore,
+      chatHistory,
+    });
+
     await chain.call({
       question: parsedMessage.question,
       chat_history: this.chatHistoryBuilder.buildFromSlack(
@@ -125,76 +155,31 @@ export class SlackService {
     });
   }
 
-  private async getChain(
-    conversation: SlackConversation,
-    bot: FullBot,
-    args: SlackEventMiddlewareArgs<'message'>,
-  ) {
-    switch (bot.type) {
-      case BotType.CONVERSATIONAL:
-        return this.getConversationalChain(conversation, bot, args);
-      case BotType.RETRIEVAL_CONVERSATIONAL:
-        return await this.getRetrievalConversationalChain(
-          conversation,
-          bot,
-          args,
-        );
-      default:
-        throw new Error('Bot type not supported');
-    }
-  }
-
-  private getConversationalChain(
-    conversation: SlackConversation,
-    bot: FullBot,
-    args: SlackEventMiddlewareArgs<'message'>,
-  ) {
-    return this.conversationalChainService.fromSlackConversation(
-      conversation,
-      bot,
-      CallbackManager.fromHandlers({
-        handleLLMEnd: this.handleLLMEnd(bot, args),
-      }),
-    );
-  }
-
-  private getRetrievalConversationalChain(
-    conversation: SlackConversation,
-    bot: FullBot,
-    args: SlackEventMiddlewareArgs<'message'>,
-  ) {
-    return this.retrievalConversationalChainService.fromSlackConversation(
-      conversation,
-      bot,
-      CallbackManager.fromHandlers({}),
-      CallbackManager.fromHandlers({
-        handleLLMEnd: this.handleLLMEnd(bot, args),
-      }),
-    );
-  }
-
   private handleLLMEnd(
     bot: Bot,
-    { message, say }: SlackEventMiddlewareArgs<'message'>,
+    ts: string,
+    { message }: SlackEventMiddlewareArgs<'message'>,
   ): (result: LLMResult) => Promise<void> {
-    if (!('text' in message)) {
-      throw new Error('Type error');
-    }
-    const parsedMessage = this.parseMessage(message.text);
     return async (result: LLMResult) => {
       if (result.generations[0][0]?.text) {
-        say(result.generations[0][0]?.text).then(async (postMessage) => {
-          await this.slackRepository.saveMessage({
-            content: result.generations[0][0]?.text,
-            slackConversationId: message.channel,
-            botId: bot.id,
-            isBot: true,
-            authorId: postMessage.message.user,
-            username: parsedMessage.bot,
-            createdAt: new Date(parseFloat(postMessage.message.ts) * 1000),
-            id: postMessage.message.ts,
+        this.app.client.chat
+          .update({
+            ts: ts,
+            channel: message.channel,
+            text: result.generations[0][0]?.text,
+          })
+          .then(async (postMessage) => {
+            await this.slackRepository.saveMessage({
+              content: result.generations[0][0]?.text,
+              slackConversationId: postMessage.channel,
+              botId: bot.id,
+              isBot: true,
+              authorId: postMessage.message.user,
+              username: bot.name,
+              createdAt: new Date(parseFloat(ts) * 1000),
+              id: ts,
+            });
           });
-        });
       }
     };
   }

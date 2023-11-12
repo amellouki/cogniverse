@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { SlackService } from './modules/slack/slack.service';
+import { SlackAppService } from './modules/slack-app/slack-app.service';
 
 dotenv.config({ path: './.env.local' });
 
@@ -18,7 +18,7 @@ async function bootstrap() {
   });
 
   // Get SlackService
-  const slackService = app.get(SlackService);
+  const slackService = app.get(SlackAppService);
   // Access the underlying Express instance
   const expressApp = app.getHttpAdapter().getInstance();
   // Attach the Slack Bolt App to the Express app

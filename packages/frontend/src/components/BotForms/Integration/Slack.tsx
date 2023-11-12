@@ -25,7 +25,7 @@ const Slack: FunctionComponent<Props> = ({
         id={'integrate-with-slack'}
         {...register('integrateWithSlack', {required: true})}
       >
-        <span className="flex items-center gap-2"><SlackIcon width={"24px"} height={"24px"}/><span>Integrate with Slack?</span></span>
+        <span>Integrate with Slack?</span>
       </Checkbox>
       {integrateWithSlack && (
         <Controller

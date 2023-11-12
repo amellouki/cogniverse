@@ -9,10 +9,10 @@ import {CLM_PROMPT_PLACEHOLDERS, RLM_PROMPT_PLACEHOLDERS} from "./contants";
 import styles from './styles.module.scss';
 import WrappedSelect from "../../BaseFormFields/Select/WrappedSelect";
 import {LLM_OPTIONS} from "@/constants";
-import TextInput from "@/components/BaseFormFields/TextInput";
 import {BotFormProps2} from "@/components/BotForms/BotFormProps";
 import FormCTAs from "@/components/BotForms/FormCTAs";
 import useSubmit from "@/components/BotForms/use-submit.hook";
+import {RC_QA_TEMPLATE, RC_QUESTION_GENERATION_TEMPLATE} from "@my-monorepo/shared";
 
 type Props = BotFormProps2<InputType>
 
@@ -26,7 +26,11 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
     watch,
   } = useForm<InputType>({
     resolver: zodResolver(schema),
-    defaultValues: props.initValue,
+    defaultValues: {
+      rlmPrompt: RC_QUESTION_GENERATION_TEMPLATE,
+      clmPrompt: RC_QA_TEMPLATE,
+      ...props.initValue
+    },
   })
 
   console.log('errors', errors)

@@ -3,11 +3,12 @@ import { ChainValues } from 'langchain/schema';
 import { CallbackManagerForChainRun } from 'langchain/callbacks';
 import { ChatMessage } from '../chat-message';
 import { PromptTemplate } from 'langchain/prompts';
+import { CONVERSATIONAL_PROMPT } from '@my-monorepo/shared';
 
-const DEFAULT_PROMPT = `The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.`;
 const INSTRUCTIONS = `use the chat history and answer the following question.
 chat history:{chat_history}
-question: {question} answer:`;
+question: {question}
+answer:`;
 
 class ConversationalChain extends LLMChain {
   inputKey = 'question';
@@ -44,7 +45,7 @@ class ConversationalChain extends LLMChain {
     const chain = new ConversationalChain({
       ...rest,
       prompt: PromptTemplate.fromTemplate(
-        (template ?? DEFAULT_PROMPT) + INSTRUCTIONS,
+        (template ?? CONVERSATIONAL_PROMPT) + INSTRUCTIONS,
       ),
     });
     return chain;
