@@ -1,6 +1,7 @@
 import { CallbackManager } from 'langchain/callbacks';
 import { BaseLLM } from 'langchain/llms/base';
 import { OpenAI } from 'langchain/llms/openai';
+import { InternalServerException } from '@my-monorepo/shared';
 
 type Config =
   | {
@@ -25,7 +26,7 @@ function createLlm(config: Config): BaseLLM {
         callbackManager: config.callbackManager,
       });
     default:
-      throw new Error('LLM type not supported');
+      throw new InternalServerException('LLM type not supported');
   }
 }
 

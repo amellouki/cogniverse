@@ -17,11 +17,18 @@ export class RetrievalConversationalService {
   ) {}
 
   getCompletion$(question: string, conversation: Conversation) {
-    return new Observable<NewMessage>((subscriber) => {
-      this.getCompletion(question, conversation, subscriber)
-        .then(() => subscriber.complete())
-        .catch((e) => subscriber.error(e));
-    }).pipe(share());
+    return new Observable<NewMessage | { type: 'error'; payload: Error }>(
+      (subscriber) => {
+        this.getCompletion(question, conversation, subscriber)
+          .then(() => subscriber.complete())
+          .catch((e) => {
+            subscriber.next({
+              type: 'error',
+              payload: e,
+            });
+          });
+      },
+    ).pipe(share());
   }
 
   async getCompletion(

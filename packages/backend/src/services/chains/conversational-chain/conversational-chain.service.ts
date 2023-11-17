@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { BotType, Conversation } from '@my-monorepo/shared';
+import { BotType, Conversation, KeyNotSetException } from '@my-monorepo/shared';
 import { CallbackManager } from 'langchain/callbacks';
 import createLlm from '../../llm/create-llm';
 import { BufferMemory } from 'langchain/memory';
@@ -28,9 +28,7 @@ export class ConversationalChainService extends ConversationalChainBuilder {
 
     const openAiApiKey = conversation.creator.openAiApiKey;
     if (!openAiApiKey) {
-      throw new Error(
-        'Please set your OpenAI API key in your account settings.',
-      );
+      throw new KeyNotSetException('OpenAI API key');
     }
 
     const llm = createLlm({

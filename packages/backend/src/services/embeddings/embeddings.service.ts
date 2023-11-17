@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { Embeddings } from 'langchain/embeddings/base';
+import { InternalServerException } from '@my-monorepo/shared';
 
 export type EmbeddingsConfig = {
   type:
@@ -26,7 +27,7 @@ export class EmbeddingsService {
           modelName: config.type,
         });
       default:
-        throw new Error('Embedding type not supported');
+        throw new InternalServerException('Embedding type not supported');
     }
   }
 }

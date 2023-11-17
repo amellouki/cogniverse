@@ -1,6 +1,9 @@
 import { OpenAI } from 'langchain/llms/openai';
 import { LmConfig } from '@my-monorepo/shared/dist/types/bot/bot-configuration/0.0.1';
-import { AccountKeys } from '@my-monorepo/shared';
+import {
+  AccountKeys,
+  LanguageModelNotSupportedException,
+} from '@my-monorepo/shared';
 import { CallbackManager } from 'langchain/callbacks';
 import { BaseLLM } from 'langchain/dist/llms/base';
 
@@ -22,7 +25,7 @@ export class LlmBuilder {
           callbackManager: callbackManager,
         });
       default:
-        throw new Error('LLM type not supported');
+        throw new LanguageModelNotSupportedException();
     }
   }
 }

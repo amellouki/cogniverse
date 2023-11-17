@@ -1,7 +1,15 @@
 import React, {useState} from 'react';
 import {useRouter} from "next/router";
 import {useBotDetails} from "@/hooks/bot-mangement/use-bot-details";
-import {Bot, BotAvatarType, BotType, ConversationalBot, NewBot, RcBot} from "@my-monorepo/shared";
+import {
+  Bot,
+  BotAvatarType,
+  BotType,
+  ConversationalBot,
+  NewBot,
+  RcBot,
+  SomethingWentWrongException
+} from "@my-monorepo/shared";
 import {InputType as ConversationalInputType} from "@/components/BotForms/form-wizards/ConversationalSteps/form.schema";
 import {InputType as RCInputType} from "@/components/BotForms/form-wizards/RCSteps/form.schema";
 import {NextPageWithLayout} from "@/pages/_app";
@@ -113,7 +121,7 @@ function getBotAvatarColor(data: Bot): string {
   if (avatar.type === BotAvatarType.BOT_AVATAR_EMOTE) {
     return avatar.backgroundColor;
   }
-  throw new Error('Not implemented');
+  throw new SomethingWentWrongException('Not implemented');
 }
 
 function getAllowedDiscordChannelId(data: Bot): string[] | undefined {
@@ -122,7 +130,7 @@ function getAllowedDiscordChannelId(data: Bot): string[] | undefined {
   if (discordIntegration.isPrivate && discordIntegration.allowedChannels) {
     return discordIntegration.allowedChannels
   }
-  throw new Error('Not implemented');
+  throw new SomethingWentWrongException('Not implemented');
 }
 
 function getRCFromValue(data: RcBot): RCInputType {

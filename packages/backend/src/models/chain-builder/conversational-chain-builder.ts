@@ -1,5 +1,5 @@
 import { ConversationalBotConfiguration } from '@my-monorepo/shared/dist/types/bot/bot-configuration/0.0.1';
-import { BotType } from '@my-monorepo/shared';
+import { BotType, KeyNotSetException } from '@my-monorepo/shared';
 import { ConversationalChain } from '../chains';
 import { BufferMemory } from 'langchain/memory';
 import { BaseChainBuilder, IChainBuilderInput } from './base-chain-builder';
@@ -24,9 +24,7 @@ export class ConversationalChainBuilder extends BaseChainBuilder {
 
     const openAiApiKey = input.keys.openAiApiKey;
     if (!openAiApiKey) {
-      throw new Error(
-        'Please set your OpenAI API key in your account settings.',
-      );
+      throw new KeyNotSetException('OpenAI api key');
     }
 
     return ConversationalChain.instantiate({

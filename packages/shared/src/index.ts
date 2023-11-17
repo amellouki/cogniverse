@@ -11,3 +11,4 @@ export * from './constants';
 export * from './types/discord';
 export * from './types/slack';
 export * from './types/account';
+export * from './models/exceptions';

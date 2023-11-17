@@ -6,6 +6,7 @@ import {
   Conversation,
   DiscordConversation,
   FullBot,
+  KeyNotSetException,
   SlackConversation,
 } from '@my-monorepo/shared';
 import { QUERY_EMBEDDING_MODEL } from '../../../constants';
@@ -42,9 +43,7 @@ export class RetrievalConversationalChainService extends RCChainBuilder {
   ): Promise<BaseChain> {
     const openAiApiKey = keys.openAiApiKey;
     if (!openAiApiKey) {
-      throw new Error(
-        'Please set your OpenAI API key in your account settings.',
-      );
+      throw new KeyNotSetException('OpenAI API key');
     }
 
     const vectorStore: VectorStore =

@@ -3,7 +3,7 @@ import { ChainValues } from 'langchain/schema';
 import { CallbackManagerForChainRun } from 'langchain/callbacks';
 import { ChatMessage } from '../chat-message';
 import { PromptTemplate } from 'langchain/prompts';
-import { CONVERSATIONAL_PROMPT } from '@my-monorepo/shared';
+import { ChainException, CONVERSATIONAL_PROMPT } from '@my-monorepo/shared';
 
 const INSTRUCTIONS = `use the chat history and answer the following question.
 chat history:{chat_history}
@@ -19,10 +19,12 @@ class ConversationalChain extends LLMChain {
     runManager?: CallbackManagerForChainRun,
   ): Promise<ChainValues> {
     if (!(this.inputKey in values)) {
-      throw new Error(`Input key ${this.inputKey} not in values`);
+      throw new ChainException(`Input key ${this.inputKey} not in values`);
     }
     if (!(this.chatHistoryKey in values)) {
-      throw new Error(`Chat history key ${this.chatHistoryKey} not in values`);
+      throw new ChainException(
+        `Chat history key ${this.chatHistoryKey} not in values`,
+      );
     }
 
     const question: string = values[this.inputKey];

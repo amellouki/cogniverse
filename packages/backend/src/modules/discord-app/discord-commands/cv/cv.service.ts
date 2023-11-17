@@ -6,7 +6,11 @@ import { RetrievalConversationalChainService } from 'src/services/chains/retriev
 import { VectorStoreService } from 'src/services/vector-store/vector-store.service';
 import { BotService } from 'src/repositories/bot/bot.service';
 import { DiscordConversationService } from 'src/repositories/discord/discord-conversation/discord-conversation.service';
-import { Bot, DiscordMessage } from '@my-monorepo/shared';
+import {
+  Bot,
+  DiscordMessage,
+  BadDiscordRequestException,
+} from '@my-monorepo/shared';
 import { CallBackRecord } from 'src/models/callback-record';
 import { CallbackManager } from 'langchain/callbacks';
 import { LLMResult } from 'langchain/schema';
@@ -126,7 +130,9 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
     const botName = interaction.options.getString('bot');
     const message = interaction.options.getString('message');
     if (!botName || !message) {
-      throw new Error('Please provide a bot name and a message');
+      throw new BadDiscordRequestException(
+        'Please provide a bot name and a message',
+      );
     }
   }
 
@@ -134,17 +140,19 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
     const botName = interaction.options.getString('bot');
     const bot = await this.botService.getBotByName(botName);
     if (!bot) {
-      throw new Error(`Bot ${botName} does not exist`);
+      throw new BadDiscordRequestException(`Bot ${botName} does not exist`);
     }
     const discordIntegration = bot.configuration.thirdPartyIntegration.discord;
     if (!discordIntegration) {
-      throw new Error(`Bot ${botName} is not integrated`);
+      throw new BadDiscordRequestException(`Bot ${botName} is not integrated`);
     }
     if (
       discordIntegration.isPrivate &&
       !discordIntegration.allowedChannels.includes(interaction.channel.id)
     ) {
-      throw new Error(`Bot ${botName} is not available for this channel`);
+      throw new BadDiscordRequestException(
+        `Bot ${botName} is not available for this channel`,
+      );
     }
     return bot;
   }

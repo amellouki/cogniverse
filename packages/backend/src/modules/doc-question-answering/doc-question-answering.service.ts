@@ -5,10 +5,11 @@ import { ENV, QUERY_EMBEDDING_MODEL } from '../../constants';
 import { CallbackManager } from 'langchain/callbacks';
 import { VectorDBQAChain } from 'langchain/chains';
 import { ConfigService } from '@nestjs/config';
-import { PineconeService } from '../../services/pinecone/pinecone.service';
+import { PineconeService } from 'src/services/pinecone/pinecone.service';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { OpenAI } from 'langchain/llms/openai';
+import { EnvironmentVariableNotSetException } from '@my-monorepo/shared';
 
 @Injectable()
 export class DocQuestionAnsweringService {
@@ -25,7 +26,7 @@ export class DocQuestionAnsweringService {
   ) {
     const openAiApiKey = this.configService.get<string>(ENV.OPEN_AI_API_KEY);
     if (!openAiApiKey) {
-      throw new Error(
+      throw new EnvironmentVariableNotSetException(
         'Some environment variables are not set. Please check your .env.local file.',
       );
     }

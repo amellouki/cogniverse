@@ -1,6 +1,13 @@
 import { ConversationalChainService } from '../services/chains/conversational-chain/conversational-chain.service';
 import { RetrievalConversationalChainService } from '../services/chains/retrieval-conversational/retrieval-conversational-chain.service';
-import { AccountKeys, Bot, BotType, FullBot } from '@my-monorepo/shared';
+import {
+  AccountKeys,
+  Bot,
+  BotNotBoundException,
+  BotType,
+  BotTypeNotSupportedException,
+  FullBot,
+} from '@my-monorepo/shared';
 import { BaseChainBuilder } from './chain-builder';
 import { VectorStoreService } from '../services/vector-store/vector-store.service';
 import { VectorStore } from 'langchain/vectorstores/base';
@@ -25,13 +32,13 @@ export class BaseThirdPartyApp {
       case BotType.RETRIEVAL_CONVERSATIONAL:
         return this.retrievalConversationalChainService;
       default:
-        throw new Error('Bot type not supported');
+        throw new BotTypeNotSupportedException();
     }
   }
 
   protected async getVectorStore(bot: FullBot): Promise<VectorStore> {
     if (bot.type === BotType.RETRIEVAL_CONVERSATIONAL && !bot.boundDocument) {
-      throw new Error('Bot has no bound document');
+      throw new BotNotBoundException();
     }
     if (!bot.boundDocument) {
       return null;

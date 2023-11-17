@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
-import { AccessTokenResponse, UserResponse } from '../../../types/github-types';
+import { AccessTokenResponse, UserResponse } from 'src/types/github-types';
 import { JwtService } from '@nestjs/jwt';
 import { OAuthProvider } from '@prisma/client';
-import { AccountService } from '../../../repositories/account/account.service';
-import { GithubAuthPayload } from '../../../types/auth-payload';
+import { AccountService } from 'src/repositories/account/account.service';
+import { GithubAuthPayload } from 'src/types/auth-payload';
 
 @Injectable()
 export class GithubOAuthService {
@@ -28,7 +28,7 @@ export class GithubOAuthService {
         accept: 'application/json',
       },
     });
-    if (!response.data.access_token) throw new Error('No access token!');
+    if (!response.data.access_token) throw new UnauthorizedException();
 
     return response.data;
   }

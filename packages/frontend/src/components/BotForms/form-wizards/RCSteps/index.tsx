@@ -6,7 +6,7 @@ import {InputType as ConfigType} from "@/components/BotForms/RCConfig/form.schem
 import {InputType as IntegrationType} from "@/components/BotForms/Integration/form.schema";
 import schema, {InputType} from "./form.schema";
 import {getNewBot} from "@/components/BotForms/form-wizards/RCSteps/helpers";
-import {NewBot} from "@my-monorepo/shared";
+import {NewBot, SomethingWentWrongException} from "@my-monorepo/shared";
 import {useRouter} from "next/router";
 import Steps from "@/components/BotForms/Steps";
 import Portal from "@/components/Portal";
@@ -42,7 +42,7 @@ const ConversationalSteps: FunctionComponent<Props> = (props) => {
       if (parsed.success) {
         return getNewBot(parsed.data)
       } else {
-        throw new Error('Failed to parse')
+        throw new SomethingWentWrongException('Failed to parse')
       }
     }
     const onSubmit = () => {
@@ -86,7 +86,7 @@ const ConversationalSteps: FunctionComponent<Props> = (props) => {
           />
         )
       default:
-        throw new Error('Unknown step');
+        throw new SomethingWentWrongException('Unknown step');
     }
   }
 

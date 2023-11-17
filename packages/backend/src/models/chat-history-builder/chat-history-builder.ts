@@ -3,6 +3,7 @@ import { ChatMessageHistory } from 'langchain/memory';
 import { SystemMessage } from 'langchain/schema';
 import { ChatMessage } from '../chat-message';
 import { BaseChatHistoryBuilder } from './base-chat-history-builder';
+import { MessageTypeNotSupportedException } from '@my-monorepo/shared';
 
 export class ChatHistoryBuilder extends BaseChatHistoryBuilder<Message> {
   build(chatHistory: Message[]): ChatMessageHistory {
@@ -15,7 +16,7 @@ export class ChatHistoryBuilder extends BaseChatHistoryBuilder<Message> {
         case 'human':
           return ChatMessage.createHumanMessage(message.content, '');
         default:
-          throw new Error('Message type not supported');
+          throw new MessageTypeNotSupportedException();
       }
     });
     return new ChatMessageHistory(messages);

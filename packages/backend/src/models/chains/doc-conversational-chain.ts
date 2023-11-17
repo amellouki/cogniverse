@@ -13,6 +13,7 @@ import { BaseLanguageModel } from 'langchain/base_language';
 import { ChatMessage } from '../chat-message';
 import { PromptTemplate } from 'langchain/prompts';
 import {
+  ChainException,
   RC_QA_TEMPLATE,
   RC_QUESTION_GENERATION_TEMPLATE,
 } from '@my-monorepo/shared';
@@ -23,10 +24,12 @@ export default class DocConversationalChain extends ConversationalRetrievalQACha
     runManager?: CallbackManagerForChainRun,
   ): Promise<ChainValues> {
     if (!(this.inputKey in values)) {
-      throw new Error(`Question key ${this.inputKey} not found.`);
+      throw new ChainException(`Question key ${this.inputKey} not found.`);
     }
     if (!(this.chatHistoryKey in values)) {
-      throw new Error(`Chat history key ${this.chatHistoryKey} not found.`);
+      throw new ChainException(
+        `Chat history key ${this.chatHistoryKey} not found.`,
+      );
     }
     const question: string = values[this.inputKey];
     const chatHistory: string = ChatMessage.getChatHistoryString(
@@ -45,7 +48,7 @@ export default class DocConversationalChain extends ConversationalRetrievalQACha
     if (keys.length === 1) {
       newQuestion = result1[keys[0]];
     } else {
-      throw new Error(
+      throw new ChainException(
         'Return from llm chain has multiple values, only single values supported.',
       );
     }

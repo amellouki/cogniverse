@@ -7,7 +7,11 @@ import {
 } from '@slack/bolt';
 import { Express } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { Bot, SlackMessage } from '@my-monorepo/shared';
+import {
+  BadSlackRequestException,
+  Bot,
+  SlackMessage,
+} from '@my-monorepo/shared';
 import { LLMResult } from 'langchain/schema';
 import { SlackService as SlackRepository } from '../../repositories/slack/slack.service';
 import { CallbackManager } from 'langchain/callbacks';
@@ -201,7 +205,7 @@ export class SlackAppService extends BaseThirdPartyApp {
       !('client_msg_id' in message)
     ) {
       this.logger.error('Type error');
-      throw new Error('Type error');
+      throw new BadSlackRequestException("can't process message");
     }
     const parsedMessage = this.parseMessage(message.text);
     const username = await this.getUsername(message.user);

@@ -6,17 +6,24 @@ import {
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
+  WsException,
 } from '@nestjs/websockets';
 import * as dotenv from 'dotenv';
 import { ConversationService } from '../../repositories/conversation/conversation.service';
 import { Message } from '@prisma/client';
-import { NewMessage, BotType, Conversation } from '@my-monorepo/shared';
+import {
+  NewMessage,
+  BotType,
+  Conversation,
+  BotTypeNotSupportedException,
+  AppException,
+} from '@my-monorepo/shared';
 import { ChatHistoryService } from '../../repositories/chat-history/chat-history.service';
-import { filter } from 'rxjs';
+import { catchError, filter, of } from 'rxjs';
 import { END_COMPLETION } from '../../constants';
 import { ConversationalService } from './conversational.service';
 import { WsAuthGuard } from '../../guards/ws-auth/ws-auth.guard';
-import { UnauthorizedException, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 
 dotenv.config({ path: './.env.local' });
 
@@ -50,7 +57,7 @@ export class RetrievalConversationalGateway {
       case BotType.CONVERSATIONAL:
         return this.conversationalService;
       default:
-        throw new Error('Invalid bot type');
+        throw new BotTypeNotSupportedException();
     }
   }
 
@@ -84,7 +91,7 @@ export class RetrievalConversationalGateway {
     } else if (!conversationId) {
       client.emit('error', 'No conversation id provided');
       client.disconnect();
-      throw new Error('No conversation id provided');
+      throw new WsException('No conversation id provided');
     } else {
       conversation = await this.conversationService.getConversationById(
         conversationId,
@@ -94,7 +101,7 @@ export class RetrievalConversationalGateway {
     if (this.unauthorisedAccess(conversation, authPayload.uid)) {
       client.emit('error', 'Unauthorised access');
       client.disconnect();
-      throw new UnauthorizedException();
+      throw new WsException('Unauthorised access');
     }
 
     const sendToken = async (tokenMessage: NewMessage) => {
@@ -128,12 +135,25 @@ export class RetrievalConversationalGateway {
     try {
       const events$ = service.getCompletion$(question || '', conversation);
 
+      events$.pipe(filter((event) => event.type === 'error')).subscribe((e) => {
+        if (e.type !== 'error' || !('payload' in e)) {
+          return;
+        }
+        const error = e.payload as AppException;
+        client.emit('error', { ...error, message: error.message });
+        client.disconnect();
+      });
+
       events$
         .pipe(filter((event) => event.type === 'response-token'))
         .subscribe(sendToken);
+
       events$
         .pipe(filter((event) => event.type === 'idea'))
         .subscribe((idea) => {
+          if (idea.type !== 'idea') {
+            return;
+          }
           this.chatHistoryService
             .saveMessage(idea)
             .then((message) => {
@@ -143,9 +163,13 @@ export class RetrievalConversationalGateway {
               throw e;
             });
         });
+
       events$
         .pipe(filter((event) => event.type === 'message'))
         .subscribe((response) => {
+          if (response.type !== 'message') {
+            return;
+          }
           this.chatHistoryService.saveMessage(response).then(() => {
             client.emit('data', getData('response', response));
             client.emit('event', { state: END_COMPLETION });

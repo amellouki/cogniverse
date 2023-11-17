@@ -15,11 +15,18 @@ export class ConversationalService {
   ) {}
 
   getCompletion$(question: string, conversation: Conversation) {
-    return new Observable<NewMessage>((subscriber) => {
-      this.getCompletion(question, conversation, subscriber)
-        .then(() => subscriber.complete())
-        .catch((e) => subscriber.error(e));
-    }).pipe(share());
+    return new Observable<NewMessage | { type: 'error'; payload: Error }>(
+      (subscriber) => {
+        this.getCompletion(question, conversation, subscriber)
+          .catch((e) => {
+            subscriber.next({
+              type: 'error',
+              payload: e,
+            });
+          })
+          .finally(() => subscriber.complete());
+      },
+    ).pipe(share());
   }
 
   async getCompletion(
@@ -44,7 +51,7 @@ export class ConversationalService {
       },
     });
 
-    const chain = await this.conversationalChainService.fromConversation(
+    const chain = this.conversationalChainService.fromConversation(
       conversation,
       callbackManager,
     );

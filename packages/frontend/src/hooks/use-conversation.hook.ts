@@ -4,6 +4,7 @@ import {Message} from "@/types/ChatThread";
 import {NewMessage, Conversation, NewTitelessConversation} from '@my-monorepo/shared';
 import {LOCAL_STORAGE} from "@/constants";
 import {useQueryClient} from "react-query";
+import {toast} from "react-toastify";
 
 const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/conversational-retrieval-qa'
 
@@ -56,6 +57,9 @@ const useConversation = (
       }
     })
     socket.on('error', (error) => {
+      toast(error.message, {
+        type: "error"
+      })
       console.error('error', error)
     })
     socket.on('disconnect', (reason) => {

@@ -1,4 +1,7 @@
-import { DiscordMessage } from '@my-monorepo/shared';
+import {
+  DiscordMessage,
+  MessageTypeNotSupportedException,
+} from '@my-monorepo/shared';
 import { ChatMessageHistory } from 'langchain/memory';
 import { ChatMessage } from '../chat-message';
 import { BaseChatHistoryBuilder } from './base-chat-history-builder';
@@ -15,7 +18,7 @@ export class DiscordChatHistoryBuilder extends BaseChatHistoryBuilder<DiscordMes
         case true:
           return ChatMessage.createAIMessage(message.content, message.username);
         default:
-          throw new Error('Message type not supported');
+          throw new MessageTypeNotSupportedException();
       }
     });
     return new ChatMessageHistory(messages);

@@ -5,7 +5,7 @@ import {
 } from '../embeddings/embeddings.service';
 import { DocumentNamespaceService } from '../document-namespace/document-namespace.service';
 import { PineconeService } from '../pinecone/pinecone.service';
-import { DocumentMetadata } from '@my-monorepo/shared';
+import { DocumentMetadata, InternalServerException } from '@my-monorepo/shared';
 import { VectorStore } from 'langchain/vectorstores/base';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 
@@ -37,7 +37,7 @@ export class VectorStoreService {
           ),
         });
       default:
-        throw new Error('Vector store type not supported');
+        throw new InternalServerException('Vector store type not supported');
     }
   }
 }

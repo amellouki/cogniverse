@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { Message } from '@prisma/client';
 import { ChatMessageHistory } from 'langchain/memory';
 import { SystemChatMessage } from 'langchain/schema';
-import { DiscordMessage, SlackMessage } from '@my-monorepo/shared';
+import {
+  DiscordMessage,
+  MessageTypeNotSupportedException,
+  SlackMessage,
+} from '@my-monorepo/shared';
 import { ChatMessage } from '../../models/chat-message';
 
 @Injectable()
@@ -17,7 +21,7 @@ export class ChatHistoryBuilderService {
         case 'human':
           return ChatMessage.createHumanMessage(message.content, '');
         default:
-          throw new Error('Message type not supported');
+          throw new MessageTypeNotSupportedException();
       }
     });
     return new ChatMessageHistory(messages);
@@ -34,7 +38,7 @@ export class ChatHistoryBuilderService {
         case true:
           return ChatMessage.createAIMessage(message.content, message.username);
         default:
-          throw new Error('Message type not supported');
+          throw new MessageTypeNotSupportedException();
       }
     });
     return new ChatMessageHistory(messages);
@@ -51,7 +55,7 @@ export class ChatHistoryBuilderService {
         case true:
           return ChatMessage.createAIMessage(message.content, message.username);
         default:
-          throw new Error('Message type not supported');
+          throw new MessageTypeNotSupportedException();
       }
     });
     return new ChatMessageHistory(messages);
