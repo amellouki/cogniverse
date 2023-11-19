@@ -69,7 +69,7 @@ export class ConversationalService {
     );
     console.log('chainValues', JSON.stringify(chainValues, null, 2));
     subscriber.next({
-      content: chainValues.output,
+      content: chainValues.text,
       conversationId: conversation.id,
       fromType: 'ai',
       type: 'message',

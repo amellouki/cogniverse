@@ -18,6 +18,8 @@ export class LlmBuilder {
     switch (lmConfig.modelName) {
       case 'gpt-4':
       case 'gpt-3.5-turbo':
+      case 'gpt-4-1106-preview':
+      case 'gpt-3.5-turbo-1106':
         return new OpenAI({
           modelName: lmConfig.modelName,
           openAIApiKey: keys.openAiApiKey,

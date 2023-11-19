@@ -1,6 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AgentService as AgentBuilderService } from '../../services/chains/agent/agent.service';
-import { Bot, BotType, Conversation, NewMessage } from '@my-monorepo/shared';
+import {
+  Bot,
+  BotType,
+  Conversation,
+  InternalServerException,
+  NewMessage,
+} from '@my-monorepo/shared';
 import { Observable, share, Subscriber } from 'rxjs';
 import { CallbackManager } from 'langchain/callbacks';
 import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
@@ -35,8 +41,8 @@ export class AgentService {
     subscriber: Subscriber<NewMessage>,
   ) {
     const bot = conversation.bot as Bot;
-    if (bot.type !== BotType.CONVERSATIONAL) {
-      throw Error('Bot is not of the Conversational type');
+    if (bot.type !== BotType.AGENT) {
+      throw new InternalServerException('Bot is not an agent');
     }
 
     const callbackManager: CallbackManager = CallbackManager.fromHandlers({
@@ -49,38 +55,9 @@ export class AgentService {
           fromId: conversation.bot.id,
         });
       },
-      handleToolStart(
-        tool,
-        input: string,
-        runId: string,
-        parentRunId?: string,
-        tags?: string[],
-        metadata?: Record<string, unknown>,
-        name?: string,
-      ): any {
-        console.log(
-          'handleToolStart',
-          tool,
-          input,
-          runId,
-          parentRunId,
-          tags,
-          metadata,
-          name,
-        );
-      },
-      handleChainStart(): any {
-        console.log('handleChainStart');
-      },
-      handleChainEnd(): any {
-        console.log('handleChainEnd');
-      },
     });
 
-    const chain = await this.agent.fromConversation(
-      conversation,
-      callbackManager,
-    );
+    const chain = this.agent.fromConversation(conversation, callbackManager);
 
     const chainValues = await chain.invoke(
       {
@@ -89,7 +66,6 @@ export class AgentService {
       },
       callbackManager,
     );
-    console.log('chainValues', JSON.stringify(chainValues, null, 2));
     subscriber.next({
       content: chainValues.output,
       conversationId: conversation.id,

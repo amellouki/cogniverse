@@ -1,5 +1,9 @@
 import { ConversationalBotConfiguration } from '@my-monorepo/shared/dist/types/bot/bot-configuration/0.0.1';
-import { BotType, KeyNotSetException } from '@my-monorepo/shared';
+import {
+  BotType,
+  InternalServerException,
+  KeyNotSetException,
+} from '@my-monorepo/shared';
 import { ConversationalChain } from '../chains';
 import { BufferMemory } from 'langchain/memory';
 import { BaseChainBuilder, IChainBuilderInput } from './base-chain-builder';
@@ -14,12 +18,12 @@ export class ConversationalChainBuilder extends BaseChainBuilder {
   build(input: ConversationalChainBuilderInput) {
     const botConfig = input.botConfig;
     if (botConfig.type !== BotType.CONVERSATIONAL) {
-      throw Error('Bot is not a conversational');
+      throw new InternalServerException('Bot type error');
     }
 
     const llm = input.llms['lm'];
     if (!llm) {
-      throw Error('Language model not configured');
+      throw new InternalServerException('model configuration not found');
     }
 
     const openAiApiKey = input.keys.openAiApiKey;

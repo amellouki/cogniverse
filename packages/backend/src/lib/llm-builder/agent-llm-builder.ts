@@ -12,7 +12,7 @@ export interface ILlmBuilderInput {
   callbackManager: CallbackManager;
 }
 
-export class AgentBuilder {
+export class AgentLLMBuilder {
   // currently only supports ChatOpenAI
   build({ lmConfig, keys, callbackManager }: ILlmBuilderInput): ChatOpenAI {
     switch (lmConfig.modelName) {

@@ -8,3 +8,4 @@ export {
   IChainBuilderInput,
   BaseChainBuilderInput,
 } from './base-chain-builder';
+export { AgentBuilder } from './agent-builder';
