@@ -22,7 +22,7 @@ export class LlmBuilder {
           modelName: lmConfig.modelName,
           openAIApiKey: keys.openAiApiKey,
           streaming: true,
-          callbackManager: callbackManager,
+          callbacks: callbackManager,
         });
       default:
         throw new LanguageModelNotSupportedException();

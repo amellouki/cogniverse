@@ -124,6 +124,7 @@ model Account {
 enum BotType {
   CONVERSATIONAL
   RETRIEVAL_CONVERSATIONAL
+  AGENT
 }
 
 enum OAuthProvider {

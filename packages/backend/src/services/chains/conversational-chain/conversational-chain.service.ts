@@ -7,6 +7,7 @@ import { BufferMemory } from 'langchain/memory';
 import ConversationalChain from '../../../models/chains/conversational.chain';
 import { ChatHistoryBuilderService } from '../../chat-history-builder/chat-history-builder.service';
 import { ConversationalChainBuilder } from '../../../models/chain-builder';
+import { createAgent } from 'src/models/chains/agent';
 
 @Injectable()
 export class ConversationalChainService extends ConversationalChainBuilder {
@@ -37,16 +38,18 @@ export class ConversationalChainService extends ConversationalChainBuilder {
       callbackManager,
     });
 
-    return ConversationalChain.instantiate({
-      template: botConfig.lm.prompt,
-      llm,
-      memory: new BufferMemory({
-        memoryKey: 'chat_history',
-        inputKey: 'question', // The key for the input to the chain
-        outputKey: 'text', // The key for the final conversational output of the chain
-        returnMessages: true, // If using with a chat model
-        chatHistory: this.chatHistoryBuilder.build(conversation.chatHistory),
-      }),
-    });
+    // return ConversationalChain.instantiate({
+    //   template: botConfig.lm.prompt,
+    //   llm,
+    //   memory: new BufferMemory({
+    //     memoryKey: 'chat_history',
+    //     inputKey: 'question', // The key for the input to the chain
+    //     outputKey: 'text', // The key for the final conversational output of the chain
+    //     returnMessages: true, // If using with a chat model
+    //     chatHistory: this.chatHistoryBuilder.build(conversation.chatHistory),
+    //   }),
+    // });
+
+    return createAgent(callbackManager);
   }
 }

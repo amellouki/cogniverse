@@ -61,6 +61,11 @@ export interface RcBotConfiguration extends BotConfiguration {
   conversationalLm?: LmConfig,
 }
 
+export interface AgentConfiguration extends BotConfiguration {
+  type: typeof BotType.AGENT,
+  lm?: LmConfig,
+}
+
 export interface RcBot extends Bot {
   type: typeof BotType.RETRIEVAL_CONVERSATIONAL,
   configVersion: typeof BOT_CONFIG_VERSION_V0_0_1,
@@ -73,6 +78,14 @@ export interface ConversationalBot extends Bot {
   type: typeof BotType.CONVERSATIONAL,
   configVersion: typeof BOT_CONFIG_VERSION_V0_0_1,
   configuration: Prisma.JsonObject & ConversationalBotConfiguration
+  boundDocument: null
+  boundDocumentId: null
+}
+
+export interface Agent extends Bot {
+  type: typeof BotType.AGENT,
+  configVersion: typeof BOT_CONFIG_VERSION_V0_0_1,
+  configuration: Prisma.JsonObject & AgentConfiguration
   boundDocument: null
   boundDocumentId: null
 }

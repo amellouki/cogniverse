@@ -1,0 +1,21 @@
+.formTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.description {
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.formWrapper {
+  display: flex;
+  overflow-y: auto;
+  overflow-x: visible;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem;
+}
