@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { BaseThirdPartyApp } from 'src/models/base-third-party-app';
+import { BaseThirdPartyApp } from 'src/lib/base-third-party-app';
 import { ConversationalChainService } from 'src/services/chains/conversational-chain/conversational-chain.service';
 import { RetrievalConversationalChainService } from 'src/services/chains/retrieval-conversational/retrieval-conversational-chain.service';
 import { VectorStoreService } from 'src/services/vector-store/vector-store.service';
@@ -11,12 +11,12 @@ import {
   DiscordMessage,
   BadDiscordRequestException,
 } from '@my-monorepo/shared';
-import { CallBackRecord } from 'src/models/callback-record';
+import { CallBackRecord } from 'src/lib/callback-record';
 import { CallbackManager } from 'langchain/callbacks';
 import { LLMResult } from 'langchain/schema';
 import { VectorStore } from 'langchain/vectorstores/base';
-import { DiscordChatHistoryBuilder } from 'src/models/chat-history-builder';
-import { ICommand } from 'src/models/command';
+import { DiscordChatHistoryBuilder } from 'src/lib/chat-history-builder';
+import { ICommand } from 'src/lib/command';
 
 @Injectable()
 export class CvService extends BaseThirdPartyApp implements ICommand {

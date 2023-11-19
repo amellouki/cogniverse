@@ -12,7 +12,7 @@ import {
 import { QUERY_EMBEDDING_MODEL } from '../../../constants';
 import createLlm from '../../llm/create-llm';
 import { CallbackManager } from 'langchain/callbacks';
-import DocConversationalChain from '../../../models/chains/doc-conversational-chain';
+import DocConversationalChain from 'src/lib/chains/doc-conversational-chain';
 import { BufferMemory } from 'langchain/memory';
 import { ConfigService } from '@nestjs/config';
 import { VectorStoreService } from '../../vector-store/vector-store.service';
@@ -21,7 +21,7 @@ import { RcBotConfiguration } from '@my-monorepo/shared/dist/types/bot/bot-confi
 import { DocumentMetadata } from '@prisma/client';
 import { BaseChatMessageHistory } from 'langchain/schema';
 import { VectorStore } from 'langchain/vectorstores/base';
-import { RCChainBuilder } from '../../../models/chain-builder';
+import { RCChainBuilder } from 'src/lib/chain-builder';
 
 @Injectable()
 export class RetrievalConversationalChainService extends RCChainBuilder {

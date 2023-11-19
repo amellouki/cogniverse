@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ICommand } from 'src/models/command';
+import { ICommand } from 'src/lib/command';
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { DiscordConversationService } from 'src/repositories/discord/discord-conversation/discord-conversation.service';
 
