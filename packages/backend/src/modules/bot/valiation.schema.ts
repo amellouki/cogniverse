@@ -10,9 +10,12 @@ const botBaseValidation = z.object({
     message: 'Name must be alphanumeric, underscores and dashes are allowed!',
   }),
   description: z.string().optional(),
-  type: z.enum([BotType.CONVERSATIONAL, BotType.RETRIEVAL_CONVERSATIONAL], {
-    errorMap: () => ({ message: 'Bot type error!' }),
-  }),
+  type: z.enum(
+    [BotType.CONVERSATIONAL, BotType.RETRIEVAL_CONVERSATIONAL, BotType.AGENT],
+    {
+      errorMap: () => ({ message: 'Bot type error!' }),
+    },
+  ),
   configVersion: z.enum(['v0.0.1'], {
     errorMap: () => ({ message: 'Config version error!' }),
   }),
@@ -72,6 +75,8 @@ const lmConfigValidation = z.object({
   apiKey: z.string().optional(),
 });
 
+// ======================================================
+
 const rcConfigBotValidation = baseBotConfigValidation.extend({
   type: z.enum([BotType.RETRIEVAL_CONVERSATIONAL], {
     errorMap: () => ({ message: 'Bot type error!' }),
@@ -86,6 +91,15 @@ const conversationalBotConfigValidation = baseBotConfigValidation.extend({
   }),
   lm: lmConfigValidation,
 });
+
+const agentConfigValidation = baseBotConfigValidation.extend({
+  type: z.enum([BotType.AGENT], {
+    errorMap: () => ({ message: 'Bot type error!' }),
+  }),
+  lm: lmConfigValidation,
+});
+
+// ======================================================
 
 const conversationBotValidation = botBaseValidation.extend({
   type: z.enum([BotType.CONVERSATIONAL], {
@@ -102,12 +116,21 @@ const rcBotValidation = botBaseValidation.extend({
   boundDocumentId: z.number().nullable(),
 });
 
+const agentBotConfigValidation = botBaseValidation.extend({
+  type: z.enum([BotType.AGENT], {
+    errorMap: () => ({ message: 'Bot type error!' }),
+  }),
+  configuration: agentConfigValidation,
+});
+
 export const botValidation = z.union([
   rcBotValidation,
   conversationBotValidation,
+  agentBotConfigValidation,
 ]);
 
 export const updateBotValidation = z.union([
   rcBotValidation.extend({ id: z.number() }),
   conversationBotValidation.extend({ id: z.number() }),
+  agentBotConfigValidation.extend({ id: z.number() }),
 ]);

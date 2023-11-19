@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 import { ConfigService } from '@nestjs/config';
 import { CvService } from 'src/modules/discord-app/discord-commands/cv/cv.service';
-import { ICommand } from 'src/models/command';
+import { ICommand } from 'src/lib/command';
 import { ResetHistoryService } from 'src/modules/discord-app/discord-commands/reset-history/reset-history.service';
 
 @Injectable()

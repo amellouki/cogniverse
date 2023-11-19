@@ -6,6 +6,7 @@ import ConversationalSteps from "../BotForms/form-wizards/ConversationalSteps";
 import RCSteps from "@/components/BotForms/form-wizards/RCSteps";
 import styles from './styles.module.scss';
 import {useRouter} from "next/router";
+import Agent from "@/components/BotForms/form-wizards/Agent";
 
 type Props = {
   botType: BotType
@@ -33,6 +34,8 @@ function renderForm(formType: string, loading: boolean, onSubmit: (data: NewBot)
       return <RCSteps onSubmit={onSubmit} />
     case BotType.CONVERSATIONAL:
       return <ConversationalSteps onSubmit={onSubmit} />
+    case BotType.AGENT:
+      return <Agent onSubmit={onSubmit} />
     default:
       return <div>Unknown</div>
   }

@@ -4,6 +4,10 @@ import { Bot, BotType, Conversation, NewMessage } from '@my-monorepo/shared';
 import { Observable, share, Subscriber } from 'rxjs';
 import { CallbackManager } from 'langchain/callbacks';
 import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
+import {
+  HandleLLMNewTokenCallbackFields,
+  NewTokenIndices,
+} from 'langchain/dist/callbacks/base';
 
 @Injectable()
 export class ConversationalService {
@@ -51,16 +55,19 @@ export class ConversationalService {
       },
     });
 
-    const chain = this.conversationalChainService.fromConversation(
+    const chain = await this.conversationalChainService.fromConversation(
       conversation,
       callbackManager,
     );
 
-    const chainValues = await chain.call({
-      question,
-      chat_history: this.chatHistoryBuilder.build(conversation.chatHistory),
-    });
-
+    const chainValues = await chain.invoke(
+      {
+        question,
+        chat_history: this.chatHistoryBuilder.build(conversation.chatHistory),
+      },
+      callbackManager,
+    );
+    console.log('chainValues', JSON.stringify(chainValues, null, 2));
     subscriber.next({
       content: chainValues.text,
       conversationId: conversation.id,

@@ -19,11 +19,11 @@ import { RetrievalConversationalChainService } from '../../services/chains/retri
 import { ConversationalChainService } from '../../services/chains/conversational-chain/conversational-chain.service';
 import { BotService } from '../../repositories/bot/bot.service';
 import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
-import { CallBackRecord } from '../../models/callback-record';
+import { CallBackRecord } from 'src/lib/callback-record';
 import { VectorStore } from 'langchain/vectorstores/base';
 import { VectorStoreService } from '../../services/vector-store/vector-store.service';
-import { SlackChatHistoryBuilder } from '../../models/chat-history-builder';
-import { BaseThirdPartyApp } from '../../models/base-third-party-app';
+import { SlackChatHistoryBuilder } from 'src/lib/chat-history-builder';
+import { BaseThirdPartyApp } from 'src/lib/base-third-party-app';
 
 const SLACK_MESSAGE_REQUEST_REGEX =
   /[ \t]*<@([a-zA-Z0-9]{1,20})>[ \t]*bot[ \t]+([a-zA-Z0-9-_]{1,20})[ \t]+(.*)/;

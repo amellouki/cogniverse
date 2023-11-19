@@ -6,7 +6,7 @@ import {LOCAL_STORAGE} from "@/constants";
 import {useQueryClient} from "react-query";
 import {toast} from "react-toastify";
 
-const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/conversational-retrieval-qa'
+const PATH = process.env.NEXT_PUBLIC_BACKEND_API + '/generation'
 
 const useConversation = (
   onQuestionReceived: (message: Message) => void,

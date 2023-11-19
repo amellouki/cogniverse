@@ -13,6 +13,7 @@ const Create: NextPageWithLayout = () => {
       <div className={styles.list}>
         <Link href={'/bots/create/' + BotType.CONVERSATIONAL}>Conversational</Link>
         <Link href={'/bots/create/' + BotType.RETRIEVAL_CONVERSATIONAL}>Retrieval Conversational</Link>
+        <Link href={'/bots/create/' + BotType.AGENT}>Agent</Link>
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ import {
   MessageTypeNotSupportedException,
   SlackMessage,
 } from '@my-monorepo/shared';
-import { ChatMessage } from '../../models/chat-message';
+import { ChatMessage } from 'src/lib/chat-message';
 
 @Injectable()
 export class ChatHistoryBuilderService {

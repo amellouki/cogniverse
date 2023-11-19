@@ -19,9 +19,10 @@ import {
   AppException,
 } from '@my-monorepo/shared';
 import { ChatHistoryService } from '../../repositories/chat-history/chat-history.service';
-import { catchError, filter, of } from 'rxjs';
+import { filter } from 'rxjs';
 import { END_COMPLETION } from '../../constants';
 import { ConversationalService } from './conversational.service';
+import { AgentService } from './agent.service';
 import { WsAuthGuard } from '../../guards/ws-auth/ws-auth.guard';
 import { UseGuards } from '@nestjs/common';
 
@@ -36,16 +37,17 @@ function getData(type: string, content: unknown) {
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({
-  namespace: 'conversational-retrieval-qa',
+  namespace: 'generation',
   cors: {
     origin: process.env.ALLOWED_DOMAINS?.split(','),
     methods: 'GET,HEAD',
   },
 })
-export class RetrievalConversationalGateway {
+export class CompletionGateway {
   constructor(
     private retrievalConversationalService: RetrievalConversationalService,
     private conversationalService: ConversationalService,
+    private agentService: AgentService,
     private conversationService: ConversationService,
     private chatHistoryService: ChatHistoryService,
   ) {}
@@ -56,6 +58,8 @@ export class RetrievalConversationalGateway {
         return this.retrievalConversationalService;
       case BotType.CONVERSATIONAL:
         return this.conversationalService;
+      case BotType.AGENT:
+        return this.agentService;
       default:
         throw new BotTypeNotSupportedException();
     }

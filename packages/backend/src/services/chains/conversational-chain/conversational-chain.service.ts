@@ -4,9 +4,9 @@ import { BotType, Conversation, KeyNotSetException } from '@my-monorepo/shared';
 import { CallbackManager } from 'langchain/callbacks';
 import createLlm from '../../llm/create-llm';
 import { BufferMemory } from 'langchain/memory';
-import ConversationalChain from '../../../models/chains/conversational.chain';
+import ConversationalChain from 'src/lib/chains/conversational.chain';
 import { ChatHistoryBuilderService } from '../../chat-history-builder/chat-history-builder.service';
-import { ConversationalChainBuilder } from '../../../models/chain-builder';
+import { ConversationalChainBuilder } from 'src/lib/chain-builder';
 
 @Injectable()
 export class ConversationalChainService extends ConversationalChainBuilder {
@@ -17,6 +17,7 @@ export class ConversationalChainService extends ConversationalChainBuilder {
     super();
   }
 
+  // TODO: refactoring remove this nad use the new chain builder
   fromConversation(
     conversation: Conversation,
     callbackManager: CallbackManager,
