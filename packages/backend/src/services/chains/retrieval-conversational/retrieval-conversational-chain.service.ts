@@ -86,6 +86,7 @@ export class RetrievalConversationalChainService extends RCChainBuilder {
     );
   }
 
+  // TODO: refactoring remove this nad use the new chain builder
   async fromConversation(
     question: string,
     conversation: Conversation,

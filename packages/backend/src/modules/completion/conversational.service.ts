@@ -53,32 +53,6 @@ export class ConversationalService {
           fromId: conversation.bot.id,
         });
       },
-      handleToolStart(
-        tool,
-        input: string,
-        runId: string,
-        parentRunId?: string,
-        tags?: string[],
-        metadata?: Record<string, unknown>,
-        name?: string,
-      ): any {
-        console.log(
-          'handleToolStart',
-          tool,
-          input,
-          runId,
-          parentRunId,
-          tags,
-          metadata,
-          name,
-        );
-      },
-      handleChainStart(): any {
-        console.log('handleChainStart');
-      },
-      handleChainEnd(): any {
-        console.log('handleChainEnd');
-      },
     });
 
     const chain = await this.conversationalChainService.fromConversation(

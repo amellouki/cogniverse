@@ -1,17 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RetrievalConversationalGateway } from './retrieval-conversational.gateway';
+import { GenerationGateway } from 'src/modules/generation/generation.gateway';
 
 describe('ConversationalRetrievalQaController', () => {
-  let controller: RetrievalConversationalGateway;
+  let controller: GenerationGateway;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [RetrievalConversationalGateway],
+      controllers: [GenerationGateway],
     }).compile();
 
-    controller = module.get<RetrievalConversationalGateway>(
-      RetrievalConversationalGateway,
-    );
+    controller = module.get<GenerationGateway>(GenerationGateway);
   });
 
   it('should be defined', () => {

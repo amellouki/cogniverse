@@ -24,6 +24,7 @@ import { END_COMPLETION } from '../../constants';
 import { ConversationalService } from './conversational.service';
 import { WsAuthGuard } from '../../guards/ws-auth/ws-auth.guard';
 import { UseGuards } from '@nestjs/common';
+import { AgentService } from './agent.service';
 
 dotenv.config({ path: './.env.local' });
 
@@ -36,16 +37,17 @@ function getData(type: string, content: unknown) {
 
 @UseGuards(WsAuthGuard)
 @WebSocketGateway({
-  namespace: 'conversational-retrieval-qa',
+  namespace: 'generation',
   cors: {
     origin: process.env.ALLOWED_DOMAINS?.split(','),
     methods: 'GET,HEAD',
   },
 })
-export class RetrievalConversationalGateway {
+export class GenerationGateway {
   constructor(
     private retrievalConversationalService: RetrievalConversationalService,
     private conversationalService: ConversationalService,
+    private agentService: AgentService,
     private conversationService: ConversationService,
     private chatHistoryService: ChatHistoryService,
   ) {}
@@ -56,6 +58,8 @@ export class RetrievalConversationalGateway {
         return this.retrievalConversationalService;
       case BotType.CONVERSATIONAL:
         return this.conversationalService;
+      case BotType.AGENT:
+        throw this.agentService;
       default:
         throw new BotTypeNotSupportedException();
     }
