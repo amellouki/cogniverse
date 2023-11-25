@@ -13,7 +13,7 @@ import {
   SlackMessage,
 } from '@my-monorepo/shared';
 import { LLMResult } from 'langchain/schema';
-import { SlackService as SlackRepository } from '../../repositories/slack/slack.service';
+import { SlackEntity } from 'src/repositories/slack/slack.entity';
 import { CallbackManager } from 'langchain/callbacks';
 import { RetrievalConversationalChainService } from '../../services/chains/retrieval-conversational/retrieval-conversational-chain.service';
 import { ConversationalChainService } from '../../services/chains/conversational-chain/conversational-chain.service';
@@ -39,7 +39,7 @@ export class SlackAppService extends BaseThirdPartyApp {
     protected conversationalChainService: ConversationalChainService,
     protected retrievalConversationalChainService: RetrievalConversationalChainService,
     protected vectorStoreService: VectorStoreService,
-    private slackRepository: SlackRepository,
+    private slackEntity: SlackEntity,
     private botEntity: BotEntity,
     private chatHistoryBuilder: ChatHistoryBuilderService,
   ) {
@@ -123,8 +123,8 @@ export class SlackAppService extends BaseThirdPartyApp {
     }
     const { ts } = await say('Generating...');
 
-    await this.slackRepository.saveMessage(await this.mapHumanMessage(args));
-    const conversation = await this.slackRepository.getConversationById(
+    await this.slackEntity.saveMessage(await this.mapHumanMessage(args));
+    const conversation = await this.slackEntity.getConversationById(
       message.channel,
     );
     const callbacks: CallBackRecord = {
@@ -173,7 +173,7 @@ export class SlackAppService extends BaseThirdPartyApp {
             text: result.generations[0][0]?.text,
           })
           .then(async (postMessage) => {
-            await this.slackRepository.saveMessage({
+            await this.slackEntity.saveMessage({
               content: result.generations[0][0]?.text,
               slackConversationId: postMessage.channel,
               botId: bot.id,

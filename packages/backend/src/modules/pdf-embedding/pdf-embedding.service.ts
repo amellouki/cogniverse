@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { DocumentMetadataService } from '../../repositories/document-metadata/document-metadata.service';
+import { DocumentMetadataEntity } from 'src/repositories/document-metadata/document-metadata.entity';
 import { UploadedFileType } from '@my-monorepo/shared';
 import { DocumentMetadata } from '@prisma/client';
 
 @Injectable()
 export class PdfEmbeddingService {
-  constructor(private documentMetadataService: DocumentMetadataService) {}
+  constructor(private documentMetadataEntity: DocumentMetadataEntity) {}
   saveDocumentMetadata(
     file: UploadedFileType,
     ownerId: string,
   ): Promise<DocumentMetadata> {
-    return this.documentMetadataService.createDocumentMetadata({
+    return this.documentMetadataEntity.createDocumentMetadata({
       title: file.originalname,
       size: file.size,
       url: 'https://www.example.com',
@@ -24,6 +24,6 @@ export class PdfEmbeddingService {
   }
 
   getDocumentListByOwnerId(ownerId: string) {
-    return this.documentMetadataService.getDocumentListByOwnerId(ownerId);
+    return this.documentMetadataEntity.getDocumentListByOwnerId(ownerId);
   }
 }

@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { DocumentMetadata, Prisma } from '@prisma/client';
 
 @Injectable()
-export class DocumentMetadataService {
+export class DocumentMetadataEntity {
   constructor(private prismaService: PrismaService) {}
 
   async getDocumentMetadataById(id: number) {
