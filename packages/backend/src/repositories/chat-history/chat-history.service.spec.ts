@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ChatHistoryService } from './chat-history.service';
+import { ChatHistoryEntity } from 'src/repositories/chat-history/chat-history.entity';
 
 describe('HistoryService', () => {
-  let service: ChatHistoryService;
+  let service: ChatHistoryEntity;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ChatHistoryService],
+      providers: [ChatHistoryEntity],
     }).compile();
 
-    service = module.get<ChatHistoryService>(ChatHistoryService);
+    service = module.get<ChatHistoryEntity>(ChatHistoryEntity);
   });
 
   it('should be defined', () => {

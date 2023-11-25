@@ -11,7 +11,7 @@ import * as dotenv from 'dotenv';
 import { ConversationService } from 'src/repositories/conversation/conversation.service';
 import { Message } from '@prisma/client';
 import { NewMessage, Conversation } from '@my-monorepo/shared';
-import { ChatHistoryService } from 'src/repositories/chat-history/chat-history.service';
+import { ChatHistoryEntity } from 'src/repositories/chat-history/chat-history.entity';
 import { filter, catchError, of, share } from 'rxjs';
 import { END_COMPLETION } from 'src/constants';
 import { WsAuthGuard } from 'src/guards/ws-auth/ws-auth.guard';
@@ -39,7 +39,7 @@ export class CompletionGateway {
   constructor(
     private chainStreamService: ChainStreamService,
     private conversationService: ConversationService,
-    private chatHistoryService: ChatHistoryService,
+    private chatHistoryEntity: ChatHistoryEntity,
   ) {}
 
   private unauthorisedAccess(
@@ -110,7 +110,7 @@ export class CompletionGateway {
       client.disconnect();
     };
 
-    const added = await this.chatHistoryService.saveMessage({
+    const added = await this.chatHistoryEntity.saveMessage({
       content: question,
       conversationId: conversation.id,
       fromType: 'human',
@@ -136,7 +136,7 @@ export class CompletionGateway {
 
       events$.pipe(filter((event) => event.type === 'idea')).subscribe({
         next: (idea) => {
-          this.chatHistoryService
+          this.chatHistoryEntity
             .saveMessage(idea)
             .then((message) => {
               sendRetrieval(message);
@@ -149,7 +149,7 @@ export class CompletionGateway {
 
       events$.pipe(filter((event) => event.type === 'message')).subscribe({
         next: (response) => {
-          this.chatHistoryService.saveMessage(response).then(() => {
+          this.chatHistoryEntity.saveMessage(response).then(() => {
             client.emit('data', getData('response', response));
             client.emit('event', { state: END_COMPLETION });
             client.disconnect();

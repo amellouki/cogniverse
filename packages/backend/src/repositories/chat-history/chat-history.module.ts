@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ChatHistoryService } from './chat-history.service';
+import { ChatHistoryEntity } from 'src/repositories/chat-history/chat-history.entity';
 import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [PrismaModule],
-  providers: [ChatHistoryService],
-  exports: [ChatHistoryService],
+  providers: [ChatHistoryEntity],
+  exports: [ChatHistoryEntity],
 })
 export class ChatHistoryModule {}
