@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from 'src/repositories/prisma/prisma.service';
 import { DiscordMessage, Prisma } from '@prisma/client';
 import { DiscordConversation } from '@my-monorepo/shared';
 
 @Injectable()
-export class DiscordConversationService {
-  private readonly logger = new Logger(DiscordConversationService.name);
+export class DiscordEntity {
+  private readonly logger = new Logger(DiscordEntity.name);
 
   constructor(private prisma: PrismaService) {}
 

@@ -5,7 +5,7 @@ import { ConversationalChainService } from 'src/services/chains/conversational-c
 import { RetrievalConversationalChainService } from 'src/services/chains/retrieval-conversational/retrieval-conversational-chain.service';
 import { VectorStoreService } from 'src/services/vector-store/vector-store.service';
 import { BotEntity } from 'src/repositories/bot/bot.entity';
-import { DiscordConversationService } from 'src/repositories/discord/discord-conversation/discord-conversation.service';
+import { DiscordEntity } from 'src/repositories/discord/discord.entity';
 import {
   Bot,
   DiscordMessage,
@@ -26,7 +26,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
     protected retrievalConversationalChainService: RetrievalConversationalChainService,
     protected vectorStoreService: VectorStoreService,
     private botEntity: BotEntity,
-    private discordConversationService: DiscordConversationService,
+    private discordEntity: DiscordEntity,
   ) {
     super(
       conversationalChainService,
@@ -58,9 +58,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
       return await interaction.reply(e);
     }
     await interaction.deferReply();
-    await this.discordConversationService.saveMessage(
-      this.mapHumanMessage(interaction),
-    );
+    await this.discordEntity.saveMessage(this.mapHumanMessage(interaction));
     try {
       return await this.callChain(interaction);
     } catch (e) {
@@ -72,9 +70,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
     const messageText = interaction.options.getString('message');
     const [bot, conversation] = await Promise.all([
       this.getBot(interaction),
-      this.discordConversationService.getConversationById(
-        interaction.channel.id,
-      ),
+      this.discordEntity.getConversationById(interaction.channel.id),
       interaction.editReply('**Responding to:**\n' + messageText),
     ]);
     const callbacks: CallBackRecord = {
@@ -112,7 +108,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
       const generation = result.generations[0][0]?.text;
       if (generation) {
         const message = await interaction.followUp(generation);
-        await this.discordConversationService.saveMessage({
+        await this.discordEntity.saveMessage({
           content: result.generations[0][0]?.text,
           discordConversationId: message.channel.id,
           botId: bot.id,
