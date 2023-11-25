@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AgentService as AgentBuilderService } from '../../services/chains/agent/agent.service';
+import { AgentService as AgentBuilderService } from 'src/services/chains/agent/agent.service';
 import {
   Bot,
   BotType,
@@ -7,38 +7,26 @@ import {
   InternalServerException,
   NewMessage,
 } from '@my-monorepo/shared';
-import { Observable, share, Subscriber } from 'rxjs';
+import { Subject } from 'rxjs';
 import { CallbackManager } from 'langchain/callbacks';
-import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
+import { ChatHistoryBuilderService } from 'src/services/chat-history-builder/chat-history-builder.service';
+import { BaseChainStream } from './base-chain-stream';
 
 @Injectable()
-export class AgentService {
+export class AgentService extends BaseChainStream {
   logger = new Logger(AgentService.name);
 
   constructor(
     private agent: AgentBuilderService,
     private chatHistoryBuilder: ChatHistoryBuilderService,
-  ) {}
-
-  getCompletion$(question: string, conversation: Conversation) {
-    return new Observable<NewMessage | { type: 'error'; payload: Error }>(
-      (subscriber) => {
-        this.getCompletion(question, conversation, subscriber)
-          .catch((e) => {
-            subscriber.next({
-              type: 'error',
-              payload: e,
-            });
-          })
-          .finally(() => subscriber.complete());
-      },
-    ).pipe(share());
+  ) {
+    super();
   }
 
   async getCompletion(
     question: string,
     conversation: Conversation,
-    subscriber: Subscriber<NewMessage>,
+    subject: Subject<NewMessage>,
   ) {
     const bot = conversation.bot as Bot;
     if (bot.type !== BotType.AGENT) {
@@ -47,7 +35,7 @@ export class AgentService {
 
     const callbackManager: CallbackManager = CallbackManager.fromHandlers({
       handleLLMNewToken: (token) => {
-        subscriber.next({
+        subject.next({
           content: token,
           conversationId: conversation.id,
           fromType: 'ai',
@@ -66,7 +54,7 @@ export class AgentService {
       },
       callbackManager,
     );
-    subscriber.next({
+    subject.next({
       content: chainValues.output,
       conversationId: conversation.id,
       fromType: 'ai',

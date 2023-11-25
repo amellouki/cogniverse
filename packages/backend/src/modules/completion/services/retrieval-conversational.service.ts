@@ -3,38 +3,26 @@ import { CallbackManager } from 'langchain/callbacks';
 import { NewMessage } from '@my-monorepo/shared';
 import { Conversation } from '@my-monorepo/shared';
 import { BotType } from '@my-monorepo/shared';
-import { Observable, share, Subscriber } from 'rxjs';
-import { RetrievalConversationalChainService } from '../../services/chains/retrieval-conversational/retrieval-conversational-chain.service';
-import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
+import { Subject } from 'rxjs';
+import { RetrievalConversationalChainService } from 'src/services/chains/retrieval-conversational/retrieval-conversational-chain.service';
+import { ChatHistoryBuilderService } from 'src/services/chat-history-builder/chat-history-builder.service';
+import { BaseChainStream } from 'src/modules/completion/services/base-chain-stream';
 
 @Injectable()
-export class RetrievalConversationalService {
+export class RetrievalConversationalService extends BaseChainStream {
   logger = new Logger(RetrievalConversationalService.name);
 
   constructor(
     private retrievalConversationalChainService: RetrievalConversationalChainService,
     private chatHistoryBuilder: ChatHistoryBuilderService,
-  ) {}
-
-  getCompletion$(question: string, conversation: Conversation) {
-    return new Observable<NewMessage | { type: 'error'; payload: Error }>(
-      (subscriber) => {
-        this.getCompletion(question, conversation, subscriber)
-          .then(() => subscriber.complete())
-          .catch((e) => {
-            subscriber.next({
-              type: 'error',
-              payload: e,
-            });
-          });
-      },
-    ).pipe(share());
+  ) {
+    super();
   }
 
   async getCompletion(
     question: string,
     conversation: Conversation,
-    subscriber: Subscriber<NewMessage>,
+    subject: Subject<NewMessage>,
   ) {
     const bot = conversation.bot;
     if (bot.type !== BotType.RETRIEVAL_CONVERSATIONAL) {
@@ -44,7 +32,7 @@ export class RetrievalConversationalService {
     const retrievalCallbackManager: CallbackManager =
       CallbackManager.fromHandlers({
         handleLLMNewToken: (token) => {
-          subscriber.next({
+          subject.next({
             content: token,
             conversationId: conversation.id,
             fromType: 'ai',
@@ -61,7 +49,7 @@ export class RetrievalConversationalService {
               type: 'idea',
               fromId: conversation.bot.id,
             };
-            subscriber.next(message);
+            subject.next(message);
           }
         },
       });
@@ -69,7 +57,7 @@ export class RetrievalConversationalService {
     const conversationalCallbackManager: CallbackManager =
       CallbackManager.fromHandlers({
         handleLLMNewToken: (token) => {
-          subscriber.next({
+          subject.next({
             content: token,
             conversationId: conversation.id,
             fromType: 'ai',
@@ -92,7 +80,7 @@ export class RetrievalConversationalService {
       chat_history: this.chatHistoryBuilder.build(conversation.chatHistory),
     });
 
-    subscriber.next({
+    subject.next({
       content: chainValues.text,
       conversationId: conversation.id,
       fromType: 'ai',
