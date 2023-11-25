@@ -4,7 +4,7 @@ import { BaseThirdPartyApp } from 'src/lib/base-third-party-app';
 import { ConversationalChainService } from 'src/services/chains/conversational-chain/conversational-chain.service';
 import { RetrievalConversationalChainService } from 'src/services/chains/retrieval-conversational/retrieval-conversational-chain.service';
 import { VectorStoreService } from 'src/services/vector-store/vector-store.service';
-import { BotService } from 'src/repositories/bot/bot.service';
+import { BotEntity } from 'src/repositories/bot/bot.entity';
 import { DiscordConversationService } from 'src/repositories/discord/discord-conversation/discord-conversation.service';
 import {
   Bot,
@@ -25,7 +25,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
     protected conversationalChainService: ConversationalChainService,
     protected retrievalConversationalChainService: RetrievalConversationalChainService,
     protected vectorStoreService: VectorStoreService,
-    private botService: BotService,
+    private botEntity: BotEntity,
     private discordConversationService: DiscordConversationService,
   ) {
     super(
@@ -138,7 +138,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
 
   private async getBot(interaction: ChatInputCommandInteraction) {
     const botName = interaction.options.getString('bot');
-    const bot = await this.botService.getBotByName(botName);
+    const bot = await this.botEntity.getBotByName(botName);
     if (!bot) {
       throw new BadDiscordRequestException(`Bot ${botName} does not exist`);
     }

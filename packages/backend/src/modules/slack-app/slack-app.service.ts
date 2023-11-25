@@ -17,7 +17,7 @@ import { SlackService as SlackRepository } from '../../repositories/slack/slack.
 import { CallbackManager } from 'langchain/callbacks';
 import { RetrievalConversationalChainService } from '../../services/chains/retrieval-conversational/retrieval-conversational-chain.service';
 import { ConversationalChainService } from '../../services/chains/conversational-chain/conversational-chain.service';
-import { BotService } from '../../repositories/bot/bot.service';
+import { BotEntity } from 'src/repositories/bot/bot.entity';
 import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
 import { CallBackRecord } from 'src/lib/callback-record';
 import { VectorStore } from 'langchain/vectorstores/base';
@@ -40,7 +40,7 @@ export class SlackAppService extends BaseThirdPartyApp {
     protected retrievalConversationalChainService: RetrievalConversationalChainService,
     protected vectorStoreService: VectorStoreService,
     private slackRepository: SlackRepository,
-    private botService: BotService,
+    private botEntity: BotEntity,
     private chatHistoryBuilder: ChatHistoryBuilderService,
   ) {
     super(
@@ -96,7 +96,7 @@ export class SlackAppService extends BaseThirdPartyApp {
       await say(`Please format your message correctly!`);
       return;
     }
-    const bot = await this.botService.getBotByName(parsedMessage.bot);
+    const bot = await this.botEntity.getBotByName(parsedMessage.bot);
     if (!bot) {
       this.logger.error(`Bot ${parsedMessage.bot} does not exist`);
       await say(

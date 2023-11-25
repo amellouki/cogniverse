@@ -9,7 +9,7 @@ type NewAccount = Pick<
 >;
 
 @Injectable()
-export class AccountService {
+export class AccountEntity {
   constructor(private readonly prismaService: PrismaService) {}
 
   async registerAccount(newAccount: NewAccount) {

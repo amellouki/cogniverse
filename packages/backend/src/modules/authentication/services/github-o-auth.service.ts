@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { AccessTokenResponse, UserResponse } from 'src/types/github-types';
 import { JwtService } from '@nestjs/jwt';
 import { OAuthProvider } from '@prisma/client';
-import { AccountService } from 'src/repositories/account/account.service';
+import { AccountEntity } from 'src/repositories/account/account.entity';
 import { GithubAuthPayload } from 'src/types/auth-payload';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class GithubOAuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
-    private readonly accountService: AccountService,
+    private readonly accountEntity: AccountEntity,
   ) {}
 
   async githubAccessToken(code: string): Promise<AccessTokenResponse> {
@@ -46,7 +46,7 @@ export class GithubOAuthService {
   }
 
   async saveGithubUser(githubUser: UserResponse) {
-    return this.accountService.registerAccount({
+    return this.accountEntity.registerAccount({
       userId: githubUser.id + '',
       username: githubUser.name || githubUser.login || '',
       profilePicture: githubUser.avatar_url,
@@ -59,7 +59,7 @@ export class GithubOAuthService {
     const userResponse = await this.githubUser(
       accessTokenResponse.access_token,
     );
-    let account = await this.accountService.getAccount(
+    let account = await this.accountEntity.getAccount(
       OAuthProvider.GITHUB,
       userResponse.id + '',
     );
