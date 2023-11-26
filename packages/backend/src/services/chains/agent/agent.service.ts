@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { AgentBuilder } from 'src/lib/chain-builder';
 import { Conversation } from '@my-monorepo/shared';
 import { CallbackManager } from 'langchain/callbacks';
@@ -11,6 +11,8 @@ import * as process from 'process';
 
 @Injectable()
 export class AgentService extends AgentBuilder {
+  private readonly logger = new Logger(AgentService.name);
+
   constructor(private chatHistoryBuilder: ChatHistoryBuilderService) {
     super();
   }
@@ -28,7 +30,16 @@ export class AgentService extends AgentBuilder {
       callbackManager,
       keys: conversation.creator,
     });
-    const tools = [new SerpAPI(process.env.SERP_API_KEY)];
+    const serpTool = new SerpAPI(process.env.SERP_API_KEY);
+    serpTool.callbacks = CallbackManager.fromHandlers({
+      handleToolStart: (_, input: string) => {
+        this.logger.log('calling serpTool with: ', input);
+      },
+      handleToolEnd: (output: string) => {
+        this.logger.log('the tool responded with: ', output);
+      },
+    });
+    const tools = [serpTool];
     const modelWithTools = model.bind({
       tools: tools.map(formatToOpenAITool),
     });
