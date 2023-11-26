@@ -1,7 +1,7 @@
 import React, {FunctionComponent} from 'react';
 import {NewBot} from "@my-monorepo/shared";
-import BotDetails from "@/components/BotForms/ReviewBotDetails/BotDetails";
-import FormCTAs from "@/components/BotForms/FormCTAs";
+import BotDetails from "@/components/BotForms/components/ReviewBotDetails/BotDetails";
+import FormCTAs from "../FormCTAs";
 import styles from "./styles.module.scss"
 
 

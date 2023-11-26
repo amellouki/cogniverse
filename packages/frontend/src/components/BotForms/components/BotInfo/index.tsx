@@ -1,19 +1,19 @@
 import React, {FunctionComponent} from 'react';
-import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
+import {Controller, UseFormReturn} from "react-hook-form";
 import FormFieldWrapper from "@/components/FormFieldWrapper";
 import TextInput from "@/components/BaseFormFields/TextInput";
-import schema, {InputType} from "./form.schema";
+import {InputType} from "./form.schema";
 import SimpleColorPicker from "@/components/BaseFormFields/SimpleColorPicker";
 import {Planet} from "react-kawaii";
 import {COLOR_OPTIONS} from "@/constants";
 import Checkbox from "@/components/BaseFormFields/Checkbox";
-import useSubmit from "@/components/BotForms/use-submit.hook";
-import {BotFormProps2} from "@/components/BotForms/BotFormProps";
 import styles from '../RCConfig/styles.module.scss';
-import FormCTAs from "@/components/BotForms/FormCTAs";
 
-type Props = BotFormProps2<InputType>
+type Props = {
+  form: UseFormReturn<{
+    botInfo: InputType
+  }>
+}
 
 const BotInfo: FunctionComponent<Props> = (props) => {
   const {
@@ -21,60 +21,60 @@ const BotInfo: FunctionComponent<Props> = (props) => {
     handleSubmit,
     control,
     formState: {errors},
-  } = useForm<InputType>({
-    resolver: zodResolver(schema),
-    defaultValues: props.initValue,
-  })
-
-  const onSubmit: SubmitHandler<InputType> = useSubmit(props)
+  } = props.form
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.CreateBot}>
+    <section className={styles.CreateBot}>
       <Controller
         render={({ field: {onChange, value}}) => (
           <section className={styles.avatarSelection}>
-            <SimpleColorPicker onChange={onChange} options={COLOR_OPTIONS} selected={value} legend={'Pick the bot\'s look'} error={errors.color} />
+            <SimpleColorPicker
+              onChange={onChange}
+              options={COLOR_OPTIONS}
+              selected={value}
+              legend={'Pick the bot\'s look'}
+              error={errors.botInfo?.color}
+            />
             {value && <Planet size={100} mood="happy" color={value}/>}
           </section>
         )}
         control={control}
-        name={'color'}
+        name={'botInfo.color'}
         defaultValue={''}
       />
       <FormFieldWrapper
         htmlFor={'bot-name'}
         label={'Bot Name'}
-        fieldError={errors.name}
+        fieldError={errors.botInfo?.name}
       >
         <TextInput
           id={'bot-name'}
           placeholder={'Provide unique bot name'}
-          hasError={!!errors.name}
+          hasError={!!errors.botInfo?.name}
           autoComplete={'off'}
-          {...register('name', {required: true})}
+          {...register('botInfo.name', {required: true})}
         />
       </FormFieldWrapper>
       <FormFieldWrapper
         htmlFor={'description'}
         label={'Description'}
-        fieldError={errors.description}
+        fieldError={errors.botInfo?.description}
       >
         <TextInput
           id={'description'}
           placeholder={'Provide a description for your bot'}
-          hasError={!!errors.description}
+          hasError={!!errors.botInfo?.description}
           autoComplete={'off'}
-          {...register('description', {required: true})}
+          {...register('botInfo.description', {required: true})}
         />
       </FormFieldWrapper>
       <Checkbox
         id={'is-public'}
-        {...register('isPublic', {required: true})}
+        {...register('botInfo.isPublic', {required: true})}
       >
         Should this bot be public?
       </Checkbox>
-      <FormCTAs onBack={props.back} />
-    </form>
+    </section>
   );
 }
 

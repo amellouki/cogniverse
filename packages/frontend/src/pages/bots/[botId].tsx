@@ -10,8 +10,8 @@ import {
   RcBot,
   SomethingWentWrongException
 } from "@my-monorepo/shared";
-import {InputType as ConversationalInputType} from "@/components/BotForms/form-wizards/ConversationalSteps/form.schema";
-import {InputType as RCInputType} from "@/components/BotForms/form-wizards/RCSteps/form.schema";
+import {InputType as ConversationalInputType} from "@/components/BotForms/ConversationalForm/form.schema";
+import {InputType as RCInputType} from "@/components/BotForms/RCForm/form.schema";
 import {NextPageWithLayout} from "@/pages/_app";
 import {getLayout} from "@/components/Layouts/DefaultLayout/CreateBotNestedLayout";
 import useUpdateBot from "@/hooks/bot-mangement/use-update-bot.hook";
@@ -21,8 +21,8 @@ import {TrashIcon} from "@heroicons/react/24/outline";
 import {Planet} from "react-kawaii";
 import DetailsItem from "@/components/DetailsItem";
 import styles from './styles.module.scss'
-import ConversationalSteps from "@/components/BotForms/form-wizards/ConversationalSteps";
-import RCSteps from "@/components/BotForms/form-wizards/RCSteps";
+import ConversationalSteps from "../../components/BotForms/ConversationalForm";
+import RCSteps from "../../components/BotForms/RCForm";
 import {Simulate} from "react-dom/test-utils";
 import load = Simulate.load;
 

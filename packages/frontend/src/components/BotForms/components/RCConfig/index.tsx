@@ -1,47 +1,34 @@
 import React, {FunctionComponent} from 'react';
-import {Controller, useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import ControlledToggleButton from "../../BaseFormFields/ControlledToggleButton";
+import {Controller, UseFormReturn} from "react-hook-form";
+import ControlledToggleButton from "@/components/BaseFormFields/ControlledToggleButton";
 import FormFieldWrapper from "@/components/FormFieldWrapper";
 import Prompt from "@/components/BaseFormFields/Prompt";
-import schema, {InputType} from "./form.schema";
+import {InputType} from "./form.schema";
 import {CLM_PROMPT_PLACEHOLDERS, RLM_PROMPT_PLACEHOLDERS} from "./contants";
 import styles from './styles.module.scss';
-import WrappedSelect from "../../BaseFormFields/Select/WrappedSelect";
+import WrappedSelect from "@/components/BaseFormFields/Select/WrappedSelect";
 import {LLM_OPTIONS} from "@/constants";
-import {BotFormProps2} from "@/components/BotForms/BotFormProps";
-import FormCTAs from "@/components/BotForms/FormCTAs";
-import useSubmit from "@/components/BotForms/use-submit.hook";
 import {RC_QA_TEMPLATE, RC_QUESTION_GENERATION_TEMPLATE} from "@my-monorepo/shared";
 
-type Props = BotFormProps2<InputType>
+type Props = {
+  form: UseFormReturn<{
+    botConfig: InputType
+  }>
+}
 
 const RetrievalConversational: FunctionComponent<Props> = (props) => {
   const {
     register,
-    handleSubmit,
-    reset,
     control,
     formState: {errors},
     watch,
-  } = useForm<InputType>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      rlmPrompt: RC_QUESTION_GENERATION_TEMPLATE,
-      clmPrompt: RC_QA_TEMPLATE,
-      ...props.initValue
-    },
-  })
+  } = props.form;
 
-  console.log('errors', errors)
-
-  const onSubmit = useSubmit(props)
-
-  const isRLMCustomPrompt = watch('isRLMCustomPrompt');
-  const isCLMCustomPrompt = watch('isCLMCustomPrompt');
+  const isRLMCustomPrompt = watch('botConfig.isRLMCustomPrompt');
+  const isCLMCustomPrompt = watch('botConfig.isCLMCustomPrompt');
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.CreateBot}>
+    <section className={styles.CreateBot}>
       <Controller render={({ field: {onChange, value } }) => (
         <WrappedSelect
           options={LLM_OPTIONS}
@@ -51,7 +38,7 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
           onChange={(option) => onChange(option?.value)}
           id={'rLlm'}
         />
-      )} name={'rLlm'} control={control} defaultValue={'gpt-3.5-turbo'} />
+      )} name={'botConfig.rLlm'} control={control} defaultValue={'gpt-3.5-turbo'} />
       <div className={styles.ToggleButtonRow}>
         <span>Retrieval model prompt</span>
         <Controller
@@ -64,7 +51,7 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
               className={styles.ToggleButton}
             />
           )}
-          name={'isRLMCustomPrompt'}
+          name={'botConfig.isRLMCustomPrompt'}
           control={control}
           defaultValue={false}
         />
@@ -73,14 +60,17 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
         <FormFieldWrapper
           htmlFor={'rlm-prompt'}
           label={'Retrieval model prompt'}
-          fieldError={errors.rlmPrompt}
+          fieldError={errors.botConfig?.rlmPrompt}
         >
           <Prompt
-            {...register('rlmPrompt', {required: true})}
+            {...register(
+              'botConfig.rlmPrompt',
+              {required: true, value: RC_QUESTION_GENERATION_TEMPLATE}
+            )}
             id={'rlm-prompt'}
-            aria-invalid={errors.rlmPrompt ? 'true' : 'false'}
+            aria-invalid={errors.botConfig?.rlmPrompt ? 'true' : 'false'}
             placeholder={'Provide retrieval model prompt'}
-            hasError={!!errors.rlmPrompt}
+            hasError={!!errors.botConfig?.rlmPrompt}
             placeholders={RLM_PROMPT_PLACEHOLDERS}
           />
         </FormFieldWrapper>
@@ -94,7 +84,7 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
           onChange={(option) => onChange(option?.value)}
           id={'cLlm'}
         />
-      )} name={'cLlm'} control={control} defaultValue={'gpt-3.5-turbo'} />
+      )} name={'botConfig.cLlm'} control={control} defaultValue={'gpt-3.5-turbo'} />
       <div className={styles.ToggleButtonRow}>
         <span>Conversational model prompt</span>
         <Controller
@@ -107,7 +97,7 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
               className={styles.ToggleButton}
             />
           )}
-          name={'isCLMCustomPrompt'}
+          name={'botConfig.isCLMCustomPrompt'}
           control={control}
           defaultValue={false}
         />
@@ -116,19 +106,21 @@ const RetrievalConversational: FunctionComponent<Props> = (props) => {
         <FormFieldWrapper
           htmlFor={'clm-prompt'}
           label={'Conversational model prompt'}
-          fieldError={errors.clmPrompt}
+          fieldError={errors.botConfig?.clmPrompt}
         >
           <Prompt
-            {...register('clmPrompt', {required: true})}
+            {...register(
+              'botConfig.clmPrompt',
+              {required: true, value: RC_QA_TEMPLATE}
+            )}
             id={'clm-prompt'}
             placeholder={'Provide conversational model prompt'}
-            hasError={!!errors.clmPrompt}
+            hasError={!!errors.botConfig?.clmPrompt}
             placeholders={CLM_PROMPT_PLACEHOLDERS}
           />
         </FormFieldWrapper>
       )}
-      <FormCTAs onBack={props.back} />
-    </form>
+    </section>
   );
 }
 
