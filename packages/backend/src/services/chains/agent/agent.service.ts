@@ -5,7 +5,7 @@ import { CallbackManager } from 'langchain/callbacks';
 import { ChatHistoryBuilderService } from 'src/services/chat-history-builder/chat-history-builder.service';
 import { AgentLLMBuilder } from 'src/lib/llm-builder/agent-llm-builder';
 // import { Calculator } from 'langchain/tools';
-import { formatToOpenAITool, SerpAPI } from 'langchain/tools';
+import { formatToOpenAITool, SerpAPI, WolframAlphaTool } from 'langchain/tools';
 import { createAgent } from 'src/lib/chains/agent';
 import * as process from 'process';
 
@@ -20,6 +20,7 @@ export class AgentService extends AgentBuilder {
   fromConversation(
     conversation: Conversation,
     callbackManager: CallbackManager,
+    toolsCallbackManager: CallbackManager,
   ) {
     if (conversation.bot.type !== 'AGENT') {
       throw new Error('Bot is not an agent');
@@ -31,18 +32,15 @@ export class AgentService extends AgentBuilder {
       keys: conversation.creator,
     });
     const serpTool = new SerpAPI(process.env.SERP_API_KEY);
-    serpTool.callbacks = CallbackManager.fromHandlers({
-      handleToolStart: (_, input: string) => {
-        this.logger.log('calling serpTool with: ', input);
-      },
-      handleToolEnd: (output: string) => {
-        this.logger.log('the tool responded with: ', output);
-      },
+    serpTool.callbacks = toolsCallbackManager;
+    const wolframAlpha = new WolframAlphaTool({
+      appid: process.env.WALPHA_APP_ID,
+      callbacks: toolsCallbackManager,
     });
-    const tools = [serpTool];
+    const tools = [serpTool, wolframAlpha];
     const modelWithTools = model.bind({
       tools: tools.map(formatToOpenAITool),
     });
-    return createAgent(modelWithTools, tools);
+    return createAgent(conversation.bot, modelWithTools, tools);
   }
 }

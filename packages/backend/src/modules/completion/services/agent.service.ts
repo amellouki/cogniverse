@@ -14,7 +14,7 @@ import { BaseChainStream } from './base-chain-stream';
 
 @Injectable()
 export class AgentService extends BaseChainStream {
-  logger = new Logger(AgentService.name);
+  private readonly logger = new Logger(AgentService.name);
 
   constructor(
     private agent: AgentBuilderService,
@@ -45,15 +45,29 @@ export class AgentService extends BaseChainStream {
       },
     });
 
-    const chain = this.agent.fromConversation(conversation, callbackManager);
-
-    const chainValues = await chain.invoke(
-      {
-        question,
-        chat_history: this.chatHistoryBuilder.build(conversation.chatHistory),
+    const toolsCallbackManager = CallbackManager.fromHandlers({
+      handleToolStart: (_, input: string) => {
+        this.logger.log('handleToolStart', input, JSON.stringify(_, null, 2));
+        subject.next({
+          content: input,
+          conversationId: conversation.id,
+          fromType: 'ai',
+          type: 'idea',
+          fromId: bot.id,
+        });
       },
+    });
+
+    const chain = this.agent.fromConversation(
+      conversation,
       callbackManager,
+      toolsCallbackManager,
     );
+
+    const chainValues = await chain.invoke({
+      question,
+      chat_history: this.chatHistoryBuilder.build(conversation.chatHistory),
+    });
     subject.next({
       content: chainValues.output,
       conversationId: conversation.id,
