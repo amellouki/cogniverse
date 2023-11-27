@@ -8,14 +8,8 @@ const schema = z.object({
 }).refine((data) => {
   return !(data.isCustomPrompt && !data.prompt);
 }, {
-  message: "Retrieval Language Model prompt is required",
-  path: ["rlmPrompt"],
-}).refine(({prompt, isCustomPrompt}) => {
-  if (!isCustomPrompt) return true;
-  return !!prompt
-}, {
-  message: "Should provide a comprehensive prompt",
-  path: ["rlmPrompt"],
+  message: "Since you checked custom prompt, custom prompt is required",
+  path: ["prompt"],
 });
 
 export type InputType = z.infer<typeof schema>

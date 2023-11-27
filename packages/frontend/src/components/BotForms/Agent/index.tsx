@@ -4,7 +4,6 @@ import Steps from "../components/Steps";
 import {NewBot} from "@my-monorepo/shared";
 import BotInfo from "../components/BotInfo";
 import {useRouter} from "next/router";
-import AgentConfig from "../components/AgentConfig";
 import schema, {InputType} from "./form.schema";
 import {INSIGHT, STEPS, UPDATE_INSIGHT, UPDATE_STEPS} from "./constants";
 import styles from "./styles.module.scss";
@@ -13,6 +12,8 @@ import {useForm} from "react-hook-form";
 import FormCTAs from "@/components/BotForms/components/FormCTAs";
 import useSubmit from "@/components/BotForms/use-submit.hook";
 import {getNewBot} from "./helpers";
+import ConversationalConfig from "../components/ConversationalConfig";
+import Integration from "@/components/BotForms/components/Integration";
 
 type Props = {
   onSubmit: (data: NewBot) => void
@@ -20,7 +21,6 @@ type Props = {
   update?: boolean
   loading?: boolean
 }
-
 
 const Agent: FunctionComponent<Props> = (props) => {
   const router = useRouter();
@@ -45,7 +45,10 @@ const Agent: FunctionComponent<Props> = (props) => {
       <BotInfo
         form={form as any}
       />
-      <AgentConfig
+      <ConversationalConfig
+        form={form as any}
+      />
+      <Integration
         form={form as any}
       />
       <FormCTAs onBack={router.back} />

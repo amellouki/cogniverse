@@ -1,9 +1,9 @@
-import {ConversationalBot, RcBot, BotAvatar, Agent} from "./bot-configuration/0.0.1";
+import {ConversationalBot, RcBot, BotAvatar, AgentBot} from "./bot-configuration/0.0.1";
 import {BotAvatarType} from "./bot-avatar-type";
 import BotType from "./bot-type";
 import {Account} from "../account";
 
-type Bot = ConversationalBot | RcBot | Agent
+type Bot = ConversationalBot | RcBot | AgentBot
 type FullBot = Bot & {creator: Account}
 type NewBot = Omit<Bot, 'id' | 'boundDocument' | 'creatorId'>
 type UpdatedBot = Omit<Bot, 'boundDocument' | 'creatorId'>
@@ -18,4 +18,5 @@ export {
   BotAvatar,
   UpdatedBot,
   FullBot,
+  AgentBot,
 }
