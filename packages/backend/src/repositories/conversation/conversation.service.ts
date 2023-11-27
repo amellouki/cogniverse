@@ -12,6 +12,9 @@ export class ConversationService {
       where: {
         creatorId,
       },
+      orderBy: {
+        id: 'desc',
+      },
     }) as unknown as Promise<Conversation[]>;
   }
 
