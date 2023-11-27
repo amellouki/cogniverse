@@ -56,6 +56,14 @@ export class AgentService extends BaseChainStream {
           fromId: bot.id,
         });
       },
+      handleToolEnd(
+        output: string,
+        runId: string,
+        parentRunId?: string,
+        tags?: string[],
+      ) {
+        console.log('handleToolEnd', output, runId, parentRunId, tags);
+      },
     });
 
     const chain = this.agent.fromConversation(

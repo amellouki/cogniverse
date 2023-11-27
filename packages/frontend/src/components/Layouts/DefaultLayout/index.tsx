@@ -23,7 +23,10 @@ const DefaultLayout: FC<PropsWithChildren<Props>> = ({
         <LinkIconButton href={'https://github.com/amellouki/cogniverse'}>
           <GithubIcon/>
         </LinkIconButton>
-        <div className={styles.spacer}/>
+        <section className={styles.placeholderWrapper}>
+          <div className={styles.placeholder} id="header-placeholder" />
+        </section>
+        {/*<div className={styles.spacer}/>*/}
         <ThemeChanger/>
       </header>
       <div className={styles.body}>

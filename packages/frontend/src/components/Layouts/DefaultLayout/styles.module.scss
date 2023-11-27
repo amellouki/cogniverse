@@ -33,3 +33,9 @@ $layout-gap: 1rem;
 .spacer {
   margin-left: auto;
 }
+
+.placeholderWrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
