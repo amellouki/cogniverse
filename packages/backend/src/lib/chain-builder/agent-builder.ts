@@ -33,6 +33,11 @@ export class AgentBuilder extends BaseChainBuilder {
       throw new KeyNotSetException('OpenAI api key');
     }
 
-    return createAgent(input.bot, modelWithTools, input.tools);
+    return createAgent(
+      input.bot,
+      modelWithTools,
+      input.tools,
+      input.chatHistory,
+    );
   }
 }

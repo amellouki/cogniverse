@@ -41,6 +41,11 @@ export class AgentService extends AgentBuilder {
     const modelWithTools = model.bind({
       tools: tools.map(formatToOpenAITool),
     });
-    return createAgent(conversation.bot, modelWithTools, tools);
+    return createAgent(
+      conversation.bot,
+      modelWithTools,
+      tools,
+      this.chatHistoryBuilder.build(conversation.chatHistory),
+    );
   }
 }
