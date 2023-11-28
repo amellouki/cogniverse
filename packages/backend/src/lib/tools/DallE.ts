@@ -1,6 +1,10 @@
 import OpenAI from 'openai';
 import { ToolParams, Tool } from 'langchain/tools';
 
+interface DallEToolParams extends ToolParams {
+  openai_api_key?: string;
+}
+
 export class DallETool extends Tool {
   private openai: OpenAI;
 
@@ -8,10 +12,10 @@ export class DallETool extends Tool {
     return this.toJSONNotImplemented();
   }
 
-  constructor(toolParams?: ToolParams) {
+  constructor(toolParams?: DallEToolParams) {
     super(toolParams);
     this.openai = new OpenAI({
-      apiKey: process.env.OPEN_AI_API_KEY,
+      apiKey: toolParams.openai_api_key ?? process.env.OPEN_AI_API_KEY,
     });
   }
 
@@ -40,8 +44,8 @@ export class DallETool extends Tool {
       console.log(JSON.stringify(img, null, 2));
 
       return JSON.stringify({
-        success:
-          'image is successfully generated and now displayed in the chat',
+        status: 'success',
+        images: img,
       });
     } catch (error) {
       return JSON.stringify({

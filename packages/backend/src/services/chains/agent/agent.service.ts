@@ -40,6 +40,7 @@ export class AgentService extends AgentBuilder {
     });
     const dalle = new DallETool({
       callbacks: toolsCallbackManager,
+      openai_api_key: conversation.creator.openAiApiKey,
     });
     const tools = [serpTool, wolframAlpha, dalle];
     const modelWithTools = model.bind({
