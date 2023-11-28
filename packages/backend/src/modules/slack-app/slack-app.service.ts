@@ -15,15 +15,16 @@ import {
 import { LLMResult } from 'langchain/schema';
 import { SlackEntity } from 'src/repositories/slack/slack.entity';
 import { CallbackManager } from 'langchain/callbacks';
-import { RetrievalConversationalChainService } from '../../services/chains/retrieval-conversational/retrieval-conversational-chain.service';
-import { ConversationalChainService } from '../../services/chains/conversational-chain/conversational-chain.service';
+import { RetrievalConversationalChainService } from 'src/services/chains/retrieval-conversational/retrieval-conversational-chain.service';
+import { ConversationalChainService } from 'src/services/chains/conversational-chain/conversational-chain.service';
 import { BotEntity } from 'src/repositories/bot/bot.entity';
-import { ChatHistoryBuilderService } from '../../services/chat-history-builder/chat-history-builder.service';
+import { ChatHistoryBuilderService } from 'src/services/chat-history-builder/chat-history-builder.service';
 import { CallBackRecord } from 'src/lib/callback-record';
 import { VectorStore } from 'langchain/vectorstores/base';
-import { VectorStoreService } from '../../services/vector-store/vector-store.service';
+import { VectorStoreService } from 'src/services/vector-store/vector-store.service';
 import { SlackChatHistoryBuilder } from 'src/lib/chat-history-builder';
 import { BaseThirdPartyApp } from 'src/lib/base-third-party-app';
+import { AgentService } from 'src/services/chains/agent/agent.service';
 
 const SLACK_MESSAGE_REQUEST_REGEX =
   /[ \t]*<@([a-zA-Z0-9]{1,20})>[ \t]*bot[ \t]+([a-zA-Z0-9-_]{1,20})[ \t]+(.*)/;
@@ -38,6 +39,7 @@ export class SlackAppService extends BaseThirdPartyApp {
     private readonly configService: ConfigService,
     protected conversationalChainService: ConversationalChainService,
     protected retrievalConversationalChainService: RetrievalConversationalChainService,
+    protected agentChainService: AgentService,
     protected vectorStoreService: VectorStoreService,
     private slackEntity: SlackEntity,
     private botEntity: BotEntity,
@@ -46,6 +48,7 @@ export class SlackAppService extends BaseThirdPartyApp {
     super(
       conversationalChainService,
       retrievalConversationalChainService,
+      agentChainService,
       vectorStoreService,
     );
     try {
@@ -144,8 +147,8 @@ export class SlackAppService extends BaseThirdPartyApp {
       conversation.chatHistory,
     );
     const chain = this.getChain(bot.type).build({
+      bot,
       llms,
-      botConfig: bot.configuration,
       keys: bot.creator,
       vectorStore,
       chatHistory,

@@ -1,8 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import {
+  ChatInputCommandInteraction,
+  Serialized,
+  SlashCommandBuilder,
+} from 'discord.js';
 import { BaseThirdPartyApp } from 'src/lib/base-third-party-app';
 import { ConversationalChainService } from 'src/services/chains/conversational-chain/conversational-chain.service';
 import { RetrievalConversationalChainService } from 'src/services/chains/retrieval-conversational/retrieval-conversational-chain.service';
+import { AgentService } from 'src/services/chains/agent/agent.service';
 import { VectorStoreService } from 'src/services/vector-store/vector-store.service';
 import { BotEntity } from 'src/repositories/bot/bot.entity';
 import { DiscordEntity } from 'src/repositories/discord/discord.entity';
@@ -11,12 +16,14 @@ import {
   DiscordMessage,
   BadDiscordRequestException,
 } from '@my-monorepo/shared';
-import { CallBackRecord } from 'src/lib/callback-record';
+import { CallBackRecord, ToolCallbackRecord } from 'src/lib/callback-record';
 import { CallbackManager } from 'langchain/callbacks';
 import { LLMResult } from 'langchain/schema';
 import { VectorStore } from 'langchain/vectorstores/base';
 import { DiscordChatHistoryBuilder } from 'src/lib/chat-history-builder';
 import { ICommand } from 'src/lib/command';
+import { AgentLLMBuilder } from 'src/lib/llm-builder/agent-llm-builder';
+import { LmConfig } from '@my-monorepo/shared/dist/types/bot/bot-configuration/0.0.1';
 
 @Injectable()
 export class CvService extends BaseThirdPartyApp implements ICommand {
@@ -25,12 +32,14 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
     protected conversationalChainService: ConversationalChainService,
     protected retrievalConversationalChainService: RetrievalConversationalChainService,
     protected vectorStoreService: VectorStoreService,
+    protected agentChainService: AgentService,
     private botEntity: BotEntity,
     private discordEntity: DiscordEntity,
   ) {
     super(
       conversationalChainService,
       retrievalConversationalChainService,
+      agentChainService,
       vectorStoreService,
     );
   }
@@ -71,7 +80,10 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
     const [bot, conversation] = await Promise.all([
       this.getBot(interaction),
       this.discordEntity.getConversationById(interaction.channel.id),
-      interaction.editReply('**Responding to:**\n' + messageText),
+      interaction.followUp({
+        content: '**Responding to:**\n' + messageText,
+        ephemeral: true,
+      }),
     ]);
     const callbacks: CallBackRecord = {
       lm: CallbackManager.fromHandlers({
@@ -82,18 +94,39 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
         handleLLMEnd: this.handleLLMEnd(bot, interaction),
       }),
     };
+    const toolCallbacks: ToolCallbackRecord = {
+      SerpAPI: CallbackManager.fromHandlers({
+        handleToolStart: this.handleLLMStart(interaction),
+      }),
+      WolframAlpha: CallbackManager.fromHandlers({
+        handleToolStart: this.handleLLMStart(interaction),
+      }),
+      // 'Dall-e': CallbackManager.fromHandlers({
+      //   handleToolStart: this.handleLLMStart(interaction),
+      // }),
+    };
     const llms = this.getLLMRecord(callbacks, bot.configuration, bot.creator);
+    const tools = this.getTools(toolCallbacks);
+    const agentLLM = new AgentLLMBuilder().build({
+      lmConfig: bot.configuration.lm as LmConfig,
+      keys: bot.creator,
+      callbackManager: CallbackManager.fromHandlers({
+        handleLLMEnd: this.handleLLMEnd(bot, interaction),
+      }),
+    });
     const vectorStore: VectorStore = await this.getVectorStore(bot);
     const chatHistory = this.getHistory(
       new DiscordChatHistoryBuilder(),
       conversation.chatHistory,
     );
     const chain = this.getChain(bot.type).build({
+      bot,
       llms,
-      botConfig: bot.configuration,
       keys: bot.creator,
       vectorStore,
       chatHistory,
+      tools,
+      agentLLM,
     });
     await chain.call({
       question: messageText,
@@ -119,6 +152,17 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
           id: message.id,
         });
       }
+    };
+  }
+
+  private handleLLMStart(
+    interaction: ChatInputCommandInteraction,
+  ): (_, input: string) => void {
+    return (_, input: string) => {
+      interaction.followUp({
+        content: '**Action:** `' + input + '`',
+        ephemeral: true,
+      });
     };
   }
 

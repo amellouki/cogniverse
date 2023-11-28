@@ -4,10 +4,7 @@ import {
   AccountKeys,
   BotType,
   Conversation,
-  DiscordConversation,
-  FullBot,
   KeyNotSetException,
-  SlackConversation,
 } from '@my-monorepo/shared';
 import { QUERY_EMBEDDING_MODEL } from '../../../constants';
 import createLlm from '../../llm/create-llm';

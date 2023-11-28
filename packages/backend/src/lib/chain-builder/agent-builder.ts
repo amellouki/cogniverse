@@ -1,18 +1,14 @@
 import { BaseChainBuilder, IChainBuilderInput } from 'src/lib/chain-builder';
 import {
-  Bot,
   BotType,
   InternalServerException,
   KeyNotSetException,
 } from '@my-monorepo/shared';
 import { createAgent } from 'src/lib/chains/agent';
-import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { formatToOpenAITool, StructuredTool } from 'langchain/tools';
 
 export interface AgentBuilderInput extends Omit<IChainBuilderInput, 'llms'> {
   tools: StructuredTool[];
-  agentLLM: ChatOpenAI;
-  bot: Bot; // TODO: either only use this or only existing bot config
 }
 
 export class AgentBuilder extends BaseChainBuilder {
@@ -22,8 +18,8 @@ export class AgentBuilder extends BaseChainBuilder {
       tools: input.tools.map(formatToOpenAITool),
     });
 
-    const botConfig = input.botConfig;
-    if (botConfig.type !== BotType.CONVERSATIONAL) {
+    const botConfig = input.bot.configuration;
+    if (botConfig.type !== BotType.AGENT) {
       throw new InternalServerException('Bot type error');
     }
 
