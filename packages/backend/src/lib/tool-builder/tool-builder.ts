@@ -2,6 +2,7 @@ import { CallbackManager } from 'langchain/callbacks';
 import { ToolType } from 'src/lib/tool-record';
 import { SerpAPI, WolframAlphaTool } from 'langchain/tools';
 import { InternalServerException } from '@my-monorepo/shared';
+import { DallETool } from 'src/lib/tools/DallE';
 
 type ToolBuilderInput = {
   toolType: ToolType | string;
@@ -19,6 +20,10 @@ export class ToolBuilder {
       case 'WolframAlpha':
         return new WolframAlphaTool({
           appid: process.env.WALPHA_APP_ID,
+          callbacks: callbackManager,
+        });
+      case 'Dall-e':
+        return new DallETool({
           callbacks: callbackManager,
         });
       default:

@@ -103,6 +103,7 @@ export class CompletionGateway {
     };
 
     const handleError = (error: any) => {
+      console.log(error.stack);
       client.emit('error', {
         ...error,
         message: error.message ?? 'Error has happened',

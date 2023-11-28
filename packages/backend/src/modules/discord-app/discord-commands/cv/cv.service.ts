@@ -101,9 +101,9 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
       WolframAlpha: CallbackManager.fromHandlers({
         handleToolStart: this.handleLLMStart(interaction),
       }),
-      // 'Dall-e': CallbackManager.fromHandlers({
-      //   handleToolStart: this.handleLLMStart(interaction),
-      // }),
+      'Dall-e': CallbackManager.fromHandlers({
+        handleToolStart: this.handleLLMStart(interaction),
+      }),
     };
     const llms = this.getLLMRecord(callbacks, bot.configuration, bot.creator);
     const tools = this.getTools(toolCallbacks);

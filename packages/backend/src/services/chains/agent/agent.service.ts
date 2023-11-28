@@ -8,6 +8,7 @@ import { AgentLLMBuilder } from 'src/lib/llm-builder/agent-llm-builder';
 import { formatToOpenAITool, SerpAPI, WolframAlphaTool } from 'langchain/tools';
 import { createAgent } from 'src/lib/chains/agent';
 import * as process from 'process';
+import { DallETool } from 'src/lib/tools/DallE';
 
 @Injectable()
 export class AgentService extends AgentBuilder {
@@ -37,7 +38,10 @@ export class AgentService extends AgentBuilder {
       appid: process.env.WALPHA_APP_ID,
       callbacks: toolsCallbackManager,
     });
-    const tools = [serpTool, wolframAlpha];
+    const dalle = new DallETool({
+      callbacks: toolsCallbackManager,
+    });
+    const tools = [serpTool, wolframAlpha, dalle];
     const modelWithTools = model.bind({
       tools: tools.map(formatToOpenAITool),
     });

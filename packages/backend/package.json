@@ -40,6 +40,7 @@
     "dotenv": "^16.0.3",
     "express-session": "^1.17.3",
     "langchain": "^0.0.192",
+    "openai": "^4.20.1",
     "pdf-parse": "^1.1.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.5",
