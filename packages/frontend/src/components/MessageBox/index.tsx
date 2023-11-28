@@ -4,6 +4,7 @@ import styles from "./styles.module.scss";
 import {Message} from "@/types/ChatThread";
 import {BotAvatar, NewMessage} from '@my-monorepo/shared';
 import Sender from "@/components/Sender";
+import Markdown from "react-markdown";
 
 export type MessageBoxProps = {
   message: Message | NewMessage;
@@ -42,9 +43,9 @@ const MessageBox: FunctionComponent<MessageBoxProps> = ({
       <div className="flex-shrink-0">
         <Sender sender={message.fromType} avatar={avatar} />
       </div>
-      <div className={styles.messageText}>
+      <Markdown className={styles.messageText}>
         {message.content}
-      </div>
+      </Markdown>
     </div>
   );
 };
