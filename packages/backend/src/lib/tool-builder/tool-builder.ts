@@ -1,16 +1,24 @@
 import { CallbackManager } from 'langchain/callbacks';
 import { ToolType } from 'src/lib/tool-record';
 import { SerpAPI, WolframAlphaTool } from 'langchain/tools';
-import { InternalServerException } from '@my-monorepo/shared';
+import { AccountKeys, InternalServerException } from '@my-monorepo/shared';
 import { DallETool } from 'src/lib/tools/DallE';
+import { OptionsTool } from 'src/lib/tools/ButtonOptions';
 
 type ToolBuilderInput = {
   toolType: ToolType | string;
   callbackManager: CallbackManager;
+  realWorldEffect?: (input: any) => any;
+  keys?: AccountKeys;
 };
 
 export class ToolBuilder {
-  build({ toolType, callbackManager }: ToolBuilderInput) {
+  build({
+    toolType,
+    callbackManager,
+    realWorldEffect,
+    keys,
+  }: ToolBuilderInput) {
     console.log('toolType', toolType);
     switch (toolType) {
       case 'SerpAPI':
@@ -25,7 +33,11 @@ export class ToolBuilder {
       case 'Dall-e':
         return new DallETool({
           callbacks: callbackManager,
+          send: realWorldEffect,
+          openai_api_key: keys?.openAiApiKey,
         });
+      case 'Options':
+        return OptionsTool.create(realWorldEffect, callbackManager);
       default:
         throw new InternalServerException('Tool not supported');
     }

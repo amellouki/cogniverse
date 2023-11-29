@@ -16,7 +16,11 @@ import {
   DiscordMessage,
   BadDiscordRequestException,
 } from '@my-monorepo/shared';
-import { CallBackRecord, ToolCallbackRecord } from 'src/lib/callback-record';
+import {
+  CallBackRecord,
+  RealWorldEffects,
+  ToolCallbackRecord,
+} from 'src/lib/callback-record';
 import { CallbackManager } from 'langchain/callbacks';
 import { LLMResult } from 'langchain/schema';
 import { VectorStore } from 'langchain/vectorstores/base';
@@ -104,9 +108,16 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
       'Dall-e': CallbackManager.fromHandlers({
         handleToolStart: this.handleLLMStart(interaction),
       }),
+      // Options: CallbackManager.fromHandlers({
+      //   handleToolStart: this.handleLLMStart(interaction),
+      // }), TODO: add support for Discord UI elements
+    };
+
+    const realWorldEffects: RealWorldEffects = {
+      'Dall-e': this.imageDrawing(interaction),
     };
     const llms = this.getLLMRecord(callbacks, bot.configuration, bot.creator);
-    const tools = this.getTools(toolCallbacks);
+    const tools = this.getTools(toolCallbacks, realWorldEffects);
     const agentLLM = new AgentLLMBuilder().build({
       lmConfig: bot.configuration.lm as LmConfig,
       keys: bot.creator,
@@ -131,6 +142,14 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
     await chain.call({
       question: messageText,
     });
+  }
+
+  private imageDrawing(interaction: ChatInputCommandInteraction) {
+    return (imageUrl: string) => {
+      interaction.followUp({
+        content: `[image](${imageUrl})`,
+      });
+    };
   }
 
   private handleLLMEnd(

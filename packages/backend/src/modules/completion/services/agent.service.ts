@@ -81,7 +81,7 @@ export class AgentService extends BaseChainStream {
 
     const dalleCallbackManager = CallbackManager.fromHandlers({
       handleToolStart: (_, input: string) => {
-        console.log('handleToolStart', input, JSON.stringify(_, null, 2));
+        console.log('handle dalle generation start');
         subject.next({
           content: 'generating image...',
           conversationId: conversation.id,

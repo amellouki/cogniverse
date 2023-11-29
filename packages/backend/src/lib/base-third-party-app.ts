@@ -13,7 +13,11 @@ import { BaseChainBuilder } from './chain-builder';
 import { VectorStoreService } from '../services/vector-store/vector-store.service';
 import { VectorStore } from 'langchain/vectorstores/base';
 import { QUERY_EMBEDDING_MODEL } from '../constants';
-import { CallBackRecord, ToolCallbackRecord } from './callback-record';
+import {
+  CallBackRecord,
+  RealWorldEffects,
+  ToolCallbackRecord,
+} from './callback-record';
 import { LLMRecord } from './llm-record';
 import { LmConfig } from '@my-monorepo/shared/dist/types/bot/bot-configuration/0.0.1';
 import { LlmBuilder } from './llm-builder';
@@ -79,15 +83,22 @@ export class BaseThirdPartyApp {
     return record;
   }
 
-  protected getTools(callbacks: ToolCallbackRecord): StructuredTool[] {
+  protected getTools(
+    callbacks: ToolCallbackRecord,
+    realWorldEffects: RealWorldEffects,
+    keys?: AccountKeys,
+  ): StructuredTool[] {
     const tools = [];
     Object.keys(callbacks).forEach((key) => {
       const callback = callbacks[key];
+      const realWorldEffect = realWorldEffects[key];
       if (callback) {
         tools.push(
           new ToolBuilder().build({
             toolType: key,
             callbackManager: callback,
+            realWorldEffect,
+            keys,
           }),
         );
       }
