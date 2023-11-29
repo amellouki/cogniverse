@@ -4,11 +4,11 @@ import type {AppProps} from "next/app";
 import {QueryClient, QueryClientProvider} from "react-query";
 import { Outfit } from "next/font/google";
 import {getGuardedLayout} from "@/components/Layouts/DefaultLayout";
-import {ReactElement, ReactNode, useState} from "react";
+import {ReactElement, ReactNode} from "react";
 import {NextPage} from "next";
 import {ToastContainer} from "react-toastify";
 
-const outfit = Outfit({ subsets: ['latin'] });
+const outfit = Outfit(  { subsets: ['latin'], weight: ['100', '300', '400', '500', '700' , '900'] });
 
 const queryClient = new QueryClient();
 

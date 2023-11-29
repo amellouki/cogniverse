@@ -41,4 +41,11 @@ export class ChatMessage extends BaseMessage {
     }
     throw new Error('Chat history is not an array');
   }
+
+  static getChatHistoryTuples(chatHistory: ChatMessage[]): [string, string][] {
+    if (Array.isArray(chatHistory)) {
+      return chatHistory.map((message) => [message.type, message.text]);
+    }
+    throw new Error('Chat history is not an array');
+  }
 }

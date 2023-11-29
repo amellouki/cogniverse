@@ -7,9 +7,9 @@ import clsx from "clsx";
 
 const NewConversation: FunctionComponent = () => {
   const { pathname } = useRouter()
-  const isCreate = pathname === '/conversations'
+  const isCreate = pathname === '/conversations/new'
   return (
-    <Link className={clsx(styles.conversationItem, isCreate && styles.selected)} href={`/`}>
+    <Link className={clsx(styles.conversationItem, isCreate && styles.selected)} href={`/conversations`}>
       <SparklesIcon width={24} height={24} />
       <span>
         New conversation

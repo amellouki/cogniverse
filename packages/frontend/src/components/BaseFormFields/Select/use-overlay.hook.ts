@@ -1,8 +1,9 @@
 import {useMemo, useState} from "react";
 import {Modifier, usePopper} from "react-popper";
 import {State} from "@popperjs/core";
+import {Placement} from "@popperjs/core/lib/enums";
 
-export default function useOverlay() {
+export default function useOverlay(placement?: Placement) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
 
@@ -26,7 +27,7 @@ export default function useOverlay() {
 
 
   const {attributes, styles: popperStyles} = usePopper(referenceElement, popperElement, {
-    placement: 'bottom-start',
+    placement: placement ?? 'bottom-start',
     modifiers,
   })
   return {setReferenceElement, setPopperElement, attributes, popperStyles};

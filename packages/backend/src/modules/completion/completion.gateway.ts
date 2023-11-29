@@ -1,5 +1,4 @@
-import { RetrievalConversationalService } from './retrieval-conversational.service';
-import { DocConversationRequestDto } from '../../dto/doc-conversation-request.dto';
+import { DocConversationRequestDto } from 'src/dto/doc-conversation-request.dto';
 import { Socket } from 'socket.io';
 import {
   ConnectedSocket,
@@ -9,22 +8,15 @@ import {
   WsException,
 } from '@nestjs/websockets';
 import * as dotenv from 'dotenv';
-import { ConversationService } from '../../repositories/conversation/conversation.service';
+import { ConversationService } from 'src/repositories/conversation/conversation.service';
 import { Message } from '@prisma/client';
-import {
-  NewMessage,
-  BotType,
-  Conversation,
-  BotTypeNotSupportedException,
-  AppException,
-} from '@my-monorepo/shared';
-import { ChatHistoryService } from '../../repositories/chat-history/chat-history.service';
-import { filter } from 'rxjs';
-import { END_COMPLETION } from '../../constants';
-import { ConversationalService } from './conversational.service';
-import { AgentService } from './agent.service';
-import { WsAuthGuard } from '../../guards/ws-auth/ws-auth.guard';
-import { UseGuards } from '@nestjs/common';
+import { NewMessage, Conversation } from '@my-monorepo/shared';
+import { ChatHistoryEntity } from 'src/repositories/chat-history/chat-history.entity';
+import { filter, catchError, of, share } from 'rxjs';
+import { END_COMPLETION } from 'src/constants';
+import { WsAuthGuard } from 'src/guards/ws-auth/ws-auth.guard';
+import { Logger, UseGuards } from '@nestjs/common';
+import { ChainStreamService } from './services/chain-stream.service';
 
 dotenv.config({ path: './.env.local' });
 
@@ -44,26 +36,13 @@ function getData(type: string, content: unknown) {
   },
 })
 export class CompletionGateway {
-  constructor(
-    private retrievalConversationalService: RetrievalConversationalService,
-    private conversationalService: ConversationalService,
-    private agentService: AgentService,
-    private conversationService: ConversationService,
-    private chatHistoryService: ChatHistoryService,
-  ) {}
+  private readonly logger = new Logger(CompletionGateway.name);
 
-  private getService(botType: BotType) {
-    switch (botType) {
-      case BotType.RETRIEVAL_CONVERSATIONAL:
-        return this.retrievalConversationalService;
-      case BotType.CONVERSATIONAL:
-        return this.conversationalService;
-      case BotType.AGENT:
-        return this.agentService;
-      default:
-        throw new BotTypeNotSupportedException();
-    }
-  }
+  constructor(
+    private chainStreamService: ChainStreamService,
+    private conversationService: ConversationService,
+    private chatHistoryEntity: ChatHistoryEntity,
+  ) {}
 
   private unauthorisedAccess(
     conversation: Conversation,
@@ -125,7 +104,16 @@ export class CompletionGateway {
       });
     };
 
-    const added = await this.chatHistoryService.saveMessage({
+    const handleError = (error: any) => {
+      console.log(error.stack);
+      client.emit('error', {
+        ...error,
+        message: error.message ?? 'Error has happened',
+      });
+      client.disconnect();
+    };
+
+    const added = await this.chatHistoryEntity.saveMessage({
       content: question,
       conversationId: conversation.id,
       fromType: 'human',
@@ -134,31 +122,24 @@ export class CompletionGateway {
     });
     sendConfirmQuestion(added);
 
-    const service = this.getService(conversation.bot.type);
+    const service = this.chainStreamService.getService(conversation.bot.type);
 
     try {
-      const events$ = service.getCompletion$(question || '', conversation);
-
-      events$.pipe(filter((event) => event.type === 'error')).subscribe((e) => {
-        if (e.type !== 'error' || !('payload' in e)) {
-          return;
-        }
-        const error = e.payload as AppException;
-        client.emit('error', { ...error, message: error.message });
-        client.disconnect();
-      });
+      const events$ = service.getCompletion$(question || '', conversation).pipe(
+        catchError((e) => {
+          handleError(e);
+          return of({ type: '__ignore__' } as NewMessage);
+        }),
+        share(),
+      );
 
       events$
         .pipe(filter((event) => event.type === 'response-token'))
-        .subscribe(sendToken);
+        .subscribe({ next: sendToken });
 
-      events$
-        .pipe(filter((event) => event.type === 'idea'))
-        .subscribe((idea) => {
-          if (idea.type !== 'idea') {
-            return;
-          }
-          this.chatHistoryService
+      events$.pipe(filter((event) => event.type === 'idea')).subscribe({
+        next: (idea) => {
+          this.chatHistoryEntity
             .saveMessage(idea)
             .then((message) => {
               sendRetrieval(message);
@@ -166,19 +147,46 @@ export class CompletionGateway {
             .catch((e) => {
               throw e;
             });
-        });
+        },
+      });
 
-      events$
-        .pipe(filter((event) => event.type === 'message'))
-        .subscribe((response) => {
-          if (response.type !== 'message') {
-            return;
-          }
-          this.chatHistoryService.saveMessage(response).then(() => {
+      events$.pipe(filter((event) => event.type === 'message')).subscribe({
+        next: (response) => {
+          this.chatHistoryEntity.saveMessage(response).then(() => {
             client.emit('data', getData('response', response));
             client.emit('event', { state: END_COMPLETION });
-            client.disconnect();
+            // client.disconnect();
           });
+        },
+      });
+
+      events$.pipe(filter((event) => event.type === 'ui')).subscribe({
+        next: (ui) => {
+          this.logger.log('ui: saving ui');
+          this.chatHistoryEntity.saveMessage(ui).then(() => {
+            this.logger.log('ui: sending ui');
+            client.emit('data', getData('ui', ui));
+          });
+        },
+      });
+
+      events$.pipe(filter((event) => event.type === 'generating')).subscribe({
+        next: (message) => {
+          console.log('generation', message);
+          client.emit('data', getData('generating', message));
+        },
+      });
+
+      events$
+        .pipe(filter((event) => event.type === 'generated_image'))
+        .subscribe({
+          next: (message) => {
+            this.logger.log('generated_image: saving image');
+            this.chatHistoryEntity.saveMessage(message).then(() => {
+              this.logger.log('generated_image: sending image');
+              client.emit('data', getData('image', message));
+            });
+          },
         });
     } catch (e) {
       client.emit('error', e);

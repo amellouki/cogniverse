@@ -15,9 +15,21 @@ export class ChatHistoryBuilderService {
     const messages = chatHistory.map((message) => {
       switch (message.fromType) {
         case 'system':
-          return new SystemChatMessage(message.content);
+          return ChatMessage.createSystemMessage(message.content);
         case 'ai':
-          return ChatMessage.createAIMessage(message.content);
+          if (message.type === 'ui') {
+            // TODO: temp abomination
+            return ChatMessage.createAIMessage(
+              JSON.parse(message.content)
+                ?.payload?.options?.map((x) => x.value)
+                .join(','),
+            );
+          } else if (message.type === 'generated_image') {
+            console.log('created AI message: generated image');
+            return ChatMessage.createAIMessage('[generated image]');
+          } else {
+            return ChatMessage.createAIMessage(message.content);
+          }
         case 'human':
           return ChatMessage.createHumanMessage(message.content, '');
         default:

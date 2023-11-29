@@ -1,22 +1,33 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import {
+  ChatInputCommandInteraction,
+  Serialized,
+  SlashCommandBuilder,
+} from 'discord.js';
 import { BaseThirdPartyApp } from 'src/lib/base-third-party-app';
 import { ConversationalChainService } from 'src/services/chains/conversational-chain/conversational-chain.service';
 import { RetrievalConversationalChainService } from 'src/services/chains/retrieval-conversational/retrieval-conversational-chain.service';
+import { AgentService } from 'src/services/chains/agent/agent.service';
 import { VectorStoreService } from 'src/services/vector-store/vector-store.service';
-import { BotService } from 'src/repositories/bot/bot.service';
-import { DiscordConversationService } from 'src/repositories/discord/discord-conversation/discord-conversation.service';
+import { BotEntity } from 'src/repositories/bot/bot.entity';
+import { DiscordEntity } from 'src/repositories/discord/discord.entity';
 import {
   Bot,
   DiscordMessage,
   BadDiscordRequestException,
 } from '@my-monorepo/shared';
-import { CallBackRecord } from 'src/lib/callback-record';
+import {
+  CallBackRecord,
+  RealWorldEffects,
+  ToolCallbackRecord,
+} from 'src/lib/callback-record';
 import { CallbackManager } from 'langchain/callbacks';
 import { LLMResult } from 'langchain/schema';
 import { VectorStore } from 'langchain/vectorstores/base';
 import { DiscordChatHistoryBuilder } from 'src/lib/chat-history-builder';
 import { ICommand } from 'src/lib/command';
+import { AgentLLMBuilder } from 'src/lib/llm-builder/agent-llm-builder';
+import { LmConfig } from '@my-monorepo/shared/dist/types/bot/bot-configuration/0.0.1';
 
 @Injectable()
 export class CvService extends BaseThirdPartyApp implements ICommand {
@@ -25,12 +36,14 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
     protected conversationalChainService: ConversationalChainService,
     protected retrievalConversationalChainService: RetrievalConversationalChainService,
     protected vectorStoreService: VectorStoreService,
-    private botService: BotService,
-    private discordConversationService: DiscordConversationService,
+    protected agentChainService: AgentService,
+    private botEntity: BotEntity,
+    private discordEntity: DiscordEntity,
   ) {
     super(
       conversationalChainService,
       retrievalConversationalChainService,
+      agentChainService,
       vectorStoreService,
     );
   }
@@ -58,9 +71,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
       return await interaction.reply(e);
     }
     await interaction.deferReply();
-    await this.discordConversationService.saveMessage(
-      this.mapHumanMessage(interaction),
-    );
+    await this.discordEntity.saveMessage(this.mapHumanMessage(interaction));
     try {
       return await this.callChain(interaction);
     } catch (e) {
@@ -72,10 +83,11 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
     const messageText = interaction.options.getString('message');
     const [bot, conversation] = await Promise.all([
       this.getBot(interaction),
-      this.discordConversationService.getConversationById(
-        interaction.channel.id,
-      ),
-      interaction.editReply('**Responding to:**\n' + messageText),
+      this.discordEntity.getConversationById(interaction.channel.id),
+      interaction.followUp({
+        content: '**Responding to:**\n' + messageText,
+        ephemeral: true,
+      }),
     ]);
     const callbacks: CallBackRecord = {
       lm: CallbackManager.fromHandlers({
@@ -86,22 +98,58 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
         handleLLMEnd: this.handleLLMEnd(bot, interaction),
       }),
     };
+    const toolCallbacks: ToolCallbackRecord = {
+      SerpAPI: CallbackManager.fromHandlers({
+        handleToolStart: this.handleLLMStart(interaction),
+      }),
+      WolframAlpha: CallbackManager.fromHandlers({
+        handleToolStart: this.handleLLMStart(interaction),
+      }),
+      'Dall-e': CallbackManager.fromHandlers({
+        handleToolStart: this.handleLLMStart(interaction),
+      }),
+      // Options: CallbackManager.fromHandlers({
+      //   handleToolStart: this.handleLLMStart(interaction),
+      // }), TODO: add support for Discord UI elements
+    };
+
+    const realWorldEffects: RealWorldEffects = {
+      'Dall-e': this.imageDrawing(interaction),
+    };
     const llms = this.getLLMRecord(callbacks, bot.configuration, bot.creator);
+    const tools = this.getTools(toolCallbacks, realWorldEffects);
+    const agentLLM = new AgentLLMBuilder().build({
+      lmConfig: bot.configuration.lm as LmConfig,
+      keys: bot.creator,
+      callbackManager: CallbackManager.fromHandlers({
+        handleLLMEnd: this.handleLLMEnd(bot, interaction),
+      }),
+    });
     const vectorStore: VectorStore = await this.getVectorStore(bot);
     const chatHistory = this.getHistory(
       new DiscordChatHistoryBuilder(),
       conversation.chatHistory,
     );
     const chain = this.getChain(bot.type).build({
+      bot,
       llms,
-      botConfig: bot.configuration,
       keys: bot.creator,
       vectorStore,
       chatHistory,
+      tools,
+      agentLLM,
     });
     await chain.call({
       question: messageText,
     });
+  }
+
+  private imageDrawing(interaction: ChatInputCommandInteraction) {
+    return (imageUrl: string) => {
+      interaction.followUp({
+        content: `[image](${imageUrl})`,
+      });
+    };
   }
 
   private handleLLMEnd(
@@ -112,7 +160,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
       const generation = result.generations[0][0]?.text;
       if (generation) {
         const message = await interaction.followUp(generation);
-        await this.discordConversationService.saveMessage({
+        await this.discordEntity.saveMessage({
           content: result.generations[0][0]?.text,
           discordConversationId: message.channel.id,
           botId: bot.id,
@@ -123,6 +171,17 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
           id: message.id,
         });
       }
+    };
+  }
+
+  private handleLLMStart(
+    interaction: ChatInputCommandInteraction,
+  ): (_, input: string) => void {
+    return (_, input: string) => {
+      interaction.followUp({
+        content: '**Action:** `' + input + '`',
+        ephemeral: true,
+      });
     };
   }
 
@@ -138,7 +197,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
 
   private async getBot(interaction: ChatInputCommandInteraction) {
     const botName = interaction.options.getString('bot');
-    const bot = await this.botService.getBotByName(botName);
+    const bot = await this.botEntity.getBotByName(botName);
     if (!bot) {
       throw new BadDiscordRequestException(`Bot ${botName} does not exist`);
     }

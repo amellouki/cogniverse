@@ -11,7 +11,7 @@ const BotSummary: FunctionComponent<Props> = ({ bot }) => {
   const avatar = bot.configuration.avatar
   return (
     <section className={styles.BotSummary}>
-      {avatar.type === BotAvatarType.BOT_AVATAR_EMOTE && <Planet size={50} mood="blissful" color={avatar.backgroundColor} />}
+      {avatar.type === BotAvatarType.BOT_AVATAR_EMOTE && <Planet size={50} mood="happy" color={avatar.backgroundColor} />}
       <div>
         <h2><strong>{bot.name}</strong></h2>
         <h3>{bot.type}</h3>

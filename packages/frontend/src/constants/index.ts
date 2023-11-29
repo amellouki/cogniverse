@@ -11,8 +11,8 @@ export const BOTS_OPTIONS: SelectOption[] = [
 export const LLM_OPTIONS: SelectOption[] = [
   { value: 'gpt-3.5-turbo', label: 'GPT3.5 turbo' },
   { value: 'gpt-4', label: 'GPT4' },
-  { value: 'gpt-3.5-turbo-1106', label: 'GPT3 (fine tuned for tools)' },
-  { value: 'gpt-4-1106-preview', label: 'GPT4 (tool calling preview)' }
+  { value: 'gpt-3.5-turbo-1106', label: 'GPT3.5 (function calling)' },
+  { value: 'gpt-4-1106-preview', label: 'GPT4 (function calling)' }
 ];
 
 export const COLOR_OPTIONS = [

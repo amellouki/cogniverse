@@ -14,7 +14,7 @@ const DiscordCallback: NextPageWithLayout = (props) => {
     if (code) {
       apiInstance.post('/login/discord', {code}).then(res => {
         localStorage.setItem(LOCAL_STORAGE.TOKEN, res.data.access_token);
-        router.push('/').then(() => console.log('Logged in successfully!'));
+        router.push('/conversations').then(() => console.log('Logged in successfully!'));
       })
     }
   }, [params])

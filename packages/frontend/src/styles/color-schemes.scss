@@ -13,7 +13,10 @@
   --color-2-rgb: 248, 94, 70;
   --color-2: rgb(var(--color-2-rgb));
   --color-2-light: rgba(var(--color-2-rgb), 0.8);
+  --color-2-dim: rgba(var(--color-2-rgb), 0.5);
+  --color-3-rgb: 131,56,236;
   --color-3: var(--blue-violet);
+  --color-3-dim: rgba(var(--color-3-rgb), 0.5);
   --color-4: rgb(249, 124, 174);
   --danger-color-rgb: 255, 0, 110;
   --danger-color: rgb(var(--danger-color-rgb));
@@ -73,6 +76,7 @@
 
   --color-1-rgb: 254, 255, 249;
   --color-2-rgb: 217, 255, 93;
+  --color-3-rgb: 0, 206, 235;
   --color-3: rgb(0, 206, 235);
   --color-4: rgb(255, 82, 29);
   --color-5: rgb(255, 216, 68);

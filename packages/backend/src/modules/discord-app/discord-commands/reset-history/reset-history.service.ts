@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ICommand } from 'src/lib/command';
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { DiscordConversationService } from 'src/repositories/discord/discord-conversation/discord-conversation.service';
+import { DiscordEntity } from 'src/repositories/discord/discord.entity';
 
 @Injectable()
 export class ResetHistoryService implements ICommand {
-  constructor(private discordConversationService: DiscordConversationService) {}
+  constructor(private discordEntity: DiscordEntity) {}
 
   data = new SlashCommandBuilder()
     .setName('reset-history')
@@ -13,7 +13,7 @@ export class ResetHistoryService implements ICommand {
 
   public async execute(interaction: ChatInputCommandInteraction) {
     await Promise.all([
-      this.discordConversationService.resetHistory(interaction.channel.id),
+      this.discordEntity.resetHistory(interaction.channel.id),
       interaction.deferReply(),
     ]);
     await interaction.editReply(

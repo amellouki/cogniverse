@@ -9,6 +9,6 @@ export interface BotFormProps {
 export interface BotFormProps2<T> {
   onSubmit: (data: T) => void
   initValue?: T
-  next: () => void
-  back: () => void
+  next?: () => void
+  back?: () => void
 }

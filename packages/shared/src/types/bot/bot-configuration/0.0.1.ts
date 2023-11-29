@@ -82,7 +82,7 @@ export interface ConversationalBot extends Bot {
   boundDocumentId: null
 }
 
-export interface Agent extends Bot {
+export interface AgentBot extends Bot {
   type: typeof BotType.AGENT,
   configVersion: typeof BOT_CONFIG_VERSION_V0_0_1,
   configuration: Prisma.JsonObject & AgentConfiguration

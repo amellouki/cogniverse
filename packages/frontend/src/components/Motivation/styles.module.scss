@@ -1,0 +1,23 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  gap: 100px;
+}
+
+.element {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.relation path {
+  stroke: var(--primary-foreground);
+  fill: var(--primary-foreground);
+  stroke-width: 2px;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}

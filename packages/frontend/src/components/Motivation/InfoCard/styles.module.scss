@@ -1,0 +1,91 @@
+.InfoCard {
+  background-color: var(--secondary-background);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  position: relative;
+  cursor: pointer;
+  margin: 1rem;
+  min-width: 200px;
+  display: flex;
+  justify-content: center;
+}
+
+.InfoCard.alwaysActive::after,
+.InfoCard.alwaysActive::before,
+.InfoCard:hover::after,
+.InfoCard:hover::before {
+  display: block;
+  opacity: 1;
+}
+
+.description,
+.InfoCard::after,
+.InfoCard::before {
+  transition: opacity 0.5s ease-in-out;
+}
+
+// glow effect
+.InfoCard::after,
+.InfoCard::before {
+  //display: none;
+  opacity: 0;
+  border-radius: 0.75rem;
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  background-size: 200%;
+  background-image: linear-gradient(
+                  45deg,
+                  var(--color-2),
+                  var(--color-2),
+                  rgba(0, 0, 0, 0),
+                  var(--color-3),
+                  var(--color-3),
+                  rgba(0, 0, 0, 0),
+                  var(--color-2)
+  );
+
+  animation: rainbow 10s linear infinite both;
+  z-index: -1;
+}
+
+.InfoCard::after {
+  filter: blur(20px);
+}
+
+@keyframes rainbow {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+
+.idea {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.description {
+  //position: absolute;
+  padding: 1rem;
+  border: 1px solid var(--primary-foreground);
+  border-radius: 0.75rem;
+  background-color: var(--secondary-background);
+}
+
+
+.InfoCard.alwaysInactive::after,
+.InfoCard.alwaysInactive::before {
+  display: none;
+}

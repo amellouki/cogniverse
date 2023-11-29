@@ -2,11 +2,11 @@ import React, {FunctionComponent, useRef} from 'react';
 import useCreateBot from "@/hooks/bot-mangement/use-create-bot.hook";
 import {BotType, NewBot} from "@my-monorepo/shared";
 import {MutableResetRef, ResetFunction} from "@/types/MutableResetRef";
-import ConversationalSteps from "../BotForms/form-wizards/ConversationalSteps";
-import RCSteps from "@/components/BotForms/form-wizards/RCSteps";
+import ConversationalSteps from "../BotForms/ConversationalForm";
+import RCSteps from "../BotForms/RCForm";
 import styles from './styles.module.scss';
 import {useRouter} from "next/router";
-import Agent from "@/components/BotForms/form-wizards/Agent";
+import Agent from "../BotForms/Agent";
 
 type Props = {
   botType: BotType

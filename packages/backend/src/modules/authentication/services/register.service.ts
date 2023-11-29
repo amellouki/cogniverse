@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { OAuthProvider } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
-import { AccountService } from '../../../repositories/account/account.service';
+import { AccountEntity } from 'src/repositories/account/account.entity';
 import { GithubOAuthService } from './github-o-auth.service';
 import { UserResponse } from '../../../types/github-types';
 
@@ -10,7 +10,7 @@ import { UserResponse } from '../../../types/github-types';
 export class RegisterService {
   constructor(
     private readonly configService: ConfigService,
-    private readonly accountService: AccountService,
+    private readonly accountEntity: AccountEntity,
     private readonly loginService: GithubOAuthService,
   ) {}
 
@@ -27,7 +27,7 @@ export class RegisterService {
   }
 
   async saveGithubUser(githubUser: UserResponse) {
-    return this.accountService.registerAccount({
+    return this.accountEntity.registerAccount({
       userId: githubUser.id + '',
       username: githubUser.name,
       profilePicture: githubUser.avatar_url,

@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SlackService } from './slack.service';
+import { SlackEntity } from 'src/repositories/slack/slack.entity';
 
 describe('SlackService', () => {
-  let service: SlackService;
+  let service: SlackEntity;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [SlackService],
+      providers: [SlackEntity],
     }).compile();
 
-    service = module.get<SlackService>(SlackService);
+    service = module.get<SlackEntity>(SlackEntity);
   });
 
   it('should be defined', () => {

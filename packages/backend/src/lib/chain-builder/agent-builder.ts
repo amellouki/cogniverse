@@ -5,12 +5,10 @@ import {
   KeyNotSetException,
 } from '@my-monorepo/shared';
 import { createAgent } from 'src/lib/chains/agent';
-import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { formatToOpenAITool, StructuredTool } from 'langchain/tools';
 
 export interface AgentBuilderInput extends Omit<IChainBuilderInput, 'llms'> {
   tools: StructuredTool[];
-  agentLLM: ChatOpenAI;
 }
 
 export class AgentBuilder extends BaseChainBuilder {
@@ -20,8 +18,8 @@ export class AgentBuilder extends BaseChainBuilder {
       tools: input.tools.map(formatToOpenAITool),
     });
 
-    const botConfig = input.botConfig;
-    if (botConfig.type !== BotType.CONVERSATIONAL) {
+    const botConfig = input.bot.configuration;
+    if (botConfig.type !== BotType.AGENT) {
       throw new InternalServerException('Bot type error');
     }
 
@@ -35,6 +33,11 @@ export class AgentBuilder extends BaseChainBuilder {
       throw new KeyNotSetException('OpenAI api key');
     }
 
-    return createAgent(modelWithTools, input.tools);
+    return createAgent(
+      input.bot,
+      modelWithTools,
+      input.tools,
+      input.chatHistory,
+    );
   }
 }

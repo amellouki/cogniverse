@@ -7,16 +7,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConversationService } from './repositories/conversation/conversation.service';
-import { ChatHistoryService } from './repositories/chat-history/chat-history.service';
 import { Conversation } from '@prisma/client';
 import { SecureRequest } from './types/secure-request';
 
 @Controller('api')
 export class AppController {
-  constructor(
-    private conversationService: ConversationService,
-    private historyService: ChatHistoryService,
-  ) {}
+  constructor(private conversationService: ConversationService) {}
 
   @Get('conversations')
   async getConversations(

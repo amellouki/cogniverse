@@ -20,7 +20,7 @@ const Navigation: FunctionComponent<Props> = ({ className }) => {
   const logout = useLogout();
   return (
     <nav className={clsx(styles.Navigation, className)}>
-      <NavItem href={'/conversations'} icon={<ChatBubbleLeftRightIcon width={36} height={36} />} title={'Conversations'} />
+      <NavItem href={'/conversations/new'} icon={<ChatBubbleLeftRightIcon width={36} height={36} />} title={'Conversations'} />
       <NavItem href={'/bots'} icon={<BotIcon width={"36px"} height={"36px"} />} title={'Bots'} />
       <NavItem href={'/documents'} icon={<DocumentDuplicateIcon width={36} height={36}/>} title={'Documents'} />
       <NavItem href={'/account'} icon={<UserCircleIcon width={36} height={36} />} title={'Account'} />

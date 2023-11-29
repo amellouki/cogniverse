@@ -45,7 +45,11 @@ const useConversation = (
           }
         })
       }
-      if (data.type === 'retrieval') {
+      if (data.type === 'retrieval' ||
+          data.type === 'ui' ||
+          data.type === 'generating' ||
+          data.type === 'generated_image'
+      ) {
         onLatestResponseComplete(data.content)
       }
       if (data.type === 'response') {

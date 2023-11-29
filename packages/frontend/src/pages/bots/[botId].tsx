@@ -8,10 +8,12 @@ import {
   ConversationalBot,
   NewBot,
   RcBot,
-  SomethingWentWrongException
+  SomethingWentWrongException,
+  AgentBot
 } from "@my-monorepo/shared";
-import {InputType as ConversationalInputType} from "@/components/BotForms/form-wizards/ConversationalSteps/form.schema";
-import {InputType as RCInputType} from "@/components/BotForms/form-wizards/RCSteps/form.schema";
+import {InputType as ConversationalInputType} from "@/components/BotForms/ConversationalForm/form.schema";
+import {InputType as RCInputType} from "@/components/BotForms/RCForm/form.schema";
+import {InputType as AgentInputType} from "@/components/BotForms/Agent/form.schema";
 import {NextPageWithLayout} from "@/pages/_app";
 import {getLayout} from "@/components/Layouts/DefaultLayout/CreateBotNestedLayout";
 import useUpdateBot from "@/hooks/bot-mangement/use-update-bot.hook";
@@ -21,10 +23,9 @@ import {TrashIcon} from "@heroicons/react/24/outline";
 import {Planet} from "react-kawaii";
 import DetailsItem from "@/components/DetailsItem";
 import styles from './styles.module.scss'
-import ConversationalSteps from "@/components/BotForms/form-wizards/ConversationalSteps";
-import RCSteps from "@/components/BotForms/form-wizards/RCSteps";
-import {Simulate} from "react-dom/test-utils";
-import load = Simulate.load;
+import ConversationalSteps from "../../components/BotForms/ConversationalForm";
+import RCSteps from "../../components/BotForms/RCForm";
+import Agent from "@/components/BotForms/Agent";
 
 const BotDetails: NextPageWithLayout = () => {
   const router = useRouter()
@@ -92,6 +93,13 @@ const BotDetails: NextPageWithLayout = () => {
             label={'custom prompt'}
             valueClassName={styles.ellipsis}
             value={data.configuration.lm.prompt}
+            />
+          )}
+          {data.configuration.type === BotType.AGENT && data.configuration.lm?.prompt && (
+            <DetailsItem
+              label={'custom prompt'}
+              valueClassName={styles.ellipsis}
+              value={data.configuration.lm.prompt}
             />
           )}
           {data.configuration.type === BotType.RETRIEVAL_CONVERSATIONAL && data.configuration.retrievalLm?.prompt && (
@@ -185,6 +193,29 @@ function getConversationalFormValue(data: ConversationalBot): ConversationalInpu
   }
 }
 
+function getAgentFormValue(data: AgentBot): AgentInputType {
+  return {
+    botInfo: {
+      color: getBotAvatarColor(data),
+      name: data.name,
+      description: data.description ?? undefined,
+      isPublic: data.public,
+    },
+    botConfig: {
+      isCustomPrompt: !!data.configuration.lm?.prompt,
+      prompt: data.configuration.lm?.prompt,
+      apiKey: data.configuration.lm?.apiKey!,
+      llm: data.configuration.lm?.modelName!,
+    },
+    integration: {
+      integrateWithDiscord: !!data.configuration?.thirdPartyIntegration?.discord,
+      discordChannelIds: getAllowedDiscordChannelId(data),
+      integrateWithSlack: !!data.configuration?.thirdPartyIntegration?.slack,
+      slackChannelIds: data.configuration?.thirdPartyIntegration?.slack?.allowedChannels ?? undefined
+    }
+  }
+}
+
 function renderForm(data: Bot, loading: boolean, onSubmit: (data: NewBot) => void) {
   switch (data.type) {
     case BotType.RETRIEVAL_CONVERSATIONAL:
@@ -199,6 +230,13 @@ function renderForm(data: Bot, loading: boolean, onSubmit: (data: NewBot) => voi
         update={true}
         loading={loading}
         input={getConversationalFormValue(data)}
+        onSubmit={onSubmit}
+      />
+    case BotType.AGENT:
+      return <Agent
+        update={true}
+        loading={loading}
+        input={getAgentFormValue(data)}
         onSubmit={onSubmit}
       />
     default:
