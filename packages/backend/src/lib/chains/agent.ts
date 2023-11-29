@@ -25,7 +25,7 @@ export const createAgent = (
   // TODO: "messages" field is private, we doing this, because we assume that it can be resolved without the need of the async getter ( chatHistory.getMessages() )
   const history = ChatMessage.getChatHistoryTuples(chatHistory['messages']);
   const prompt = ChatPromptTemplate.fromMessages([
-    ['system', botConfig.lm.prompt ?? 'You are a helpful assistant'],
+    ['assistant', botConfig.lm.prompt ?? 'You are a helpful assistant'],
     ...history,
     ['human', '{question}'],
     new MessagesPlaceholder('agent_scratchpad'),

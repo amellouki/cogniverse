@@ -4,11 +4,11 @@ import { Conversation } from '@my-monorepo/shared';
 import { CallbackManager } from 'langchain/callbacks';
 import { ChatHistoryBuilderService } from 'src/services/chat-history-builder/chat-history-builder.service';
 import { AgentLLMBuilder } from 'src/lib/llm-builder/agent-llm-builder';
-// import { Calculator } from 'langchain/tools';
 import { formatToOpenAITool, SerpAPI, WolframAlphaTool } from 'langchain/tools';
 import { createAgent } from 'src/lib/chains/agent';
 import * as process from 'process';
 import { DallETool } from 'src/lib/tools/DallE';
+import { OptionsTool } from 'src/lib/tools/ButtonOptions';
 
 @Injectable()
 export class AgentService extends AgentBuilder {
@@ -18,10 +18,25 @@ export class AgentService extends AgentBuilder {
     super();
   }
 
+  // TODO: typesafe this
+  createUIElement(type: string, payload: any) {
+    switch (type) {
+      case 'button_group':
+        return JSON.stringify({
+          type: 'ui',
+          ui_type: 'button_group',
+          payload: payload,
+        });
+    }
+  }
+
   fromConversation(
     conversation: Conversation,
     callbackManager: CallbackManager,
     toolsCallbackManager: CallbackManager,
+    uiCallbacks: (ui: string) => void,
+    dalleCallbackManager: CallbackManager,
+    dalleCallback: (imageUrl: string) => void,
   ) {
     if (conversation.bot.type !== 'AGENT') {
       throw new Error('Bot is not an agent');
@@ -39,10 +54,15 @@ export class AgentService extends AgentBuilder {
       callbacks: toolsCallbackManager,
     });
     const dalle = new DallETool({
-      callbacks: toolsCallbackManager,
+      callbacks: dalleCallbackManager,
       openai_api_key: conversation.creator.openAiApiKey,
+      send: dalleCallback,
     });
-    const tools = [serpTool, wolframAlpha, dalle];
+    const options = OptionsTool.create(async (input) => {
+      uiCallbacks(this.createUIElement('button_group', input));
+      return true;
+    });
+    const tools = [serpTool, wolframAlpha, dalle, options];
     const modelWithTools = model.bind({
       tools: tools.map(formatToOpenAITool),
     });

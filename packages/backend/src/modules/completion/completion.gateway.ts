@@ -15,7 +15,7 @@ import { ChatHistoryEntity } from 'src/repositories/chat-history/chat-history.en
 import { filter, catchError, of, share } from 'rxjs';
 import { END_COMPLETION } from 'src/constants';
 import { WsAuthGuard } from 'src/guards/ws-auth/ws-auth.guard';
-import { UseGuards } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { ChainStreamService } from './services/chain-stream.service';
 
 dotenv.config({ path: './.env.local' });
@@ -36,6 +36,8 @@ function getData(type: string, content: unknown) {
   },
 })
 export class CompletionGateway {
+  private readonly logger = new Logger(CompletionGateway.name);
+
   constructor(
     private chainStreamService: ChainStreamService,
     private conversationService: ConversationService,
@@ -153,10 +155,39 @@ export class CompletionGateway {
           this.chatHistoryEntity.saveMessage(response).then(() => {
             client.emit('data', getData('response', response));
             client.emit('event', { state: END_COMPLETION });
-            client.disconnect();
+            // client.disconnect();
           });
         },
       });
+
+      events$.pipe(filter((event) => event.type === 'ui')).subscribe({
+        next: (ui) => {
+          this.logger.log('ui: saving ui');
+          this.chatHistoryEntity.saveMessage(ui).then(() => {
+            this.logger.log('ui: sending ui');
+            client.emit('data', getData('ui', ui));
+          });
+        },
+      });
+
+      events$.pipe(filter((event) => event.type === 'generating')).subscribe({
+        next: (message) => {
+          console.log('generation', message);
+          client.emit('data', getData('generating', message));
+        },
+      });
+
+      events$
+        .pipe(filter((event) => event.type === 'generated_image'))
+        .subscribe({
+          next: (message) => {
+            this.logger.log('generated_image: saving image');
+            this.chatHistoryEntity.saveMessage(message).then(() => {
+              this.logger.log('generated_image: sending image');
+              client.emit('data', getData('image', message));
+            });
+          },
+        });
     } catch (e) {
       client.emit('error', e);
       client.disconnect();

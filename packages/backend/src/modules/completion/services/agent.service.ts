@@ -11,6 +11,7 @@ import { Subject } from 'rxjs';
 import { CallbackManager } from 'langchain/callbacks';
 import { ChatHistoryBuilderService } from 'src/services/chat-history-builder/chat-history-builder.service';
 import { BaseChainStream } from './base-chain-stream';
+import { LLMResult } from 'langchain/schema';
 
 @Injectable()
 export class AgentService extends BaseChainStream {
@@ -43,6 +44,18 @@ export class AgentService extends BaseChainStream {
           fromId: conversation.bot.id,
         });
       },
+      handleLLMEnd(output: LLMResult): any {
+        if (!output.generations[0][0]?.text) {
+          return;
+        }
+        subject.next({
+          content: output.generations[0][0]?.text,
+          conversationId: conversation.id,
+          fromType: 'ai',
+          type: 'message',
+          fromId: bot.id,
+        });
+      },
     });
 
     const toolsCallbackManager = CallbackManager.fromHandlers({
@@ -66,22 +79,61 @@ export class AgentService extends BaseChainStream {
       },
     });
 
+    const dalleCallbackManager = CallbackManager.fromHandlers({
+      handleToolStart: (_, input: string) => {
+        console.log('handleToolStart', input, JSON.stringify(_, null, 2));
+        subject.next({
+          content: 'generating image...',
+          conversationId: conversation.id,
+          fromType: 'ai',
+          type: 'generating',
+          fromId: bot.id,
+        });
+      },
+    });
+
+    const dalleCallback = (imageUrl: string) => {
+      this.logger.log('generated_image: dalle callback');
+      subject.next({
+        content: imageUrl,
+        conversationId: conversation.id,
+        fromType: 'ai',
+        type: 'generated_image',
+        fromId: bot.id,
+      });
+    };
+
+    const uiCallbacks = (ui: any) => {
+      console.log('ui', ui);
+      subject.next({
+        content: ui,
+        conversationId: conversation.id,
+        fromType: 'ai',
+        type: 'ui',
+        fromId: bot.id,
+      });
+    };
+
     const chain = this.agent.fromConversation(
       conversation,
       callbackManager,
       toolsCallbackManager,
+      uiCallbacks,
+      dalleCallbackManager,
+      dalleCallback,
     );
 
     const chainValues = await chain.invoke({
       question,
-      chat_history: this.chatHistoryBuilder.build(conversation.chatHistory),
     });
-    subject.next({
-      content: chainValues.output,
-      conversationId: conversation.id,
-      fromType: 'ai',
-      type: 'message',
-      fromId: bot.id,
-    });
+
+    console.log('chainValues', JSON.stringify(chainValues, null, 2));
+    // subject.next({
+    //   content: chainValues.output,
+    //   conversationId: conversation.id,
+    //   fromType: 'ai',
+    //   type: 'message',
+    //   fromId: bot.id,
+    // });
   }
 }

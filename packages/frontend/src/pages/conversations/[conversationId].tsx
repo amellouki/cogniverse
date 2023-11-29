@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, {createContext, useRef} from "react";
 import QueryForm from "@/components/QueryForm";
 import ChatThread from "@/components/ChatThread";
 import useChatHistory from "@/hooks/use-chat-history.hook";
@@ -10,6 +10,9 @@ import ConversationElements from "@/components/ConversationElements";
 import {NextPageWithLayout} from "@/pages/_app";
 import styles from "./styles.module.scss";
 import {getLayout} from "@/components/Layouts/DefaultLayout/ConversationsNestedLayout";
+import {noop} from "lodash";
+
+export const SendMessageContext = createContext<Function>(noop);
 
 const Conversation: NextPageWithLayout = () => {
   const router = useRouter()
@@ -35,27 +38,29 @@ const Conversation: NextPageWithLayout = () => {
   }
 
   return (
-    <div className={styles.Conversation}>
-      {(!isLoading && !data) && <SelectBot botSelectionRef={botSelectionRef}/>}
-      {data && <ConversationElements conversationElements={data}/>}
-      <ChatThread chatHistory={history} response={response} avatar={data?.bot.configuration.avatar}/>
-      <QueryForm className={styles.queryForm} onSubmit={(question: string) => {
-        const id = data?.id || newlyCreatedConversationId
-        appendOptimistic({
-          content: question,
-          type: 'question',
-          fromId: 0,
-          fromType: 'human',
-        });
-        sendQuestion(
-          question,
-          conversationId || newlyCreatedConversationId,
-          newlyCreatedConversationId
-            ? undefined
-            : getNewConversation()
-        );
-      }}/>
-    </div>
+    <SendMessageContext.Provider value={(message: string) => sendQuestion(message, conversationId || newlyCreatedConversationId)}>
+      <div className={styles.Conversation}>
+        {(!isLoading && !data) && <SelectBot botSelectionRef={botSelectionRef}/>}
+        {data && <ConversationElements conversationElements={data}/>}
+        <ChatThread chatHistory={history} response={response} avatar={data?.bot.configuration.avatar}/>
+        <QueryForm className={styles.queryForm} onSubmit={(question: string) => {
+          const id = data?.id || newlyCreatedConversationId
+          appendOptimistic({
+            content: question,
+            type: 'question',
+            fromId: 0,
+            fromType: 'human',
+          });
+          sendQuestion(
+            question,
+            conversationId || newlyCreatedConversationId,
+            newlyCreatedConversationId
+              ? undefined
+              : getNewConversation()
+          );
+        }}/>
+      </div>
+    </SendMessageContext.Provider>
   );
 
   function getNewConversation() {

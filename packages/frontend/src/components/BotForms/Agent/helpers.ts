@@ -19,7 +19,7 @@ export function getNewBot(data: InputType): NewBot {
       },
       lm: {
         modelName: botConfig.llm,
-        prompt: '',
+        prompt: botConfig.isCustomPrompt ? botConfig.prompt : '',
         apiKey: '',
       },
       thirdPartyIntegration: {
