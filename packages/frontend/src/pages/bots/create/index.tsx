@@ -11,8 +11,8 @@ const Create: NextPageWithLayout = () => {
       <h2 className={styles.formTitle}>Create a new bot</h2>
       <span>Select the type of the bot you want to create!</span>
       <div className={styles.list}>
-        <Link href={'/bots/create/' + BotType.CONVERSATIONAL}>Conversational</Link>
-        <Link href={'/bots/create/' + BotType.RETRIEVAL_CONVERSATIONAL}>Retrieval Conversational</Link>
+        <Link href={'/bots/create/' + BotType.CONVERSATIONAL}><s>Conversational</s></Link>
+        <Link href={'/bots/create/' + BotType.RETRIEVAL_CONVERSATIONAL}><s>Retrieval Conversational</s></Link>
         <Link href={'/bots/create/' + BotType.AGENT}>Agent</Link>
       </div>
     </div>

@@ -7,14 +7,10 @@ export const STEPS = [
     title: 'Configurations',
     description: 'Configure the language model.',
   },
-  // {
-  //   title: 'Integration',
-  //   description: 'Integrate your bot with 3rd party messaging platforms.'
-  // },
   {
-    title: 'Create bot',
-    description: 'Review information and create your bot.'
-  }
+    title: 'Integration',
+    description: 'Integrate your bot with 3rd party messaging platforms.'
+  },
 ]
 
 export const INSIGHT = 'Please complete the following steps to create a new agent.'
@@ -28,14 +24,10 @@ export const UPDATE_STEPS = [
     title: 'Configurations',
     description: 'Configure the language model.',
   },
-  // {
-  //   title: 'Integration',
-  //   description: 'Integrate your bot with 3rd party messaging platforms.'
-  // },
   {
-    title: 'Create bot',
-    description: 'Review information and update your agent.'
-  }
+    title: 'Integration',
+    description: 'Integrate your bot with 3rd party messaging platforms.'
+  },
 ]
 
 export const UPDATE_INSIGHT = 'Please complete the following steps to update your agent.'

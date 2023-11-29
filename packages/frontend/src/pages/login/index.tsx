@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from "@/components/Button";
 import LinkButton from "@/components/Button/LinkButton";
 import {NextPageWithLayout} from "@/pages/_app";
 import GithubIcon from "@/components/icons/Github.icon";
@@ -15,7 +14,7 @@ const Login: NextPageWithLayout = (props) => {
     <div className={styles.Login}>
       <Logo />
       <div className={styles.loginContainer}>
-        <Button disabled={true} className={styles.button}>Start as Guest</Button>
+        {/*<Button disabled={true} className={styles.button}>Start as Guest</Button>*/}
         <LinkButton
           href={`https://github.com/login/oauth/authorize?client_id=${GITHUB_OAUTH_CLIENT_ID}`}
           className={styles.button}
