@@ -74,7 +74,7 @@ const Motivation: FunctionComponent = () => {
           >
             <div className={styles.element}>
               <InfoCard
-                description={'Configure the tools you want to use to power your bot: Browsing, Image generation, UI, etc...'}
+                description={'Configure the tools you want to use to power your bot: SerpAPI, Image generation with Dall-e, WolframAlpha, UI, etc...'}
               >
                 Tools
               </InfoCard>
