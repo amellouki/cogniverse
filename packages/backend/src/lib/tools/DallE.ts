@@ -40,18 +40,18 @@ export class DallETool extends Tool {
   protected async _call(input: string) {
     try {
       const img = await this.openai.images.generate({
-        model: 'dall-e-2',
+        model: 'dall-e-3',
         prompt: input,
         quality: 'standard',
         response_format: 'url',
-        size: '1024x1024',
+        size: '1792x1024',
       });
       this.logger.log('generated_image: image generated');
 
       this.send(img.data[0].url);
       return JSON.stringify({
-        status: 'success',
-        image_urls: img.data[0].revised_prompt,
+        status: 'image generated and sent to client',
+        image_description: img.data[0].revised_prompt,
       });
     } catch (error) {
       return JSON.stringify({

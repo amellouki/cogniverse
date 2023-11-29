@@ -55,7 +55,7 @@ const MessageBox: FunctionComponent<MessageBoxProps> = ({
           src={message.content}
           alt="Generated Image"
           style={{
-            width: '50%',
+            width: '100%',
             minWidth: '500px',
             height: 'auto',
           }}
