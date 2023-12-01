@@ -2,14 +2,16 @@
   display: flex;
   flex-direction: column;
   background-color: var(--secondary-background);
+  padding: 0.5rem;
 }
 
 .NavigationItem {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.5rem;
+  padding: 0.5rem 0.8rem;
   overflow: hidden;
+  border-radius: 0.5rem;
 
   span {
     font-size: 0.75rem;

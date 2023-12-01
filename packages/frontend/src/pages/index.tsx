@@ -6,9 +6,9 @@ import GithubIcon from "@/components/icons/Github.icon";
 import LinkButton from "@/components/Button/LinkButton";
 import clsx from "clsx";
 import Motivation from "@/components/Motivation";
+import Welcome from "@/components/Welcome";
 import layoutStyles from "@/components/Layouts/DefaultLayout/styles.module.scss";
 import styles from './styles.module.scss';
-import Welcome from "@/components/Welcome";
 
 const Home: NextPageWithLayout = () => {
   debugger;
