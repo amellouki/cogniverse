@@ -11,7 +11,6 @@ import layoutStyles from "@/components/Layouts/DefaultLayout/styles.module.scss"
 import styles from './styles.module.scss';
 
 const Home: NextPageWithLayout = () => {
-  debugger;
   return (
     <div className={clsx(layoutStyles.container, styles.Home)}>
       <header>
