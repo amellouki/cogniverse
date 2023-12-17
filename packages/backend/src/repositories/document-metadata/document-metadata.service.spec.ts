@@ -1,15 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DocumentMetadataEntity } from 'src/repositories/document-metadata/document-metadata.entity';
+import { DocumentMetadataRepository } from 'src/repositories/document-metadata/document-metadata.repository';
 
 describe('DocumentMetadataService', () => {
-  let service: DocumentMetadataEntity;
+  let service: DocumentMetadataRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DocumentMetadataEntity],
+      providers: [DocumentMetadataRepository],
     }).compile();
 
-    service = module.get<DocumentMetadataEntity>(DocumentMetadataEntity);
+    service = module.get<DocumentMetadataRepository>(
+      DocumentMetadataRepository,
+    );
   });
 
   it('should be defined', () => {

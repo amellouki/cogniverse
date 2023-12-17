@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { OAuthProvider } from '@prisma/client';
-import { AccountEntity } from 'src/repositories/account/account.entity';
+import { AccountRepository } from 'src/repositories/account/account.repository';
 import { DiscordAuthPayload } from '../../../types/auth-payload';
 import {
   AccessTokenResponse,
@@ -23,7 +23,7 @@ export class DiscordOAuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
-    private readonly accountEntity: AccountEntity,
+    private readonly accountRepository: AccountRepository,
   ) {}
 
   async discordAccessToken(code: string): Promise<AccessTokenResponse> {
@@ -58,7 +58,7 @@ export class DiscordOAuthService {
   }
 
   async saveDiscordUser(githubUser: UserResponse) {
-    return this.accountEntity.registerAccount({
+    return this.accountRepository.registerAccount({
       userId: githubUser.id + '',
       username: githubUser.username,
       profilePicture: githubUser.avatar,
@@ -72,7 +72,7 @@ export class DiscordOAuthService {
       accessTokenResponse.token_type,
       accessTokenResponse.access_token,
     );
-    let account = await this.accountEntity.getAccount(
+    let account = await this.accountRepository.getAccount(
       OAuthProvider.DISCORD,
       userResponse.id + '',
     );

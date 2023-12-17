@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { DocumentMetadataEntity } from 'src/repositories/document-metadata/document-metadata.entity';
+import { DocumentMetadataRepository } from 'src/repositories/document-metadata/document-metadata.repository';
 import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [PrismaModule],
-  providers: [DocumentMetadataEntity],
-  exports: [DocumentMetadataEntity],
+  providers: [DocumentMetadataRepository],
+  exports: [DocumentMetadataRepository],
 })
 export class DocumentMetadataModule {}

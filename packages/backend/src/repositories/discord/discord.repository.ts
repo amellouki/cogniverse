@@ -4,8 +4,8 @@ import { DiscordMessage, Prisma } from '@prisma/client';
 import { DiscordConversation } from '@my-monorepo/shared';
 
 @Injectable()
-export class DiscordEntity {
-  private readonly logger = new Logger(DiscordEntity.name);
+export class DiscordRepository {
+  private readonly logger = new Logger(DiscordRepository.name);
 
   constructor(private prisma: PrismaService) {}
 

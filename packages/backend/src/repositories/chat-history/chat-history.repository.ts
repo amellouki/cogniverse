@@ -4,7 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import AppendMessageRequestDto from '../../dto/append-message-request.dto';
 
 @Injectable()
-export class ChatHistoryEntity {
+export class ChatHistoryRepository {
   constructor(private prismaService: PrismaService) {}
 
   async createMessage(data: Prisma.MessageCreateInput): Promise<Message> {

@@ -6,20 +6,20 @@ import {
   Request,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ConversationService } from './repositories/conversation/conversation.service';
+import { ConversationRepository } from 'src/repositories/conversation/conversation.repository';
 import { Conversation } from '@prisma/client';
 import { SecureRequest } from './types/secure-request';
 
 @Controller('api')
 export class AppController {
-  constructor(private conversationService: ConversationService) {}
+  constructor(private conversationRepository: ConversationRepository) {}
 
   @Get('conversations')
   async getConversations(
     @Request() request: SecureRequest,
   ): Promise<Conversation[]> {
     const creatorId = request.authPayload.uid;
-    return await this.conversationService.conversations(creatorId);
+    return await this.conversationRepository.conversations(creatorId);
   }
 
   @Get('conversation/:id')
@@ -28,7 +28,9 @@ export class AppController {
     @Request() request: SecureRequest,
   ): Promise<Conversation> {
     const creatorId = request.authPayload.uid;
-    const conversation = await this.conversationService.getConversationById(id);
+    const conversation = await this.conversationRepository.getConversationById(
+      id,
+    );
     if (conversation && conversation.creatorId !== creatorId) {
       throw new UnauthorizedException();
     }

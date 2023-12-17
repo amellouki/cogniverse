@@ -19,7 +19,6 @@ export class ToolBuilder {
     realWorldEffect,
     keys,
   }: ToolBuilderInput) {
-    console.log('toolType', toolType);
     switch (toolType) {
       case 'SerpAPI':
         const serpTool = new SerpAPI(process.env.SERP_API_KEY);
@@ -36,6 +35,8 @@ export class ToolBuilder {
           send: realWorldEffect,
           openai_api_key: keys?.openAiApiKey,
         });
+      case 'Retrieval':
+        return new Object();
       case 'Options':
         return OptionsTool.create(realWorldEffect, callbackManager);
       default:

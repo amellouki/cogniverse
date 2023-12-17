@@ -4,7 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Conversation, NewConversation } from '@my-monorepo/shared';
 
 @Injectable()
-export class ConversationService {
+export class ConversationRepository {
   constructor(private prisma: PrismaService) {}
 
   async conversations(creatorId: string): Promise<Conversation[]> {

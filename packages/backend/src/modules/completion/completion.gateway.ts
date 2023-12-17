@@ -8,10 +8,10 @@ import {
   WsException,
 } from '@nestjs/websockets';
 import * as dotenv from 'dotenv';
-import { ConversationService } from 'src/repositories/conversation/conversation.service';
+import { ConversationRepository } from 'src/repositories/conversation/conversation.repository';
 import { Message } from '@prisma/client';
 import { NewMessage, Conversation } from '@my-monorepo/shared';
-import { ChatHistoryEntity } from 'src/repositories/chat-history/chat-history.entity';
+import { ChatHistoryRepository } from 'src/repositories/chat-history/chat-history.repository';
 import { filter, catchError, of, share } from 'rxjs';
 import { END_COMPLETION } from 'src/constants';
 import { WsAuthGuard } from 'src/guards/ws-auth/ws-auth.guard';
@@ -40,8 +40,8 @@ export class CompletionGateway {
 
   constructor(
     private chainStreamService: ChainStreamService,
-    private conversationService: ConversationService,
-    private chatHistoryEntity: ChatHistoryEntity,
+    private conversationRepository: ConversationRepository,
+    private chatHistoryRepository: ChatHistoryRepository,
   ) {}
 
   private unauthorisedAccess(
@@ -63,7 +63,7 @@ export class CompletionGateway {
     let conversation: Conversation;
 
     if (!conversationId && newConversation) {
-      conversation = (await this.conversationService.createConversation(
+      conversation = (await this.conversationRepository.createConversation(
         authPayload.uid,
         {
           ...newConversation,
@@ -76,7 +76,7 @@ export class CompletionGateway {
       client.disconnect();
       throw new WsException('No conversation id provided');
     } else {
-      conversation = await this.conversationService.getConversationById(
+      conversation = await this.conversationRepository.getConversationById(
         conversationId,
       );
     }
@@ -113,7 +113,7 @@ export class CompletionGateway {
       client.disconnect();
     };
 
-    const added = await this.chatHistoryEntity.saveMessage({
+    const added = await this.chatHistoryRepository.saveMessage({
       content: question,
       conversationId: conversation.id,
       fromType: 'human',
@@ -139,7 +139,7 @@ export class CompletionGateway {
 
       events$.pipe(filter((event) => event.type === 'idea')).subscribe({
         next: (idea) => {
-          this.chatHistoryEntity
+          this.chatHistoryRepository
             .saveMessage(idea)
             .then((message) => {
               sendRetrieval(message);
@@ -152,7 +152,7 @@ export class CompletionGateway {
 
       events$.pipe(filter((event) => event.type === 'message')).subscribe({
         next: (response) => {
-          this.chatHistoryEntity.saveMessage(response).then(() => {
+          this.chatHistoryRepository.saveMessage(response).then(() => {
             client.emit('data', getData('response', response));
             client.emit('event', { state: END_COMPLETION });
             // client.disconnect();
@@ -163,7 +163,7 @@ export class CompletionGateway {
       events$.pipe(filter((event) => event.type === 'ui')).subscribe({
         next: (ui) => {
           this.logger.log('ui: saving ui');
-          this.chatHistoryEntity.saveMessage(ui).then(() => {
+          this.chatHistoryRepository.saveMessage(ui).then(() => {
             this.logger.log('ui: sending ui');
             client.emit('data', getData('ui', ui));
           });
@@ -182,7 +182,7 @@ export class CompletionGateway {
         .subscribe({
           next: (message) => {
             this.logger.log('generated_image: saving image');
-            this.chatHistoryEntity.saveMessage(message).then(() => {
+            this.chatHistoryRepository.saveMessage(message).then(() => {
               this.logger.log('generated_image: sending image');
               client.emit('data', getData('image', message));
             });

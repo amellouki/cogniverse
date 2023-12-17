@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { AccountKeys } from '@my-monorepo/shared';
-import { AccountEntity } from 'src/repositories/account/account.entity';
+import { AccountRepository } from 'src/repositories/account/account.repository';
 
 @Injectable()
 export class AccountService {
-  constructor(private accountEntity: AccountEntity) {}
+  constructor(private accountRepository: AccountRepository) {}
 
   updateKeys(botId: string, body: AccountKeys) {
-    return this.accountEntity.updateKeys(botId, body);
+    return this.accountRepository.updateKeys(botId, body);
   }
 }

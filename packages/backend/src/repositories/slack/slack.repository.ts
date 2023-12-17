@@ -4,8 +4,8 @@ import { Prisma } from '@prisma/client';
 import { SlackConversation, SlackMessage } from '@my-monorepo/shared';
 
 @Injectable()
-export class SlackEntity {
-  private readonly logger = new Logger(SlackEntity.name);
+export class SlackRepository {
+  private readonly logger = new Logger(SlackRepository.name);
 
   constructor(private prisma: PrismaService) {}
 

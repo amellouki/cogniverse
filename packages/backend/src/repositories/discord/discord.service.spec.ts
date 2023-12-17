@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DiscordEntity } from 'src/repositories/discord/discord.entity';
+import { DiscordRepository } from 'src/repositories/discord/discord.repository';
 
 describe('DiscordConversationService', () => {
-  let service: DiscordEntity;
+  let service: DiscordRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DiscordEntity],
+      providers: [DiscordRepository],
     }).compile();
 
-    service = module.get<DiscordEntity>(DiscordEntity);
+    service = module.get<DiscordRepository>(DiscordRepository);
   });
 
   it('should be defined', () => {

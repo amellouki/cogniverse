@@ -4,7 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { FullBot } from '@my-monorepo/shared';
 
 @Injectable()
-export class BotEntity {
+export class BotRepository {
   constructor(private prisma: PrismaService) {}
 
   createBot(data: Prisma.BotCreateInput) {

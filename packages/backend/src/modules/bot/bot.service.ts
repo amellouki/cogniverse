@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { BotEntity } from 'src/repositories/bot/bot.entity';
+import { BotRepository } from 'src/repositories/bot/bot.repository';
 import { Prisma } from '@prisma/client';
 import { Bot, NewBot, UpdatedBot } from '@my-monorepo/shared';
 
 @Injectable()
 export class BotService {
-  constructor(private botEntity: BotEntity) {}
+  constructor(private botRepository: BotRepository) {}
 
   createBot(creatorId: string, newBot: NewBot) {
     const copy = { ...newBot };
@@ -21,7 +21,7 @@ export class BotService {
         },
       },
     };
-    return this.botEntity.createBot(botData);
+    return this.botRepository.createBot(botData);
   }
 
   updateBot(creatorId: string, botId: number, bot: UpdatedBot) {
@@ -34,18 +34,18 @@ export class BotService {
         ? { connect: { id: bot.boundDocumentId } }
         : { disconnect: true },
     };
-    return this.botEntity.updateBot(botId, botData);
+    return this.botRepository.updateBot(botId, botData);
   }
 
   deleteBot(botId: number) {
-    return this.botEntity.deleteBot(botId);
+    return this.botRepository.deleteBot(botId);
   }
 
   getBotById(id: number) {
-    return this.botEntity.getBotById(id);
+    return this.botRepository.getBotById(id);
   }
 
   getBotsByCreatorId(creatorId: string) {
-    return this.botEntity.getPublicBotsAndBotsCreatedByUser(creatorId);
+    return this.botRepository.getPublicBotsAndBotsCreatedByUser(creatorId);
   }
 }

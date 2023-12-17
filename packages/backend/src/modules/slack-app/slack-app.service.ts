@@ -13,11 +13,11 @@ import {
   SlackMessage,
 } from '@my-monorepo/shared';
 import { LLMResult } from 'langchain/schema';
-import { SlackEntity } from 'src/repositories/slack/slack.entity';
+import { SlackRepository } from 'src/repositories/slack/slack.repository';
 import { CallbackManager } from 'langchain/callbacks';
 import { RetrievalConversationalChainService } from 'src/services/chains/retrieval-conversational/retrieval-conversational-chain.service';
 import { ConversationalChainService } from 'src/services/chains/conversational-chain/conversational-chain.service';
-import { BotEntity } from 'src/repositories/bot/bot.entity';
+import { BotRepository } from 'src/repositories/bot/bot.repository';
 import { ChatHistoryBuilderService } from 'src/services/chat-history-builder/chat-history-builder.service';
 import { CallBackRecord } from 'src/lib/callback-record';
 import { VectorStore } from 'langchain/vectorstores/base';
@@ -41,8 +41,8 @@ export class SlackAppService extends BaseThirdPartyApp {
     protected retrievalConversationalChainService: RetrievalConversationalChainService,
     protected agentChainService: AgentService,
     protected vectorStoreService: VectorStoreService,
-    private slackEntity: SlackEntity,
-    private botEntity: BotEntity,
+    private slackRepository: SlackRepository,
+    private botRepository: BotRepository,
     private chatHistoryBuilder: ChatHistoryBuilderService,
   ) {
     super(
@@ -99,7 +99,7 @@ export class SlackAppService extends BaseThirdPartyApp {
       await say(`Please format your message correctly!`);
       return;
     }
-    const bot = await this.botEntity.getBotByName(parsedMessage.bot);
+    const bot = await this.botRepository.getBotByName(parsedMessage.bot);
     if (!bot) {
       this.logger.error(`Bot ${parsedMessage.bot} does not exist`);
       await say(
@@ -126,8 +126,8 @@ export class SlackAppService extends BaseThirdPartyApp {
     }
     const { ts } = await say('Generating...');
 
-    await this.slackEntity.saveMessage(await this.mapHumanMessage(args));
-    const conversation = await this.slackEntity.getConversationById(
+    await this.slackRepository.saveMessage(await this.mapHumanMessage(args));
+    const conversation = await this.slackRepository.getConversationById(
       message.channel,
     );
     const callbacks: CallBackRecord = {
@@ -176,7 +176,7 @@ export class SlackAppService extends BaseThirdPartyApp {
             text: result.generations[0][0]?.text,
           })
           .then(async (postMessage) => {
-            await this.slackEntity.saveMessage({
+            await this.slackRepository.saveMessage({
               content: result.generations[0][0]?.text,
               slackConversationId: postMessage.channel,
               botId: bot.id,

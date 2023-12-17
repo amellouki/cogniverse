@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { SlackEntity } from 'src/repositories/slack/slack.entity';
+import { SlackRepository } from 'src/repositories/slack/slack.repository';
 import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [PrismaModule],
-  providers: [SlackEntity],
-  exports: [SlackEntity],
+  providers: [SlackRepository],
+  exports: [SlackRepository],
 })
 export class SlackModule {}

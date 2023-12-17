@@ -9,8 +9,8 @@ import { ConversationalChainService } from 'src/services/chains/conversational-c
 import { RetrievalConversationalChainService } from 'src/services/chains/retrieval-conversational/retrieval-conversational-chain.service';
 import { AgentService } from 'src/services/chains/agent/agent.service';
 import { VectorStoreService } from 'src/services/vector-store/vector-store.service';
-import { BotEntity } from 'src/repositories/bot/bot.entity';
-import { DiscordEntity } from 'src/repositories/discord/discord.entity';
+import { BotRepository } from 'src/repositories/bot/bot.repository';
+import { DiscordRepository } from 'src/repositories/discord/discord.repository';
 import {
   Bot,
   DiscordMessage,
@@ -37,8 +37,8 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
     protected retrievalConversationalChainService: RetrievalConversationalChainService,
     protected vectorStoreService: VectorStoreService,
     protected agentChainService: AgentService,
-    private botEntity: BotEntity,
-    private discordEntity: DiscordEntity,
+    private botRepository: BotRepository,
+    private discordRepository: DiscordRepository,
   ) {
     super(
       conversationalChainService,
@@ -71,7 +71,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
       return await interaction.reply(e);
     }
     await interaction.deferReply();
-    await this.discordEntity.saveMessage(this.mapHumanMessage(interaction));
+    await this.discordRepository.saveMessage(this.mapHumanMessage(interaction));
     try {
       return await this.callChain(interaction);
     } catch (e) {
@@ -83,7 +83,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
     const messageText = interaction.options.getString('message');
     const [bot, conversation] = await Promise.all([
       this.getBot(interaction),
-      this.discordEntity.getConversationById(interaction.channel.id),
+      this.discordRepository.getConversationById(interaction.channel.id),
       interaction.followUp({
         content: '**Responding to:**\n' + messageText,
         ephemeral: true,
@@ -160,7 +160,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
       const generation = result.generations[0][0]?.text;
       if (generation) {
         const message = await interaction.followUp(generation);
-        await this.discordEntity.saveMessage({
+        await this.discordRepository.saveMessage({
           content: result.generations[0][0]?.text,
           discordConversationId: message.channel.id,
           botId: bot.id,
@@ -197,7 +197,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
 
   private async getBot(interaction: ChatInputCommandInteraction) {
     const botName = interaction.options.getString('bot');
-    const bot = await this.botEntity.getBotByName(botName);
+    const bot = await this.botRepository.getBotByName(botName);
     if (!bot) {
       throw new BadDiscordRequestException(`Bot ${botName} does not exist`);
     }

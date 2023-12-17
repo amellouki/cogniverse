@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AccountEntity } from 'src/repositories/account/account.entity';
+import { AccountRepository } from 'src/repositories/account/account.repository';
 
 describe('AccountService', () => {
-  let service: AccountEntity;
+  let service: AccountRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AccountEntity],
+      providers: [AccountRepository],
     }).compile();
 
-    service = module.get<AccountEntity>(AccountEntity);
+    service = module.get<AccountRepository>(AccountRepository);
   });
 
   it('should be defined', () => {

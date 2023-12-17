@@ -8,14 +8,14 @@ import { DiscordOAuthDto } from '../../../dto/discord-o-auth.dto';
 import { ZodValidationPipe } from '../../../pipes/zod-validation/zod-validation.pipe';
 import { discordLoginSchema, githubLoginSchema } from './validation.schema';
 import { SecureRequest } from '../../../types/secure-request';
-import { AccountEntity } from 'src/repositories/account/account.entity';
+import { AccountRepository } from 'src/repositories/account/account.repository';
 
 @Controller('login')
 export class LoginController {
   constructor(
     private readonly githubOauthService: GithubOAuthService,
     private readonly discordOauthService: DiscordOAuthService,
-    private readonly accountEntity: AccountEntity,
+    private readonly accountRepository: AccountRepository,
     private readonly loginService: LoginService,
   ) {}
 
@@ -44,6 +44,6 @@ export class LoginController {
   @Get('account-info')
   getAccountInfo(@Request() request: SecureRequest) {
     const { uid } = request.authPayload;
-    return this.accountEntity.getAccountById(uid);
+    return this.accountRepository.getAccountById(uid);
   }
 }
