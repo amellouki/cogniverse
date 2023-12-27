@@ -1,11 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { AccessTokenResponse, UserResponse } from 'src/types/github-types';
 import { JwtService } from '@nestjs/jwt';
 import { OAuthProvider } from '@prisma/client';
 import { AccountRepository } from 'src/repositories/account/account.repository';
 import { GithubAuthPayload } from 'src/types/auth-payload';
+import { AxiosService } from 'src/services/axios/axios.service';
 
 @Injectable()
 export class GithubOAuthService {
@@ -18,29 +18,32 @@ export class GithubOAuthService {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly accountRepository: AccountRepository,
+    private readonly axios: AxiosService,
   ) {}
 
   async githubAccessToken(code: string): Promise<AccessTokenResponse> {
-    const response = await axios<AccessTokenResponse>({
-      method: 'post',
-      url: `https://github.com/login/oauth/access_token?client_id=${this.clientID}&client_secret=${this.clientSecret}&code=${code}`,
-      headers: {
-        accept: 'application/json',
+    const response = await this.axios.post<AccessTokenResponse>(
+      `https://github.com/login/oauth/access_token?client_id=${this.clientID}&client_secret=${this.clientSecret}&code=${code}`,
+      {
+        headers: {
+          accept: 'application/json',
+        },
       },
-    });
+    );
     if (!response.data.access_token) throw new UnauthorizedException();
 
     return response.data;
   }
 
   async githubUser(accessToken: string): Promise<UserResponse> {
-    const response = await axios<UserResponse>({
-      method: 'get',
-      url: `https://api.github.com/user`,
-      headers: {
-        Authorization: 'token ' + accessToken,
+    const response = await this.axios.get<UserResponse>(
+      `https://api.github.com/user`,
+      {
+        headers: {
+          Authorization: 'token ' + accessToken,
+        },
       },
-    });
+    );
 
     return response.data;
   }
