@@ -3,18 +3,20 @@
   flex-direction: column;
   background-color: var(--secondary-background);
   padding: 0.5rem;
+  min-width: 105px;
 }
 
 .NavigationItem {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.5rem 0.8rem;
+  padding: 0.5rem;
   overflow: hidden;
   border-radius: 0.5rem;
 
   span {
     font-size: 0.75rem;
+    text-align: center;
   }
 
   svg {
