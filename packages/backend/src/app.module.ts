@@ -16,6 +16,7 @@ import { AuthGuard } from './guards/auth/auth.guard';
 import * as dotenv from 'dotenv';
 import { AccountModule } from './modules/account/account.module';
 import { SlackAppModule } from './modules/slack-app/slack-app.module';
+import { DataSourceModule } from 'src/modules/data-source/data-source.module';
 
 dotenv.config({ path: './.env.local' });
 
@@ -40,6 +41,7 @@ dotenv.config({ path: './.env.local' });
     AccountModule,
     DiscordAppModule,
     SlackAppModule,
+    DataSourceModule,
   ],
   controllers: [AppController],
   providers: [

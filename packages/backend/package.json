@@ -39,6 +39,7 @@
     "discord.js": "14.10.2",
     "dotenv": "^16.0.3",
     "express-session": "^1.17.3",
+    "googleapis": "^126.0.1",
     "jest-mock-extended": "^3.0.5",
     "langchain": "^0.0.192",
     "openai": "^4.20.1",

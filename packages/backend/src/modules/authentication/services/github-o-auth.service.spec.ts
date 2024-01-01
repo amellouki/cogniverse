@@ -59,11 +59,11 @@ describe('Unit testing GithubOAuthService', () => {
   });
 
   it('should retrieve github access token given code', async () => {
-    axiosMock.post.mockResolvedValueOnce({
+    axiosMock.get.mockResolvedValueOnce({
       data: GITHUB_ACCESS_TOKEN_RESPONSE,
     });
     const respone = await service.githubAccessToken('[CODE]');
-    expect(axiosMock.post).toBeCalledWith(
+    expect(axiosMock.get).toBeCalledWith(
       'https://github.com/login/oauth/access_token?client_id=[CLIENT_ID]&client_secret=[CLIENT_SECRET]&code=[CODE]',
       { headers: { accept: 'application/json' } },
     );
@@ -100,7 +100,7 @@ describe('Unit testing GithubOAuthService', () => {
   it('should login with github', async () => {
     accountRepositoryMock.getAccount.mockResolvedValueOnce(MOCK_ACCOUNT_DATA);
     jwtServiceMock.signAsync.mockResolvedValueOnce('[JWT_TOKEN]');
-    axiosMock.post.mockResolvedValueOnce({
+    axiosMock.get.mockResolvedValueOnce({
       data: GITHUB_ACCESS_TOKEN_RESPONSE,
     });
     axiosMock.get.mockResolvedValueOnce({

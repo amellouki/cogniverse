@@ -22,7 +22,7 @@ export class GithubOAuthService {
   ) {}
 
   async githubAccessToken(code: string): Promise<AccessTokenResponse> {
-    const response = await this.axios.post<AccessTokenResponse>(
+    const response = await this.axios.get<AccessTokenResponse>(
       `https://github.com/login/oauth/access_token?client_id=${this.clientID}&client_secret=${this.clientSecret}&code=${code}`,
       {
         headers: {

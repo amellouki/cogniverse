@@ -5,7 +5,8 @@ import {
   DocumentDuplicateIcon,
   ChatBubbleLeftRightIcon,
   UserCircleIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  CircleStackIcon
 } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import {useRouter} from "next/router";
@@ -23,6 +24,7 @@ const Navigation: FunctionComponent<Props> = ({ className }) => {
       <NavItem href={'/conversations/new'} icon={<ChatBubbleLeftRightIcon width={36} height={36} />} title={'Playground'} />
       <NavItem href={'/bots'} icon={<BotIcon width={"36px"} height={"36px"} />} title={'Bots'} />
       <NavItem href={'/documents'} icon={<DocumentDuplicateIcon width={36} height={36}/>} title={'Documents'} />
+      <NavItem href={'/data'} icon={<CircleStackIcon width={36} height={36} />} title={'Data Sources'} />
       <NavItem href={'/account'} icon={<UserCircleIcon width={36} height={36} />} title={'Account'} />
       <button onClick={logout} className={styles.NavigationItem}>
         <ArrowRightOnRectangleIcon width={36} height={36} />
