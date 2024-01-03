@@ -3,13 +3,25 @@ import { getLayout } from '@/components/Layouts/DefaultLayout/BotNestedLayout';
 import Button from '@/components/Button';
 import apiInstance from '@/helpers/api';
 import { useRouter } from 'next/router';
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useState,
+} from 'react';
+import { useInfiniteQuery, useQuery } from 'react-query';
+import { noop } from 'lodash';
+import Link from 'next/link';
 
 const Page: NextPageWithLayout = () => {
   return (
     <div>
       <h1>Data Sources</h1>
       <section>
-        <GoogleDrive />
+        <Link href={'/data/google-drive/root'}>
+          <Button>Google Drive</Button>
+        </Link>
       </section>
     </div>
   );
@@ -18,31 +30,3 @@ const Page: NextPageWithLayout = () => {
 Page.getLayout = getLayout;
 
 export default Page;
-
-function useGoogle() {
-  const router = useRouter();
-
-  return [
-    async function login() {
-      const res = await apiInstance.get('google/auth_url');
-      if (!res.data.url) {
-      }
-      router.push(res.data.url).then(() => console.log('Redirected to google'));
-    },
-    async function ls() {
-      const res = await apiInstance.get(`google/ls/root`);
-      console.log(res);
-    },
-  ];
-}
-
-const GoogleDrive = () => {
-  const [login, ls] = useGoogle();
-
-  return (
-    <div>
-      <Button onClick={login}>Connect to Google Drive</Button>
-      <Button onClick={ls}>List directory</Button>
-    </div>
-  );
-};

@@ -60,7 +60,7 @@ export class AccountRepository {
   }
 
   async saveGoogleRefreshToken(
-    oAuth: Pick<OAuth, 'providerAccountId' | 'refreshToken'>,
+    oAuth: Pick<OAuth, 'providerAccountId' | 'refreshToken' | 'extra'>,
   ) {
     return this.prismaService.oAuth.update({
       where: {
@@ -80,6 +80,21 @@ export class AccountRepository {
           providerAccountId,
           provider: OAuthProvider.GOOGLE,
         },
+      },
+    });
+  }
+
+  async removeDeprecatedToken(providerAccountId: string) {
+    return this.prismaService.oAuth.update({
+      where: {
+        provider_providerAccountId: {
+          providerAccountId,
+          provider: OAuthProvider.GOOGLE,
+        },
+      },
+      data: {
+        refreshToken: null,
+        accessToken: null,
       },
     });
   }
