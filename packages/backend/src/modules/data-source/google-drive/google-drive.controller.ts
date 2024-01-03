@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Request,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -41,7 +42,10 @@ export class GoogleDriveController {
     const token = await this.googleClient.getToken(code);
     this.googleClient.setCredentials(token.tokens);
     await this.accountRepo.saveGoogleToken({
-      extra: undefined,
+      extra: {
+        scope: token.tokens.scope,
+        expiry_date: token.tokens.expiry_date,
+      },
       providerAccountId: req.authPayload.uid,
       accessToken: token.tokens.access_token,
       refreshToken: undefined,
@@ -54,14 +58,19 @@ export class GoogleDriveController {
         this.accountRepo.saveGoogleRefreshToken({
           providerAccountId: req.authPayload.uid,
           refreshToken: tokens.refresh_token,
+          extra: {
+            scope: token.tokens.scope,
+            expiry_date: token.tokens.expiry_date,
+          },
         });
       }
     });
-    return { invalid: false };
+    return { valid: true };
   }
 
   @Get('ls/:id')
-  async ls(@Param('id') id: string) {
+  async ls(@Param('id') id: string, @Query('pageToken') pageToken: string) {
+    console.log('ls', id, pageToken);
     const accessTokenSet = await this.googleClient.retrieveAndSetAccessToken();
     if (!accessTokenSet) {
       throw new UnauthorizedException();
@@ -69,14 +78,28 @@ export class GoogleDriveController {
     const drive = google.drive({ version: 'v3', auth: this.googleClient });
     const res = await drive.files.list({
       pageSize: 20,
-      fields: 'nextPageToken, files(id, name, parents)',
+      pageToken,
+      orderBy: 'folder, name',
+      fields: 'nextPageToken, files(id, name, parents, mimeType)',
       q: `'${id}' in parents and trashed = false`,
     });
-    return res.data.files;
+    return { ...res.data };
   }
 
-  @Get('connected')
-  async connected() {
-    return this.googleClient.validateAccessToken();
+  @Get('token-status')
+  async tokenStatus() {
+    const accessTokenSet = await this.googleClient.retrieveAndSetAccessToken();
+    if (!accessTokenSet) {
+      throw new UnauthorizedException();
+    }
+    const extra = this.googleClient.oAuthData.extra as any;
+    if (extra) {
+      return {
+        valid: extra.expiry_date > Date.now(),
+        ...extra,
+      };
+    } else {
+      return { valid: false };
+    }
   }
 }
