@@ -5,16 +5,32 @@ import apiInstance from '@/helpers/api';
 import { useRouter } from 'next/router';
 import { useInfiniteQuery, useQuery } from 'react-query';
 import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useState,
+} from 'react';
+import { noop } from 'lodash';
+import SelectionArea, { SelectionEvent } from '@viselect/react';
+import styles from './styles.module.scss';
+import clsx from 'clsx';
+import { FolderIcon } from '@heroicons/react/24/solid';
+import { DocumentIcon } from '@heroicons/react/24/solid';
+
+type FileId = string;
+
+const SelectedFiles = createContext<
+  [Set<FileId>, Dispatch<SetStateAction<Set<FileId>>>]
+>([new Set<FileId>(), noop]);
 
 const Page: NextPageWithLayout = () => {
   return (
-    <div>
+    <>
       <h1>Data Sources</h1>
-      <section>
-        <GoogleDrive />
-      </section>
-    </div>
+      <GoogleDrive />
+    </>
   );
 };
 
@@ -32,6 +48,7 @@ function useGoogle() {
   const router = useRouter();
 
   return [login];
+
   async function login() {
     const res = await apiInstance.get('google/auth_url');
     if (!res.data.url) {
@@ -45,34 +62,50 @@ const GoogleDrive = () => {
   const { data, isLoading } = useGoogleTokenStatus();
   const search = useSearchParams();
   const id = search.get('id');
-
+  const selectedFilesState = useState<Set<FileId>>(new Set<FileId>());
   return (
-    <div>
-      {!isLoading && !data?.valid && (
-        <Button onClick={login}>Connect to Google Drive</Button>
-      )}
-      {!isLoading && data?.valid && id && <GoogleDriveFolder id={id} />}
-    </div>
+    <SelectedFiles.Provider value={selectedFilesState}>
+      <section className={styles.GoogleDrive}>
+        {!isLoading && !data?.valid && (
+          <Button onClick={login}>Connect to Google Drive</Button>
+        )}
+        {!isLoading && data?.valid && id && <GoogleDriveFolder id={id} />}
+      </section>
+    </SelectedFiles.Provider>
   );
 };
 
 const File = ({ data }: { data: any }) => {
   return (
-    <div>
-      <strong>File Item</strong>
+    <Selectable id={data.id}>
+      <DocumentIcon height={24} width={24} />
+      <img src={data.thumbnailLink} />
       {data.name}
-    </div>
+    </Selectable>
   );
 };
 
 const Folder = ({ data }: { data: any }) => {
+  const router = useRouter();
   return (
-    <div>
-      <Link href={data.id}>
-        <strong>Folder</strong>
+    <Selectable id={data.id}>
+      <div onDoubleClick={() => router.push(data.id)}>
+        <FolderIcon width={24} height={24} />
         {data.name}
-      </Link>
-    </div>
+      </div>
+    </Selectable>
+  );
+};
+
+const Selectable = ({ children, id }: { children: any; id: string }) => {
+  const [selected] = useContext(SelectedFiles);
+  return (
+    <li
+      className={clsx(styles.Selectable, selected.has(id) && styles.selected)}
+      data-key={id}
+    >
+      {children}
+    </li>
   );
 };
 
@@ -84,12 +117,48 @@ const GoogleDriveItem = ({ data }: { data: any }) => {
 };
 
 const GoogleDriveNavigation = ({ items }: { items: any[] }) => {
+  const extractIds = (els: Element[]): string[] =>
+    els
+      .map((v) => v.getAttribute('data-key'))
+      .filter(Boolean)
+      .map(String);
+
+  const [selected, setSelected] = useContext(SelectedFiles);
+
+  console.log(selected);
+  const onStart = ({ event, selection }: SelectionEvent) => {
+    if (!event?.ctrlKey && !event?.metaKey) {
+      selection.clearSelection();
+      setSelected(() => new Set());
+    }
+  };
+
+  const onMove = ({
+    store: {
+      changed: { added, removed },
+    },
+  }: SelectionEvent) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      extractIds(added).forEach((id: string) => next.add(id));
+      extractIds(removed).forEach((id: string) => next.delete(id));
+      return next;
+    });
+  };
+
   return (
-    <div>
-      {items?.map((file: any) => (
-        <GoogleDriveItem key={file.id} data={file} />
-      ))}
-    </div>
+    <SelectionArea
+      className={styles.container}
+      onStart={onStart}
+      onMove={onMove}
+      selectables={'.' + styles.Selectable}
+    >
+      <ul className={styles.Navigation}>
+        {items?.map((file: any) => (
+          <GoogleDriveItem key={file.id} data={file} />
+        ))}
+      </ul>
+    </SelectionArea>
   );
 };
 
@@ -123,9 +192,9 @@ const GoogleDriveFolder = ({ id }: { id: string }) => {
     return <div>No children</div>;
   }
   return (
-    <div>
+    <>
       <GoogleDriveNavigation items={children} />
       <button onClick={() => fetchNextPage()}>More</button>
-    </div>
+    </>
   );
 };

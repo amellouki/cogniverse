@@ -51,3 +51,9 @@ a {
   color: var(--primary-foreground);
   opacity: 1;
 }
+
+.selection-area {
+  background: var(--color-2-light);
+  border: var(--color-2) 1px solid;
+  border-radius: 0.1em;
+}
