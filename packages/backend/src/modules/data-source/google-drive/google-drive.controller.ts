@@ -80,7 +80,8 @@ export class GoogleDriveController {
       pageSize: 20,
       pageToken,
       orderBy: 'folder, name',
-      fields: 'nextPageToken, files(id, name, parents, mimeType)',
+      fields:
+        'nextPageToken, files(id, name, parents, mimeType, thumbnailLink)',
       q: `'${id}' in parents and trashed = false`,
     });
     return { ...res.data };
