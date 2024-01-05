@@ -3,13 +3,14 @@ import { getLayout } from '@/components/Layouts/DefaultLayout/BotNestedLayout';
 import Button from '@/components/Button';
 import apiInstance from '@/helpers/api';
 import { useRouter } from 'next/router';
-import { useInfiniteQuery, useQuery } from 'react-query';
+import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
 import { useSearchParams } from 'next/navigation';
 import {
   createContext,
   Dispatch,
   SetStateAction,
   useContext,
+  useMemo,
   useState,
 } from 'react';
 import { noop } from 'lodash';
@@ -18,6 +19,7 @@ import styles from './styles.module.scss';
 import clsx from 'clsx';
 import { FolderIcon } from '@heroicons/react/24/solid';
 import { DocumentIcon } from '@heroicons/react/24/solid';
+import { GDDataSourceRequestDto } from '@my-monorepo/shared';
 
 type FileId = string;
 
@@ -57,14 +59,27 @@ function useGoogle() {
   }
 }
 
+function useAddGDriveDataSource(onSuccess?: () => void) {
+  return useMutation(
+    async (data: GDDataSourceRequestDto) => {
+      return apiInstance
+        .post('google/data-source', data)
+        .then((res) => res.data);
+    },
+    {
+      onSuccess,
+    },
+  );
+}
+
 const GoogleDrive = () => {
   const [login] = useGoogle();
   const { data, isLoading } = useGoogleTokenStatus();
   const search = useSearchParams();
   const id = search.get('id');
-  const selectedFilesState = useState<Set<FileId>>(new Set<FileId>());
+  const [selected, setSelected] = useState<Set<FileId>>(new Set<FileId>());
   return (
-    <SelectedFiles.Provider value={selectedFilesState}>
+    <SelectedFiles.Provider value={[selected, setSelected]}>
       <section className={styles.GoogleDrive}>
         {!isLoading && !data?.valid && (
           <Button onClick={login}>Connect to Google Drive</Button>
@@ -180,21 +195,48 @@ const GoogleDriveFolder = ({ id }: { id: string }) => {
       getNextPageParam: (lastPage) => lastPage.nextPageToken,
     },
   );
+  const [selected, setSelected] = useContext(SelectedFiles);
+
+  const children = useMemo(() => {
+    return data?.pages.flatMap((page) => page.files);
+  }, [data]);
+  const selectedFiles = useMemo(() => {
+    if (!children) return [];
+    return Array.from(selected).map((id) => children.find((v) => v.id === id));
+  }, [children, selected]);
+
+  const dataSourceAdd = useAddGDriveDataSource(() => {
+    setSelected(() => new Set());
+  });
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   console.log(data);
 
-  const children = data?.pages.flatMap((page) => page.files);
-
   if (!children) {
     return <div>No children</div>;
   }
   return (
     <>
+      <Button
+        disabled={!selected.size || dataSourceAdd.isLoading}
+        onClick={() => dataSourceAdd.mutate(mapSelectedToDto())}
+      >
+        Ingest documents
+      </Button>
       <GoogleDriveNavigation items={children} />
       <button onClick={() => fetchNextPage()}>More</button>
     </>
   );
+
+  function mapSelectedToDto(): GDDataSourceRequestDto {
+    return {
+      items: selectedFiles.map((file) => ({
+        id: file.id as string,
+        mimeType: file.mimeType as string,
+      })),
+    };
+  }
 };
