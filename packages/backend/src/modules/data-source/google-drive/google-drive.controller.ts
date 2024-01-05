@@ -15,6 +15,9 @@ import { SecureRequest } from 'src/types/secure-request';
 import { AccountRepository } from 'src/repositories/account/account.repository';
 import { OAuthProvider } from '@my-monorepo/shared';
 import { GoogleClientService } from './google-client/google-client.service';
+import { GDDataSourceRequestDto } from 'src/dto/google-drive-data-source-request.dto';
+import { WebPDFLoader } from 'langchain/document_loaders/web/pdf';
+import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
 
@@ -82,7 +85,8 @@ export class GoogleDriveController {
       orderBy: 'folder, name',
       fields:
         'nextPageToken, files(id, name, parents, mimeType, thumbnailLink)',
-      q: `'${id}' in parents and trashed = false`,
+      // only pdfs
+      q: `'${id}' in parents and trashed = false and mimeType = 'application/pdf'`, // TODO: SUPPORT MORE TYPES
     });
     return { ...res.data };
   }
@@ -103,4 +107,39 @@ export class GoogleDriveController {
       return { valid: false };
     }
   }
+
+  @Post('data-source')
+  async dataSource(
+    @Body() body: GDDataSourceRequestDto,
+    @Request() request: SecureRequest,
+  ) {
+    console.log(JSON.stringify(body, null, 2));
+    const accessTokenSet = await this.googleClient.retrieveAndSetAccessToken();
+    if (!accessTokenSet) {
+      throw new UnauthorizedException();
+    }
+    const drive = google.drive({ version: 'v3', auth: this.googleClient });
+    // for each item, load the file content
+    const files = await Promise.all(
+      body.items.map((item) =>
+        drive.files.get({ fileId: item.id, alt: 'media' }),
+      ),
+    );
+
+    const processedDocs = await Promise.all(
+      files.map((file) => {
+        return parseBlob(file.data as any);
+      }),
+    );
+  }
+}
+
+async function parseBlob(blob: Blob) {
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 10000,
+    chunkOverlap: 0,
+  });
+  const loader = new WebPDFLoader(blob);
+  const doc = await loader.load();
+  return await splitter.splitDocuments(doc);
 }
