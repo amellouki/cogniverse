@@ -16,8 +16,7 @@ import { AccountRepository } from 'src/repositories/account/account.repository';
 import { OAuthProvider } from '@my-monorepo/shared';
 import { GoogleClientService } from './google-client/google-client.service';
 import { GDDataSourceRequestDto } from 'src/dto/google-drive-data-source-request.dto';
-import { WebPDFLoader } from 'langchain/document_loaders/web/pdf';
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
+import { StoreService } from './store/store.service';
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
 
@@ -27,6 +26,7 @@ export class GoogleDriveController {
     private readonly configService: ConfigService,
     private readonly accountRepo: AccountRepository,
     private googleClient: GoogleClientService,
+    private readonly storeService: StoreService,
   ) {}
 
   @Public()
@@ -86,7 +86,7 @@ export class GoogleDriveController {
       fields:
         'nextPageToken, files(id, name, parents, mimeType, thumbnailLink)',
       // only pdfs
-      q: `'${id}' in parents and trashed = false and mimeType = 'application/pdf'`, // TODO: SUPPORT MORE TYPES
+      q: `'${id}' in parents and trashed = false and mimeType = 'application/pdf'`, // TODO: SUPPORT MORE MIME TYPES
     });
     return { ...res.data };
   }
@@ -126,20 +126,14 @@ export class GoogleDriveController {
       ),
     );
 
-    const processedDocs = await Promise.all(
+    const success = await Promise.all(
       files.map((file) => {
-        return parseBlob(file.data as any);
+        return this.storeService.storePDFFromBlob(file.data as any as Blob);
       }),
     );
-  }
-}
 
-async function parseBlob(blob: Blob) {
-  const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 10000,
-    chunkOverlap: 0,
-  });
-  const loader = new WebPDFLoader(blob);
-  const doc = await loader.load();
-  return await splitter.splitDocuments(doc);
+    this.storeService.test();
+
+    return success;
+  }
 }
