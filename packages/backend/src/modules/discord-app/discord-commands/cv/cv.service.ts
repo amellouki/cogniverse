@@ -108,6 +108,9 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
       'Dall-e': CallbackManager.fromHandlers({
         handleToolStart: this.handleLLMStart(interaction),
       }),
+      Retrieval: CallbackManager.fromHandlers({
+        handleToolStart: this.handleLLMStart(interaction),
+      }),
       // Options: CallbackManager.fromHandlers({
       //   handleToolStart: this.handleLLMStart(interaction),
       // }), TODO: add support for Discord UI elements
@@ -117,7 +120,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
       'Dall-e': this.imageDrawing(interaction),
     };
     const llms = this.getLLMRecord(callbacks, bot.configuration, bot.creator);
-    const tools = this.getTools(toolCallbacks, realWorldEffects);
+    const tools = await this.getTools(toolCallbacks, realWorldEffects);
     const agentLLM = new AgentLLMBuilder().build({
       lmConfig: bot.configuration.lm as LmConfig,
       keys: bot.creator,

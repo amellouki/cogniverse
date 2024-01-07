@@ -9,14 +9,15 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { google } from 'googleapis';
+import { drive_v3, google } from 'googleapis';
 import { Public } from 'src/decorator/public';
 import { SecureRequest } from 'src/types/secure-request';
 import { AccountRepository } from 'src/repositories/account/account.repository';
-import { OAuthProvider } from '@my-monorepo/shared';
+import { GDDataSourceItemDto, OAuthProvider } from '@my-monorepo/shared';
 import { GoogleClientService } from './google-client/google-client.service';
 import { GDDataSourceRequestDto } from 'src/dto/google-drive-data-source-request.dto';
 import { StoreService } from './store/store.service';
+import _ from 'lodash';
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
 
@@ -108,32 +109,46 @@ export class GoogleDriveController {
     }
   }
 
-  @Post('data-source')
-  async dataSource(
-    @Body() body: GDDataSourceRequestDto,
-    @Request() request: SecureRequest,
-  ) {
-    console.log(JSON.stringify(body, null, 2));
+  private async getFilesContent(items: GDDataSourceItemDto[]) {
     const accessTokenSet = await this.googleClient.retrieveAndSetAccessToken();
     if (!accessTokenSet) {
       throw new UnauthorizedException();
     }
     const drive = google.drive({ version: 'v3', auth: this.googleClient });
-    // for each item, load the file content
-    const files = await Promise.all(
-      body.items.map((item) =>
-        drive.files.get({ fileId: item.id, alt: 'media' }),
-      ),
+    return await Promise.all(
+      items.map(async (item) => {
+        const file = await drive.files.get({
+          fileId: item.id,
+          alt: 'media',
+        });
+        return file.data;
+      }),
     );
+  }
+
+  @Post('data-source')
+  async dataSource(@Body() body: GDDataSourceRequestDto) {
+    const blobs = await this.getFilesContent(body.items);
 
     const success = await Promise.all(
-      files.map((file) => {
-        return this.storeService.storePDFFromBlob(file.data as any as Blob);
+      blobs.map((blob) => {
+        return this.storeService.storePDFFromBlob(blob as any as Blob, {});
       }),
     );
 
     this.storeService.test();
 
     return success;
+  }
+
+  private getFileMetaData(file: drive_v3.Schema$File) {
+    return _.pick(file, [
+      'id',
+      'name',
+      'parents',
+      'mimeType',
+      'thumbnailLink',
+      'content',
+    ]);
   }
 }
