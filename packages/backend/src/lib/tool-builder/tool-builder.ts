@@ -4,6 +4,7 @@ import { SerpAPI, WolframAlphaTool } from 'langchain/tools';
 import { AccountKeys, InternalServerException } from '@my-monorepo/shared';
 import { DallETool } from 'src/lib/tools/DallE';
 import { OptionsTool } from 'src/lib/tools/ButtonOptions';
+import { createRetrievalTool } from 'src/lib/tools/retrieval';
 
 type ToolBuilderInput = {
   toolType: ToolType | string;
@@ -13,7 +14,7 @@ type ToolBuilderInput = {
 };
 
 export class ToolBuilder {
-  build({
+  async build({
     toolType,
     callbackManager,
     realWorldEffect,
@@ -36,7 +37,7 @@ export class ToolBuilder {
           openai_api_key: keys?.openAiApiKey,
         });
       case 'Retrieval':
-        return new Object();
+        return await createRetrievalTool();
       case 'Options':
         return OptionsTool.create(realWorldEffect, callbackManager);
       default:

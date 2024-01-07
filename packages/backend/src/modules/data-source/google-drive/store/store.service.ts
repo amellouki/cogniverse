@@ -21,10 +21,11 @@ export class StoreService {
     private pineconeService: PineconeService,
   ) {}
 
-  async storePDFFromBlob(blob: Blob) {
+  async storePDFFromBlob(blob: Blob, fileMetadata) {
     const openAiApiKey = this.configService.get<string>(ENV.OPEN_AI_API_KEY);
     const pineconeIndex = await this.pineconeService.getIndex();
-    const docs = await this.parsePDFBlob(blob);
+    const docs = await this.parsePDFBlob(blob, fileMetadata);
+    console.log('docs', docs);
     const embeddings = new OpenAIEmbeddings({
       openAIApiKey: openAiApiKey,
       modelName: DOC_EMBEDDING_MODEL,
@@ -39,11 +40,14 @@ export class StoreService {
     };
   }
 
-  async parsePDFBlob(blob: Blob) {
+  async parsePDFBlob(blob: Blob, metadata: any) {
     const loader = new WebPDFLoader(blob);
     const docs = await loader.load();
+    docs[0].metadata = {
+      ...docs[0].metadata,
+      ...metadata,
+    };
     const splitDocuments = await this.splitter.splitDocuments(docs);
-    // const docs = await loader.loadAndSplit(this.splitter);
     return splitDocuments;
   }
 
@@ -62,8 +66,8 @@ export class StoreService {
 
     const result = await store
       .asRetriever(1)
-      .getRelevantDocuments('TEST QUESTION ?');
+      .getRelevantDocuments('WHAT DID WE DO IN THE SCRUM PROCESS?');
 
-    console.log('testing result', result);
+    console.log('Testing result', result);
   }
 }
