@@ -7,7 +7,7 @@ import {
   discordOauthServiceMock,
   githubOauthServiceMock,
   loginServiceMock,
-} from 'cogniverse-backend/mocks';
+} from 'src/mocks';
 import { DiscordOAuthService } from 'src/modules/authentication/services/discord-o-auth.service';
 import { AccountRepository } from 'src/repositories/account/account.repository';
 import { LoginService } from 'src/modules/authentication/services/login.service';

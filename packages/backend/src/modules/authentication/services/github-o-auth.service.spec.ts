@@ -8,7 +8,7 @@ import {
   GITHUB_ACCESS_TOKEN_RESPONSE,
   jwtServiceMock,
   MOCK_ACCOUNT_DATA,
-} from 'cogniverse-backend/mocks';
+} from 'src/mocks';
 import { ConfigService } from '@nestjs/config';
 import { AccountRepository } from 'src/repositories/account/account.repository';
 import { JwtService } from '@nestjs/jwt';

@@ -4,7 +4,7 @@ import {
   ZOD_VALIDATION_MOCK_METADATA,
   ZOD_VALIDATION_MOCK_SCHEMA,
   ZOD_VALIDATION_TEST_CASES,
-} from 'cogniverse-backend/mocks';
+} from 'src/mocks';
 
 describe(`ZodValidationPipe`, () => {
   let pipe: ZodValidationPipe = null;

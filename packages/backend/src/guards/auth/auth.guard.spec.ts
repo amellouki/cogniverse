@@ -9,7 +9,7 @@ import {
   httpArgumentsHostMock,
   jwtServiceMock,
   reflectorMock,
-} from 'cogniverse-backend/mocks';
+} from 'src/mocks';
 import { UnauthorizedException } from '@nestjs/common';
 
 describe('AuthGuard', () => {

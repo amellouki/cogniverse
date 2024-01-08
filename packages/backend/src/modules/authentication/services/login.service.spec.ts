@@ -1,9 +1,9 @@
 import { LoginService } from 'src/modules/authentication/services/login.service';
 import { Test } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
-import { jwtServiceMock } from 'cogniverse-backend/mocks';
+import { jwtServiceMock } from 'src/mocks';
 
-describe('Unit testing LoginService',() => {
+describe('Unit testing LoginService', () => {
   let service: LoginService;
 
   beforeEach(async () => {
