@@ -39,6 +39,7 @@
     "discord.js": "14.10.2",
     "dotenv": "^16.0.3",
     "express-session": "^1.17.3",
+    "jest-mock-extended": "^3.0.5",
     "langchain": "^0.0.192",
     "openai": "^4.20.1",
     "pdf-parse": "^1.1.1",
@@ -78,7 +79,10 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "moduleNameMapper": {
+      "^repositories/(.*)$": "<rootDir>/src/repositories/$1",
+      "^src/(.*)$": "<rootDir>/src/$1"
+    },
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
