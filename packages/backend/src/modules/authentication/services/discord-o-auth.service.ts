@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { OAuthProvider } from '@prisma/client';
@@ -9,6 +8,7 @@ import {
   AccessTokenResponse,
   UserResponse,
 } from '../../../types/discord-types';
+import { AxiosService } from 'src/services/axios/axios.service';
 
 @Injectable()
 export class DiscordOAuthService {
@@ -24,6 +24,7 @@ export class DiscordOAuthService {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly accountRepository: AccountRepository,
+    private readonly axios: AxiosService,
   ) {}
 
   async discordAccessToken(code: string): Promise<AccessTokenResponse> {
@@ -34,7 +35,7 @@ export class DiscordOAuthService {
     params.append('code', code);
     params.append('redirect_uri', this.redirectUri);
 
-    const response = await axios.post(
+    const response = await this.axios.post(
       'https://discord.com/api/oauth2/token',
       params,
     );
@@ -46,9 +47,7 @@ export class DiscordOAuthService {
     tokenType: string,
     accessToken: string,
   ): Promise<UserResponse> {
-    const response = await axios<UserResponse>({
-      method: 'get',
-      url: `https://discord.com/api/users/@me`,
+    const response = await this.axios.get(`https://discord.com/api/users/@me`, {
       headers: {
         Authorization: tokenType + ' ' + accessToken,
       },

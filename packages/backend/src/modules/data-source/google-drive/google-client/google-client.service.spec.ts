@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AccountRepository } from 'src/repositories/account/account.repository';
+import { GoogleClientService } from './google-client.service';
 
-describe('AccountService', () => {
-  let service: AccountRepository;
+describe('GoogleClientService', () => {
+  let service: GoogleClientService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AccountRepository],
+      providers: [GoogleClientService],
     }).compile();
 
-    service = module.get<AccountRepository>(AccountRepository);
+    service = module.get<GoogleClientService>(GoogleClientService);
   });
 
   it('should be defined', () => {
