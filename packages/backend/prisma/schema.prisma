@@ -109,7 +109,6 @@ model DocumentMetadata {
 
 model Account {
   id             String             @id() @unique @default(uuid())
-  OAuthProvider  OAuthProvider
   userId         String
   username       String
   profilePicture String?
@@ -118,7 +117,28 @@ model Account {
   documents      DocumentMetadata[] @relation("owner")
   openAiApiKey   String?
 
+  OAuthProvider OAuthProvider // TODO: don't use this,
+  OAuth         OAuth[] // move to one to many relation for each provider
+
   @@unique(fields: [OAuthProvider, userId])
+}
+
+model OAuth {
+  id                Int           @id @default(autoincrement())
+  provider          OAuthProvider
+  accountId         String
+  providerAccountId String
+  accessToken       String?
+  refreshToken      String?
+  extra             Json?
+  Account           Account       @relation(fields: [accountId], references: [id])
+
+  @@unique(fields: [provider, providerAccountId])
+}
+
+model TestGoogleDrive {
+  email    String  @id
+  approved Boolean @default(false)
 }
 
 enum BotType {
@@ -130,4 +150,5 @@ enum BotType {
 enum OAuthProvider {
   GITHUB
   DISCORD
+  GOOGLE
 }

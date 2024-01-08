@@ -108,6 +108,9 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
       'Dall-e': CallbackManager.fromHandlers({
         handleToolStart: this.handleLLMStart(interaction),
       }),
+      Retrieval: CallbackManager.fromHandlers({
+        handleToolStart: this.handleLLMStart(interaction),
+      }),
       // Options: CallbackManager.fromHandlers({
       //   handleToolStart: this.handleLLMStart(interaction),
       // }), TODO: add support for Discord UI elements

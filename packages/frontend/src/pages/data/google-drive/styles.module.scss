@@ -1,0 +1,34 @@
+.container {
+  user-select: none;
+}
+
+.GoogleDrive {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.Selection {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 3rem;
+}
+
+.Selectable {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin: 0.5rem;
+  cursor: pointer;
+  background: var(--primary-background);
+
+  &.selected {
+    border: 1px solid var(--color-2);
+  }
+}

@@ -89,7 +89,7 @@ export class BaseThirdPartyApp {
     keys?: AccountKeys,
   ): StructuredTool[] {
     const tools = [];
-    Object.keys(callbacks).forEach((key) => {
+    Object.keys(callbacks).forEach(async (key) => {
       const callback = callbacks[key];
       const realWorldEffect = realWorldEffects[key];
       if (callback) {

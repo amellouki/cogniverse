@@ -5,6 +5,7 @@ import { DocumentMetadataModule } from './document-metadata/document-metadata.mo
 import { BotModule } from './bot/bot.module';
 import { AccountModule } from './account/account.module';
 import { SlackModule } from './slack/slack.module';
+import { TestGoogleDriveModule } from './test-google-drive/test-google-drive.module';
 
 const repositoryModules = [
   ConversationModule,
@@ -13,6 +14,7 @@ const repositoryModules = [
   BotModule,
   AccountModule,
   SlackModule,
+  TestGoogleDriveModule,
 ];
 
 @Module({

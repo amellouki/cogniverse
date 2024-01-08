@@ -28,7 +28,6 @@ lerna-debug.log*
 *.sublime-workspace
 
 # prisma
-/prisma/migrations
 /prisma/dev.db
 /prisma/dev.db-journal
 

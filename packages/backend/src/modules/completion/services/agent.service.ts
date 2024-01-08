@@ -114,7 +114,7 @@ export class AgentService extends BaseChainStream {
       });
     };
 
-    const chain = this.agent.fromConversation(
+    const chain = await this.agent.fromConversation(
       conversation,
       callbackManager,
       toolsCallbackManager,
