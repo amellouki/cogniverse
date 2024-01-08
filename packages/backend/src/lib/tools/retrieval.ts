@@ -1,13 +1,10 @@
-import { ChainTool, Tool } from 'langchain/tools';
+import { ChainTool, Tool, ToolParams } from 'langchain/tools';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { QUERY_EMBEDDING_MODEL } from 'src/constants';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { VectorDBQAChain } from 'langchain/chains';
 import { OpenAI } from 'langchain/llms/openai';
 import * as dotenv from 'dotenv';
-import { CallbackManager } from 'langchain/callbacks';
-import { Document } from 'langchain/document';
 
 dotenv.config({ path: './.env.local' });
 
@@ -26,50 +23,41 @@ const embeddings = new OpenAIEmbeddings({
   modelName: QUERY_EMBEDDING_MODEL,
 });
 
-export async function createRetrievalTool(
-  callbacks?: CallbackManager,
-  namespace?: string,
-) {
-  const vectoreStore = await PineconeStore.fromExistingIndex(embeddings, {
-    pineconeIndex: index,
-    namespace,
-  });
-  const chain = VectorDBQAChain.fromLLM(model, vectoreStore, {
-    k: 3,
-    callbacks: CallbackManager.fromHandlers({
-      handleRetrieverEnd(documents: Document[]): any {
-        console.log('handleRetrieverEnd', documents);
-      },
-    }),
-  });
-  const tool = new ChainTool({
-    name: 'Retrieval',
-    description:
-      'Useful when you want to retrieve user documents to respond to a user query, input should be a standalone semantic query',
-    chain,
-    callbacks,
-    // callbacks: CallbackManager.fromHandlers({
-    //   handleToolStart(
-    //     tool: any,
-    //     input: string,
-    //     runId: string,
-    //     parentRunId?: string,
-    //     tags?: string[],
-    //     metadata?: Record<string, unknown>,
-    //     name?: string,
-    //   ): any {
-    //     console.log('handleToolStart:rertieval', input);
-    //   },
-    //
-    //   handleToolEnd(
-    //     output: string,
-    //     runId: string,
-    //     parentRunId?: string,
-    //     tags?: string[],
-    //   ): any {
-    //     console.log('handleToolEnd:retrieval', output);
-    //   },
-    // }),
-  });
-  return tool;
+interface RetrievalToolParams extends ToolParams {
+  vectorStoreNamespace: string;
+}
+
+export class RetrievalTool extends Tool {
+  private readonly vectorStoreNamespace: string;
+
+  toJSON() {
+    return this.toJSONNotImplemented();
+  }
+
+  constructor(toolParams?: RetrievalToolParams) {
+    super(toolParams);
+    this.vectorStoreNamespace = toolParams.vectorStoreNamespace;
+  }
+
+  get lc_namespace() {
+    return [...super.lc_namespace, 'retrieval'];
+  }
+
+  static lc_name() {
+    return 'Retrieval';
+  }
+
+  protected async _call(input: string): Promise<string> {
+    const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
+      pineconeIndex: index,
+      namespace: this.vectorStoreNamespace,
+    });
+
+    const docs = await vectorStore.asRetriever(3).getRelevantDocuments(input);
+    const output = docs.map((doc) => doc.pageContent).join('\n\n\n');
+    return output;
+  }
+  name = 'Retrieval';
+  description =
+    'Useful when you want to retrieve user documents to respond to a user query, input should be a standalone semantic query';
 }

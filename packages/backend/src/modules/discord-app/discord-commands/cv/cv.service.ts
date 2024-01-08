@@ -120,7 +120,7 @@ export class CvService extends BaseThirdPartyApp implements ICommand {
       'Dall-e': this.imageDrawing(interaction),
     };
     const llms = this.getLLMRecord(callbacks, bot.configuration, bot.creator);
-    const tools = await this.getTools(toolCallbacks, realWorldEffects);
+    const tools = this.getTools(toolCallbacks, realWorldEffects);
     const agentLLM = new AgentLLMBuilder().build({
       lmConfig: bot.configuration.lm as LmConfig,
       keys: bot.creator,

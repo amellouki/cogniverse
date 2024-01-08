@@ -1,0 +1,37 @@
+.File {
+  display: flex;
+  flex-direction: column;
+  width: 20rem;
+  border-width: 1px;
+  border-color: transparent;
+  height: 15rem;
+  gap: 1rem;
+  img {
+    display: flex;
+    flex-basis: 10rem;
+    height: 10rem;
+    flex-grow: 0;
+    width: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .caption {
+    display: flex;
+    gap: 0.5rem;
+    align-self: start;
+    max-width: 100%;
+    min-height: 0;
+    svg {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-height: 100%;
+    }
+  }
+}

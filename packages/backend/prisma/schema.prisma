@@ -136,6 +136,11 @@ model OAuth {
   @@unique(fields: [provider, providerAccountId])
 }
 
+model TestGoogleDrive {
+  email    String  @id
+  approved Boolean @default(false)
+}
+
 enum BotType {
   CONVERSATIONAL
   RETRIEVAL_CONVERSATIONAL

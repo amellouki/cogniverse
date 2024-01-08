@@ -83,18 +83,18 @@ export class BaseThirdPartyApp {
     return record;
   }
 
-  protected async getTools(
+  protected getTools(
     callbacks: ToolCallbackRecord,
     realWorldEffects: RealWorldEffects,
     keys?: AccountKeys,
-  ): Promise<StructuredTool[]> {
+  ): StructuredTool[] {
     const tools = [];
     Object.keys(callbacks).forEach(async (key) => {
       const callback = callbacks[key];
       const realWorldEffect = realWorldEffects[key];
       if (callback) {
         tools.push(
-          await new ToolBuilder().build({
+          new ToolBuilder().build({
             toolType: key,
             callbackManager: callback,
             realWorldEffect,

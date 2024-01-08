@@ -17,6 +17,7 @@ import * as dotenv from 'dotenv';
 import { AccountModule } from './modules/account/account.module';
 import { SlackAppModule } from './modules/slack-app/slack-app.module';
 import { DataSourceModule } from 'src/modules/data-source/data-source.module';
+import { TestRegisterModule } from 'src/modules/test-register/test-register.module';
 
 dotenv.config({ path: './.env.local' });
 
@@ -42,6 +43,7 @@ dotenv.config({ path: './.env.local' });
     DiscordAppModule,
     SlackAppModule,
     DataSourceModule,
+    TestRegisterModule,
   ],
   controllers: [AppController],
   providers: [

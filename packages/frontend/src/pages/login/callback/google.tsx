@@ -14,7 +14,7 @@ const Google: NextPageWithLayout = () => {
     if (code) {
       apiInstance.post('/google/consent', { code }).then((res) => {
         router
-          .push('/conversations')
+          .push('/data/google-drive/root')
           .then(() => console.log('Logged in successfully!'));
       });
     }
