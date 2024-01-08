@@ -9,7 +9,7 @@ import { createAgent } from 'src/lib/chains/agent';
 import * as process from 'process';
 import { DallETool } from 'src/lib/tools/DallE';
 import { OptionsTool } from 'src/lib/tools/ButtonOptions';
-import { createRetrievalTool } from 'src/lib/tools/retrieval';
+import { RetrievalTool } from 'src/lib/tools/retrieval';
 
 @Injectable()
 export class AgentService extends AgentBuilder {
@@ -59,14 +59,14 @@ export class AgentService extends AgentBuilder {
       openai_api_key: conversation.creator.openAiApiKey,
       send: dalleCallback,
     });
+    const retrievalTool = new RetrievalTool({
+      callbacks: toolsCallbackManager,
+      vectorStoreNamespace: conversation.creator.id,
+    });
     const options = OptionsTool.create(async (input) => {
       uiCallbacks(this.createUIElement('button_group', input));
       return true;
     });
-    const retrievalTool = await createRetrievalTool(
-      toolsCallbackManager,
-      conversation.creator.id,
-    );
     const tools = [serpTool, wolframAlpha, dalle, retrievalTool];
     const modelWithTools = model.bind({
       tools: tools.map(formatToOpenAITool),
