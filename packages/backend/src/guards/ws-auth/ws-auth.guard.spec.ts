@@ -5,7 +5,7 @@ import {
   executionContextMock,
   jwtServiceMock,
   wsArgumentsHostMock,
-} from 'cogniverse-backend/mocks';
+} from 'src/mocks';
 import { JwtService } from '@nestjs/jwt';
 
 describe('WsAuthGuard', () => {

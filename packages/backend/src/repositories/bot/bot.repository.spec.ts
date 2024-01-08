@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
-import { prismaClientMock, BOT_REPO } from 'cogniverse-backend/mocks';
+import { prismaClientMock, BOT_REPO } from 'src/mocks';
 import { BotRepository } from './bot.repository';
 
 describe('AgentService', () => {
