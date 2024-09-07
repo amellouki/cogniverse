@@ -1,4 +1,4 @@
-# [Cogniverse.ai](https://www.cogniverse.ai)
+# Cogniverse.ai (No longer maintained or hosted)
 A web app that leverages LLMs through Langchain.\
 _Pre prompt your bots and integrate them with messaging platforms such us Discord and Slack._
 
